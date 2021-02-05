@@ -21,14 +21,18 @@ export default function Enemy(r, g, addDust, level, rgbColor4, rgbColor2, lasers
   this.vel = p5.Vector.random2D();
   this.vel.mult(4);
   this.rotation = g.random(.03, .1);
+  this.recentlyEdged = 100;
 
   this.update = function () {
+    // console.log(this.recentlyEdged)
     Entity.prototype.update.call(this);
+    this.recentlyEdged -= 1;
     this.edges();
     var changeCourse = g.random(1, 100)
     var shoot = g.random(1, 25)
     // ENEMY AI
-    if (changeCourse <= this.crazyness) {
+    if (changeCourse <= this.crazyness && this.recentlyEdged <= 0 ) {
+      this.recentlyEdged = 100;
       this.setAccel(1)
       this.vel = p5.Vector.random2D();
       this.vel.mult(4);

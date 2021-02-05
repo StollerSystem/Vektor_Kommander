@@ -60,12 +60,12 @@ export class AsteroidsComponent implements OnInit {
       }
     }
 
-    const addDebris = function(pos: any, vel: any, n: any, r: any, g: any, rgbColor4: any) {
+    const addDebris = function (pos: any, vel: any, n: any, r: any, g: any, rgbColor4: any) {
       debris.push(new Debris(pos, vel, n, r, g, rgbColor4));
       // console.log(debris)
     }
 
-    const roundLoss = function(g: any) {
+    const roundLoss = function (g: any) {
       let game = g;
       setTimeout(function () {
         lives--;
@@ -119,9 +119,16 @@ export class AsteroidsComponent implements OnInit {
         ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust);
         hud = new Hud(g, rgbColor1, rgbColor3, pts);
         stars = loadStars(g)
-        for (let i = 0; i < 4; i ++) {
-          barriers[i] = loadBarriers(g, i * (g.width / 5))
-        }
+
+        // for (let i = 0; i < 4; i++) {
+        //   const x = g.random(0, g.width)
+        //   const y = g.random(0, g.height)
+        //   const vx = g.random(-2, -5)
+        //   const size = g.round(g.random(50, 100))
+
+        //   barriers[i] = loadBarriers(g, x, y, vx, size)
+        // }
+
         // pts = mainFont.textToPoints('ASTRO-BLASTER', 0, 0, 200, {
         //   sampleFactor: 0.25,
         //   simplifyThreshold: 0
@@ -158,7 +165,13 @@ export class AsteroidsComponent implements OnInit {
           let ranNum = g.random(750);
           if (ranNum <= 1) {
             spawnAsteroids();
-            
+          }
+        }
+
+        if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
+          let ranNum = g.random(200);
+          if (ranNum <= 1) {
+            spawnBarriers();
           }
         }
 
@@ -255,6 +268,29 @@ export class AsteroidsComponent implements OnInit {
               }
             }
           }
+          // check barrier + laser collision 
+          if (exists) {
+            for (var k = barriers.length - 1; k >= 0; k--) {
+              for (var j = barriers[k].length - 1; j >= 0; j--) {
+                if (exists && lasers[i].hits(barriers[k][j])) {
+                  exists = false;
+                  // score += 500;
+                  // enemies[k].destroy();
+                  let dustVel = p5.Vector.add(lasers[i].vel.mult(0.5), barriers[k][j].vel);
+                  addDust(barriers[k][j].pos, dustVel, 10, .01, 2, 3, g);
+                  // addDebris(enemies[k].pos, enemies[k].vel, 10, 30, g, rgbColor4);
+                  
+                  barriers[k].splice(j, 1);
+                  lasers.splice(i, 1);
+                  break; 
+                }
+                
+              }
+
+
+
+            }
+          }
           // check player + laser collision     
           if (exists) {
             // console.log(lasers[i].hits(ship))
@@ -292,10 +328,13 @@ export class AsteroidsComponent implements OnInit {
         }
 
         ship.update();
-
+        // UPDATE AND DESTROY BARRIERS
         for (let i = 0; i < barriers.length; i++) {
           for (let j = 0; j < barriers[i].length; j++) {
             barriers[i][j].update()
+            if (barriers[i][j].offscreen()) {
+              barriers[i].splice(j,1)
+            }
           }
         }
 
@@ -353,7 +392,18 @@ export class AsteroidsComponent implements OnInit {
         }
       }
 
-      function spawnEnemy() {
+      const spawnBarriers = function() {
+        for (let i = 0; i < level + 1; i++) {
+          const x = g.width
+          const y = g.random(0, g.height)
+          const vx = g.random(-.1, -3)
+          const size = g.round(g.random(10, 50))
+
+          barriers.push(loadBarriers(g, x, y, vx, size))
+        }
+      }
+
+      const spawnEnemy = function() {
         var radius = g.random(20, 30)
         enemies.push(new Enemy(radius, g, addDust, level, rgbColor4, rgbColor2, lasers))
       }
