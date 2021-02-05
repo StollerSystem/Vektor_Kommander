@@ -2,7 +2,7 @@ import * as p5 from 'p5';
 
 export default function Debris(pos, vel, n, r, g, rgbColor4) {
 
-  this.destroyFrames = 1300;
+  this.destroyFrames = 1000;
   this.r = r
   this.pos = pos.copy();
   this.vel = vel.copy();
@@ -14,7 +14,7 @@ export default function Debris(pos, vel, n, r, g, rgbColor4) {
       vel: this.vel.copy().add(p5.Vector.random2D().mult(g.random(1,1.5))),
       heading: g.random(0, 360),
       rot: g.random(-0.2, 0.2),
-      len: g.random(.05,.5)
+      len: g.random(.05,.4)
     };
 
   // console.log(this.debrisParts)
@@ -33,10 +33,10 @@ export default function Debris(pos, vel, n, r, g, rgbColor4) {
     for (var i = 0; i < this.debrisParts.length; i++) {
       // ellipse(this.r,this.r,10)
       g.push();
-      let transNum = (1 * ((this.destroyFrames--) / 1000))
+      let transNum = (.8 * ((this.destroyFrames--) / 1000))
       let trans = transNum > 0 ? transNum : 0;
       g.stroke(`rgba(${rgbColor4[0]},${rgbColor4[1]},${rgbColor4[2]},${trans})`);
-      g.strokeWeight(g.random(1,2.5))
+      g.strokeWeight(g.random(.5,2))
       var d = this.debrisParts[i];
       g.translate(d.pos.x, d.pos.y);
       g.rotate(d.heading);

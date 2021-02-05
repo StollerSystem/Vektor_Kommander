@@ -65,7 +65,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
   });
   input.registerAsListener(g.RIGHT_ARROW, function (char, code, press) {
     // title = false;
-    scope.setRotation(press ? 0.08 : 0);
+    scope.setRotation(press ? 0.06 : 0);
     // console.log(scope.heading)
     // if (press) {
     //   rocketSoundEffects[1].play();
@@ -75,7 +75,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
   });
   input.registerAsListener(g.LEFT_ARROW, function (char, code, press) {
     // title = false;
-    scope.setRotation(press ? -0.08 : 0);
+    scope.setRotation(press ? -0.06 : 0);
     // console.log(scope.heading)
     // if (press) {
     //   rocketSoundEffects[1].play();

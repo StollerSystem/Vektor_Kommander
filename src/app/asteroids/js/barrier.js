@@ -7,16 +7,18 @@ export default function Barrier(g, x, y, vx, vy) {
   const colorArray = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink']
 
 
-  Entity.call(this, pos.x, pos.y, 12, g)
+  Entity.call(this, pos.x, pos.y, 20, g)
 
   this.vel = g.createVector(vx,vy) // SET VELOCITY
-  // Entity.prototype.setRotation.call(this, g.random(-0.03, 0.03)); // SET ROTATION
+  this.rotation = 1
+
+  // Entity.prototype.setRotation.call(this, g.random(-0.03, 0.03));
 
   this.render = function() {
     g.push()
-    g.fill(255)
+    g.noFill()
     g.stroke(255);
-    g.strokeWeight(g.random(1, 2));
+    g.strokeWeight(g.random(.5, .75));
     g.rect(this.pos.x, this.pos.y, this.r, this.r)
     g.pop()
   }

@@ -31,10 +31,10 @@ export default function Asteroid(pos, r, size, g, rgbColor1) {
   }
 
   // Calculate minimum and maximum radii squared
-  // this.rmin = this.r + g.min(this.offset);
-  // this.rmin2 = this.rmin * this.rmin;
-  // this.rmax = this.r + g.max(this.offset);
-  // this.rmax2 = this.rmax * this.rmax;
+  this.rmin = this.r + g.min(this.offset);
+  this.rmin2 = this.rmin * this.rmin;
+  this.rmax = this.r + g.max(this.offset);
+  this.rmax2 = this.rmax * this.rmax;
 
   Entity.prototype.setRotation.call(this, g.random(-0.03, 0.03));
 

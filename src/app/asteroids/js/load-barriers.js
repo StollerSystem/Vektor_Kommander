@@ -6,7 +6,7 @@ export default function loadBarrier(e, x, y, vx, size) {
 
   for (let i = 0; i < randomHeight; i++) {
     for (let j = 0; j < (size/randomHeight); j++) {
-      const newBarrierBlock = new Barrier(e, x - (j * 12), y - (i * 12), vx)
+      const newBarrierBlock = new Barrier(e, x - (j * 20), y - (i * 20), vx)
       blocks.push(newBarrierBlock)
     }
   }

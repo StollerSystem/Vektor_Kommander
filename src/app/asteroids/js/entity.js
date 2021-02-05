@@ -49,5 +49,6 @@ Entity.prototype.setAccel = function(magnitude)
 // }
 
 Entity.prototype.setRotation = function(rot) {
+  // console.log("set ROT")
   this.rotation = rot;
 }
