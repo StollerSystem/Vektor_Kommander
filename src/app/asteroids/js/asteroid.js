@@ -2,14 +2,15 @@ import * as p5 from 'p5';
 import Entity from './entity';
 
 export default function Asteroid(pos, r, size, g, rgbColor1) {
-  if (pos == null) {
-    pos = g.createVector(g.random(g.width), g.random(g.height));
-  }
 
   r = r != null ? r * 0.5 : g.random(80, 105);
+  if (pos == null) {
+    pos = g.createVector(g.width+r, g.random(g.height));
+  }
+
   Entity.call(this, pos.x, pos.y, r, g);
 
-  this.vel = p5.Vector.random2D();
+  this.vel = g.createVector(g.random(-1,-3),g.random(1,-1))
   this.total = g.floor(g.random(7, 15));
 
   //smaller asteroids go a bit faster
@@ -18,9 +19,9 @@ export default function Asteroid(pos, r, size, g, rgbColor1) {
     case 2:
       this.vel.mult(1); break;
     case 1:
-      this.vel.mult(2); break;
+      this.vel.mult(1.5); break;
     case 0:
-      this.vel.mult(3); break;
+      this.vel.mult(2); break;
   }
 
 
@@ -41,7 +42,7 @@ export default function Asteroid(pos, r, size, g, rgbColor1) {
     g.push();
     g.stroke(`rgba(${rgbColor1[0]},${rgbColor1[1]},${rgbColor1[2]},1)`);
     g.strokeWeight(g.random(1,1.5))
-    g.noFill();
+    g.fill(0)
     g.translate(this.pos.x, this.pos.y);
     g.rotate(this.heading);
     g.beginShape();

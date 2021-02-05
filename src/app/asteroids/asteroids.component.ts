@@ -124,7 +124,7 @@ export class AsteroidsComponent implements OnInit {
         //   sampleFactor: 0.25,
         //   simplifyThreshold: 0
         // });
-        // spawnAsteroids();
+        spawnAsteroids();
       }
 
       g.draw = () => {

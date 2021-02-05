@@ -7,11 +7,11 @@ import { lineIntersect } from './utility';
 // import { addDust } from './dust';
 
 export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust) {
-  Entity.call(this, g.width / 2, g.height / 2, 20, g);
+  Entity.call(this, 200, g.height / 2, 20, g);
   this.isDestroyed = false;
   this.destroyFrames = 1000;
   this.shields = shieldTime;
-  this.rmax = this.r*1.5;
+  this.rmax = this.r * 1.5;
   this.rmax2 = this.rmax * this.rmax;
   this.tailEdge = true; //if true will hide vapor trail
   this.tailSkip = false;//tail effect toggles between true/false
@@ -47,10 +47,10 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     }
     title = false;
 
-    let shootPos = scope.pos.add(g.createVector(this.r*2,this.r/4))
+    let shootPos = scope.pos.add(g.createVector(this.r * 2, this.r / 4))
     var laser = new Laser(shootPos, scope.vel, scope.heading, g, rgbColor2, false);
     if (score > 0) {
-      score -= 5; 
+      score -= 5;
     }
 
     var dustVel = laser.vel.copy();
@@ -123,7 +123,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
         this.lastPos[i][1] = this.lastPos[i - 1][1];
         this.lastPos[i][2] = this.lastPos[i - 1][2];
       }
-      this.lastPos[0][0] = g.createVector(this.pos.x - this.r * g.cos(this.heading), this.pos.y - this.r * g.sin(this.heading));
+      this.lastPos[0][0] = g.createVector(this.pos.x - (this.r + 10) * g.cos(this.heading), this.pos.y - (this.r + 10) * g.sin(this.heading));
       this.lastPos[0][1] = this.heading;
 
       if (this.tailEdge) {
@@ -284,25 +284,25 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
 
       g.curve(
         -1, 20,
-        0, -this.r / 3,
-        this.r, -this.r / 8,
-        this.r*2, 80,
-        )
+        0 - 10, -this.r / 3,
+        this.r - 10, -this.r / 8,
+        this.r * 2, 80,
+      )
 
       g.beginShape()
 
       // g.vertex(-this.r, this.r)
-      g.vertex(-this.r, this.r / 2)
-      g.vertex(this.r * 2, this.r / 2)
-      g.vertex(this.r * 2.5, 0)
-      g.vertex(0, -this.r / 3)
-      g.vertex(-this.r, -this.r)
+      g.vertex(-this.r - 10, this.r / 2)
+      g.vertex(this.r * 2 - 10, this.r / 2)
+      g.vertex(this.r * 2.5 - 10, 0)
+      g.vertex(-10, -this.r / 3)
+      g.vertex(-this.r - 10, -this.r)
 
       g.endShape(g.CLOSE)
       // g.point(0,0)
-      g.triangle(-this.r, this.r,
-        -this.r, this.r/4,
-        this.r/2, this.r/4);
+      g.triangle(-this.r - 10, this.r,
+        -this.r - 10, this.r / 4,
+        this.r / 2 - 10, this.r / 4);
 
       // thruster animations
       if (this.accelMagnitude > 0) {
@@ -312,9 +312,9 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
         g.fill(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
         g.strokeWeight(1)
         g.translate(-this.r, 0);
-        var thrustEnd = g.random(-45, -10)
-        g.triangle(this.r - 22, this.r - 10,
-          this.r - 22, -this.r + 10,
+        var thrustEnd = g.random(-55, -10)
+        g.triangle(this.r - 32, this.r - 10,
+          this.r - 32, -this.r + 10,
           thrustEnd, 0);
         g.pop()
       }
@@ -325,10 +325,10 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
         g.fill(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
         g.strokeWeight(1)
         g.translate(0, 0);
-        var thrustEnd = g.random(this.r*4, this.r*3)
-        g.triangle(this.r*2, this.r/2,
-          this.r*2.5, 0,
-          thrustEnd, this.r/4);
+        var thrustEnd = g.random(this.r * 4, this.r * 3)
+        g.triangle(this.r * 2 - 10, this.r / 2,
+          this.r * 2.5 - 10, 0,
+          thrustEnd, this.r / 4);
         g.pop()
       }
       if (this.rotation > 0) {
@@ -352,8 +352,8 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
         g.strokeWeight(1)
         g.translate(-this.r, 0);
         var thrustEnd = g.random(35, 10)
-        g.triangle(this.r + 25, this.r/2,
-          this.r + 35, this.r/2,
+        g.triangle(this.r + 25, this.r / 2,
+          this.r + 35, this.r / 2,
           this.r + 30, thrustEnd);
         g.pop()
       }
