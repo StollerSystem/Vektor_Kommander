@@ -11,7 +11,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
   this.isDestroyed = false;
   this.destroyFrames = 1000;
   this.shields = shieldTime;
-  this.rmax = this.r;
+  this.rmax = this.r*1.5;
   this.rmax2 = this.rmax * this.rmax;
   this.tailEdge = true; //if true will hide vapor trail
   this.tailSkip = false;//tail effect toggles between true/false
@@ -26,10 +26,10 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     this.lastPos[i][2] = 1;
   }
 
-  g.keyReleased = ()  => {
+  g.keyReleased = () => {
     input.handleEvent(g.key, g.keyCode, false);
   }
-  
+
   g.keyPressed = () => {
     input.handleEvent(g.key, g.keyCode, true);
   }
@@ -46,13 +46,15 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
       return;
     }
     title = false;
-    var laser = new Laser(scope.pos, scope.vel, scope.heading, g, rgbColor2, false);
+
+    let shootPos = scope.pos.add(g.createVector(this.r*2,this.r/4))
+    var laser = new Laser(shootPos, scope.vel, scope.heading, g, rgbColor2, false);
     if (score > 0) {
-      score -= 5;
+      score -= 5; 
     }
-    
-    var dustVel = laser.vel.copy();    
-    addDust(scope.pos, dustVel.mult(.5), 4, .045, 2, 5, g);
+
+    var dustVel = laser.vel.copy();
+    addDust(shootPos, dustVel.mult(.5), 4, .045, 2, 5, g);
 
     // var effect = laserSoundEffects[floor(random() * laserSoundEffects.length)];
     // laser.playSoundEffect(effect);
@@ -78,7 +80,16 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
   });
   input.registerAsListener(g.UP_ARROW, function (char, code, press) {
     // title = false;
-    scope.setAccel(press ? 0.2 : 0);
+    scope.setAccel(press ? 0.1 : 0);
+    // if (press) {
+    //   rocketSoundEffects[0].play();
+    // } else {
+    //   rocketSoundEffects[0].stop();
+    // }
+  });
+  input.registerAsListener(g.DOWN_ARROW, function (char, code, press) {
+    // title = false;
+    scope.setAccel(press ? -0.1 : 0);
     // if (press) {
     //   rocketSoundEffects[0].play();
     // } else {
@@ -115,9 +126,9 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
       this.lastPos[0][0] = g.createVector(this.pos.x - this.r * g.cos(this.heading), this.pos.y - this.r * g.sin(this.heading));
       this.lastPos[0][1] = this.heading;
 
-      if (this.tailEdge) {        
+      if (this.tailEdge) {
         this.lastPos[0][2] = 0;
-        this.tailEdge = false;        
+        this.tailEdge = false;
       } else {
         this.lastPos[0][2] = 1;
       }
@@ -132,14 +143,14 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     for (var i = 0; i < 6; i++)
       this.brokenParts[i] = {
         pos: this.pos.copy(),
-        vel: this.vel.copy().add(p5.Vector.random2D().mult(g.random(1,1.8))),
+        vel: this.vel.copy().add(p5.Vector.random2D().mult(g.random(1, 1.8))),
         heading: g.random(0, 360),
         rot: g.random(-0.07, 0.07)
       };
   }
 
   this.hits = function (asteroid) {
-    
+
     // Are shields up?
     if (this.shields > 0) {
       return false;
@@ -174,7 +185,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
         var next_i = (i + 1) % asteroid_vertices.length;
         if (lineIntersect(shipVertices[j], shipVertices[(j + 1) % shipVertices.length],
           asteroid_vertices[i], asteroid_vertices[next_i])) {
-          
+
           return true;
         }
       }
@@ -182,46 +193,47 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     return false;
   }
 
-  this.playSoundEffect = function(soundArray){
+  this.playSoundEffect = function (soundArray) {
     // soundArray[g.floor(g.random(0,soundArray.length))].play();
   }
 
   this.vertices = function () {
     var shipVertices = [
-      p5.Vector.add(g.createVector(-this.r, this.r),this.pos),
-      p5.Vector.add(g.createVector(-this.r, -this.r),this.pos),
-      p5.Vector.add(g.createVector(4 / 3 * this.r, 0),this.pos)
+      p5.Vector.add(g.createVector(-this.r, this.r), this.pos),
+      p5.Vector.add(g.createVector(-this.r, -this.r), this.pos),
+      p5.Vector.add(g.createVector(4 / 3 * this.r, 0), this.pos)
     ]
     return shipVertices;
   }
 
   this.edges = function () {
     if (this.pos.x >= this.g.width - this.rmax) {
-      
-      let rebound = this.vel.x < 2 ? -2 : -this.vel.x/2;
+
+      let rebound = this.vel.x < 2 ? -2 : -this.vel.x / 2;
       this.vel = g.createVector(rebound, 0);
       // this.tailEdge = true;
     } else if (this.pos.x <= + this.rmax) {
-      
-      let rebound = this.vel.x > -2 ? 2 : -this.vel.x/2; 
-     
-      this.vel = g.createVector(rebound, 0);
+
+      // let rebound = this.vel.x > -2 ? 2 : -this.vel.x/2; 
+      if (this.vel.x < 0) {
+        this.vel.x = 0
+      }
       // this.tailEdge = true;
     }
     if (this.pos.y >= this.g.height - this.rmax) {
-
-      let rebound = this.vel.y < 2 ? -2 : this.vel.y/2; 
-      this.vel = g.createVector(0, rebound);
+      // WACKY!
+      let rebound = this.vel.y < 2 ? -2 : this.vel.y / 2;
+      this.vel = g.createVector(this.vel.x, rebound);
       // this.tailEdge = true;
     } else if (this.pos.y <= +this.rmax) {
-      let rebound = this.vel.y > -2 ? 2 : -this.vel.y/2; 
-      this.vel = g.createVector(0, rebound);
+      let rebound = this.vel.y > -2 ? 2 : -this.vel.y / 2;
+      this.vel = g.createVector(this.vel.x, rebound);
       // this.tailEdge = true;
     }
   }
 
   this.render = function () {
-    if (this.isDestroyed) {      
+    if (this.isDestroyed) {
       // ship debris
       for (var i = 0; i < this.brokenParts.length; i++) {
         g.push();
@@ -239,18 +251,18 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
       for (var i = this.lastPos.length - 2; i >= 0; i--) {
         g.push();
         // won't render the tail stroke right after respawn...looks werid 
-        if (this.shields < 170 ) {
-          g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},${this.lastPos[i][2] / g.random(4,6)})`)
+        if (this.shields < 170) {
+          g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},${this.lastPos[i][2] / g.random(4, 6)})`)
         } else {
           g.stroke(0);
         }
-        g.fill(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},${this.lastPos[i][2] / g.random(4,6)})`);
+        g.fill(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},${this.lastPos[i][2] / g.random(4, 6)})`);
         g.beginShape();
         g.vertex(this.lastPos[i][0].x + g.sin(this.lastPos[i][1]) * -1 * ((this.lastPos.length - i / 1.05) / this.lastPos.length) * this.r, this.lastPos[i][0].y - g.cos(this.lastPos[i][1]) * -1 * ((this.lastPos.length - i / 1.05) / this.lastPos.length) * this.r);
 
-        g.vertex(this.lastPos[i + 1][0].x  + g.sin(this.lastPos[i + 1][1]) * -1 * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r, this.lastPos[i + 1][0].y - g.cos(this.lastPos[i + 1][1]) * -1 * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r);
+        g.vertex(this.lastPos[i + 1][0].x + g.sin(this.lastPos[i + 1][1]) * -1 * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r, this.lastPos[i + 1][0].y - g.cos(this.lastPos[i + 1][1]) * -1 * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r);
 
-        g.vertex(this.lastPos[i + 1][0].x  + g.sin(this.lastPos[i + 1][1]) * (+1) * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r, this.lastPos[i + 1][0].y - g.cos(this.lastPos[i + 1][1]) * (+1) * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r);
+        g.vertex(this.lastPos[i + 1][0].x + g.sin(this.lastPos[i + 1][1]) * (+1) * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r, this.lastPos[i + 1][0].y - g.cos(this.lastPos[i + 1][1]) * (+1) * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r);
 
         g.vertex(this.lastPos[i][0].x + g.sin(this.lastPos[i][1]) * (+1) * ((this.lastPos.length - i / 1.05) / this.lastPos.length) * this.r, this.lastPos[i][0].y - g.cos(this.lastPos[i][1]) * (+1) * ((this.lastPos.length - i / 1.05) / this.lastPos.length) * this.r);
         g.endShape(g.CLOSE);
@@ -263,18 +275,37 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
       g.rotate(this.heading);
       g.fill(0);
       // shield up effect 
-      var shieldTrans = g.random(1,.3)
+      var shieldTrans = g.random(1, .3)
       var shieldCol = `rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},${shieldTrans})`
-      var weight = this.shields > 0 ? g.random(1.5,4) : g.random(1,1.5);
+      var weight = this.shields > 0 ? g.random(1.5, 4) : g.random(1, 1.5);
       var shipColor = this.shields > 0 ? shieldCol : `rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`;
       g.stroke(shipColor);
       g.strokeWeight(weight)
-      g.triangle(-this.r, -this.r,
-        -this.r, this.r,
-        4 / 3 * this.r, 0);
+
+      g.curve(
+        -1, 20,
+        0, -this.r / 3,
+        this.r, -this.r / 8,
+        this.r*2, 80,
+        )
+
+      g.beginShape()
+
+      // g.vertex(-this.r, this.r)
+      g.vertex(-this.r, this.r / 2)
+      g.vertex(this.r * 2, this.r / 2)
+      g.vertex(this.r * 2.5, 0)
+      g.vertex(0, -this.r / 3)
+      g.vertex(-this.r, -this.r)
+
+      g.endShape(g.CLOSE)
+      // g.point(0,0)
+      g.triangle(-this.r, this.r,
+        -this.r, this.r/4,
+        this.r/2, this.r/4);
 
       // thruster animations
-      if (this.accelMagnitude != 0) {
+      if (this.accelMagnitude > 0) {
         g.push()
         var trans = g.random(.9, .2)
         g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
@@ -285,7 +316,20 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
         g.triangle(this.r - 22, this.r - 10,
           this.r - 22, -this.r + 10,
           thrustEnd, 0);
-          g.pop()
+        g.pop()
+      }
+      if (this.accelMagnitude < 0) {
+        g.push()
+        var trans = g.random(.9, .2)
+        g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
+        g.fill(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
+        g.strokeWeight(1)
+        g.translate(0, 0);
+        var thrustEnd = g.random(this.r*4, this.r*3)
+        g.triangle(this.r*2, this.r/2,
+          this.r*2.5, 0,
+          thrustEnd, this.r/4);
+        g.pop()
       }
       if (this.rotation > 0) {
         g.push()
@@ -295,9 +339,9 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
         g.strokeWeight(1)
         g.translate(-this.r, 0);
         var thrustEnd = g.random(-35, -10)
-        g.triangle(this.r + 15, -10,
-          this.r + 25, -3,
-          this.r + 20, thrustEnd);
+        g.triangle(this.r + 25, -4,
+          this.r + 35, -3,
+          this.r + 30, thrustEnd);
         g.pop()
       }
       if (this.rotation < 0) {
@@ -308,10 +352,10 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
         g.strokeWeight(1)
         g.translate(-this.r, 0);
         var thrustEnd = g.random(35, 10)
-        g.triangle(this.r + 15, 10,
-          this.r + 25, 3,
-          this.r + 20, thrustEnd);
-          g.pop()
+        g.triangle(this.r + 25, this.r/2,
+          this.r + 35, this.r/2,
+          this.r + 30, thrustEnd);
+        g.pop()
       }
 
       g.pop();

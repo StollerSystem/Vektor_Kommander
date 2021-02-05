@@ -8,6 +8,8 @@ import Dust from './js/dust.js';
 import Hud from './js/hud.js';
 import Debris from './js/debris.js';
 import Star from './js/star.js';
+import loadStars from './js/load-stars.js'
+import loadBarriers from './js/load-barriers.js'
 // import { addDust } from './js/utility.js'
 // import DigitalFont from '../../assets/digital.tff';
 
@@ -50,6 +52,7 @@ export class AsteroidsComponent implements OnInit {
     const points: any = [200, 100, 50, 25];
     var level: any = 0;
     let stars: any = [];
+    let barriers: any;
 
     const addDust = function (pos: any, vel: any, n: any, trans: any, color: any, weight: any, g: any) {
       for (var i = 0; i < n; i++) {
@@ -115,13 +118,8 @@ export class AsteroidsComponent implements OnInit {
         g.createCanvas(g.windowWidth * .9, g.windowHeight * .9);
         ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust);
         hud = new Hud(g, rgbColor1, rgbColor3, pts);
-        for (let i = 0; i < 100; i++) {
-          let randomX = g.round(g.random(0, g.width))
-          let randomY = g.random(0, g.height)
-          let randomSize = g.random(0.1, 20)
-  
-          stars[i] = new Star(randomX, randomY, randomSize, g);
-        }
+        stars = loadStars(g)
+        // barriers = loadBarriers(g, g.width/2)
         // pts = mainFont.textToPoints('ASTRO-BLASTER', 0, 0, 200, {
         //   sampleFactor: 0.25,
         //   simplifyThreshold: 0
@@ -139,9 +137,7 @@ export class AsteroidsComponent implements OnInit {
             let randomSize = g.random(0.1, 7)
             const newStar = new Star(windowX, randomY, randomSize, g);
             stars.push(newStar)
-            // console.log('off screen')
             stars.splice(i, 1)
-
           }
         }
 
@@ -296,10 +292,11 @@ export class AsteroidsComponent implements OnInit {
         // renders
         g.background(0);
 
+        // barriers.render()
+
         for (let i = 0; i < stars.length; i++) {
           stars[i].show()
         }
-
 
         for (var i = 0; i < asteroids.length; i++) {
           asteroids[i].render();
