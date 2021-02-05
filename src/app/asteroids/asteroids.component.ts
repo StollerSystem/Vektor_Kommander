@@ -52,7 +52,7 @@ export class AsteroidsComponent implements OnInit {
     const points: any = [200, 100, 50, 25];
     var level: any = 0;
     let stars: any = [];
-    let barriers: any;
+    let barriers: any = [];
 
     const addDust = function (pos: any, vel: any, n: any, trans: any, color: any, weight: any, g: any) {
       for (var i = 0; i < n; i++) {
@@ -119,7 +119,9 @@ export class AsteroidsComponent implements OnInit {
         ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust);
         hud = new Hud(g, rgbColor1, rgbColor3, pts);
         stars = loadStars(g)
-        // barriers = loadBarriers(g, g.width/2)
+        for (let i = 0; i < 4; i ++) {
+          barriers[i] = loadBarriers(g, i * (g.width / 5))
+        }
         // pts = mainFont.textToPoints('ASTRO-BLASTER', 0, 0, 200, {
         //   sampleFactor: 0.25,
         //   simplifyThreshold: 0
@@ -129,6 +131,7 @@ export class AsteroidsComponent implements OnInit {
 
       g.draw = () => {
 
+        // STARS
         for (let i = 0; i < stars.length; i++) {
           stars[i].move()
           if (stars[i].x <= 0) {
@@ -142,16 +145,32 @@ export class AsteroidsComponent implements OnInit {
         }
 
         // RANDOM ENEMY SPAWN
-        // if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
-        //   let ranNum = g.random(1000);
-        //   if (ranNum <= 1) {
-        //     spawnEnemy();
-        //     possibleEnemies--;
-        //   }
-        // }
+        if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
+          let ranNum = g.random(1000);
+          if (ranNum <= 1) {
+            spawnEnemy();
+            // possibleEnemies--;
+          }
+        }
+
+        // RANDOM ASTEROID SPAWN
+        if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
+          let ranNum = g.random(750);
+          if (ranNum <= 1) {
+            spawnAsteroids();
+            
+          }
+        }
+
 
         // UPDATE ASTEROIDS AND CHECK FOR COLLISIONS 
         for (var i = 0; i < asteroids.length; i++) {
+
+          if (asteroids[i].offscreen()) {
+            // destroy asteroids that go off screen.
+            asteroids.splice(i, 1);
+            continue;
+          }
 
           if (ship.hits(asteroids[i]) && canPlay) {
             canPlay = false;
@@ -184,6 +203,7 @@ export class AsteroidsComponent implements OnInit {
             lasers.splice(i, 1);
             continue;
           }
+          // LASER HITS ASTEROIDS
           for (var j = asteroids.length - 1; j >= 0; j--) {
             if (lasers[i].hits(asteroids[j])) {
               exists = false;
@@ -194,7 +214,7 @@ export class AsteroidsComponent implements OnInit {
                 score += points[asteroids[j].size];
               }
               var dustVel = p5.Vector.add(lasers[i].vel.mult(0.2), asteroids[j].vel);
-              var dustNum = (asteroids[j].size * 2 + 1) * 7;
+              var dustNum = (asteroids[j].size * 2 + 1) * 3;
               addDust(asteroids[j].pos, dustVel, dustNum, .005, 1, 2.5, g);
               // The new smaller asteroids broken lasers are added to the same list
               // of asteroids, so they can be referenced the same way as their full
@@ -258,7 +278,7 @@ export class AsteroidsComponent implements OnInit {
         for (var i = enemies.length - 1; i >= 0; i--) {
           if (ship.hits(enemies[i]) && canPlay) {
             canPlay = false;
-            var dustVel = p5.Vector.add(ship.vel.mult(0.2), asteroids[i].vel);
+            var dustVel = p5.Vector.add(ship.vel.mult(0.2), enemies[i].vel);
             addDust(ship.pos, dustVel, 15, .005, 3, 2.5, g);
             ship.destroy();
             input.reset();
@@ -272,6 +292,12 @@ export class AsteroidsComponent implements OnInit {
         }
 
         ship.update();
+
+        for (let i = 0; i < barriers.length; i++) {
+          for (let j = 0; j < barriers[i].length; j++) {
+            barriers[i][j].update()
+          }
+        }
 
         // UPDATE AND DESTROY DUST
         for (var i = dust.length - 1; i >= 0; i--) {
@@ -289,10 +315,14 @@ export class AsteroidsComponent implements OnInit {
           }
         }
 
-        // renders
+        // RENDERS
         g.background(0);
 
-        // barriers.render()
+        for (let i = 0; i < barriers.length; i++) {
+          for (let j = 0; j < barriers[i].length; j++) {
+            barriers[i][j].render()
+          }
+        }
 
         for (let i = 0; i < stars.length; i++) {
           stars[i].show()

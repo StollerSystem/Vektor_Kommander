@@ -11,19 +11,20 @@ export default function Enemy(r, g, addDust, level, rgbColor4, rgbColor2, lasers
     g.createVector(g.random(g.width), g.height + r),
     g.createVector(-r, g.random(g.height))
   ]
-  var pos = outOfBounds[g.floor(g.random(0, 4))]  
+  var pos = outOfBounds[g.floor(g.random(0, 4))]
 
   Entity.call(this, pos.x, pos.y, r, g)
 
   this.crazyness = g.random(1, 2 + level / 4);
-  this.shotThresh = g.random(1, 1.5 + level / 5);  
+  this.shotThresh = g.random(1, 1.5 + level / 5);
   this.point = g.random(1, 2);
   this.vel = p5.Vector.random2D();
   this.vel.mult(4);
-  this.rotation = g.random(.03, .1);  
+  this.rotation = g.random(.03, .1);
 
   this.update = function () {
-    Entity.prototype.update.call(this);    
+    Entity.prototype.update.call(this);
+    this.edges();
     var changeCourse = g.random(1, 100)
     var shoot = g.random(1, 25)
     // ENEMY AI
@@ -47,7 +48,7 @@ export default function Enemy(r, g, addDust, level, rgbColor4, rgbColor2, lasers
     lasers.push(laser);
   }
 
-  this.render = function () {    
+  this.render = function () {
     g.push();
     g.translate(this.pos.x, this.pos.y);
     g.rotate(this.heading);
@@ -80,6 +81,19 @@ export default function Enemy(r, g, addDust, level, rgbColor4, rgbColor2, lasers
       p5.Vector.add(g.createVector(0, this.r * this.point), this.pos)
     ]
     return vertices;
+  }
+
+  this.edges = function () {
+    if (this.pos.x > this.g.width + this.rmax) {
+      this.pos.x = -this.rmax;
+    } else if (this.pos.x < -this.rmax) {
+      this.pos.x = this.g.width + this.rmax;
+    }
+    if (this.pos.y > this.g.height + this.rmax) {
+      this.pos.y = -this.rmax;
+    } else if (this.pos.y < -this.rmax) {
+      this.pos.y = this.g.height + this.rmax;
+    }
   }
 }
 

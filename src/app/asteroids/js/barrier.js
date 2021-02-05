@@ -1,21 +1,25 @@
 import Entity from './entity'
 
-export default function Barrier(g) {
+export default function Barrier(g, x, y, vx, vy) {
 
-  var pos = g.createVector(g.width/3,g.height/3)
+  var pos = g.createVector(x,y)
   const colorArray = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink']
 
 
   Entity.call(this, pos.x, pos.y, 5, g)
 
+  this.vel = g.createVector(vx,vy) // SET VELOCITY
+  // Entity.prototype.setRotation.call(this, g.random(-0.03, 0.03)); // SET ROTATION
+
   this.render = function() {
     g.push()
-    g.fill(colorArray[g.round(g.random(0, 6))])
-    g.stroke(colorArray[g.round(g.random(0, 6))]);
-    g.strokeWeight(g.random(1, 4));
+    g.fill(255)
+    g.stroke(255);
+    g.strokeWeight(g.random(1, 2));
     g.rect(this.pos.x, this.pos.y, this.r, this.r)
     g.pop()
   }
+
 }
 
 Barrier.prototype = Object.create(Entity.prototype)

@@ -10,7 +10,7 @@ export default function Asteroid(pos, r, size, g, rgbColor1) {
 
   Entity.call(this, pos.x, pos.y, r, g);
 
-  this.vel = g.createVector(g.random(-1,-3),g.random(1,-1))
+  this.vel = g.createVector(g.random(-2,-4),g.random(.5,-.5))
   this.total = g.floor(g.random(7, 15));
 
   //smaller asteroids go a bit faster
@@ -79,6 +79,16 @@ export default function Asteroid(pos, r, size, g, rgbColor1) {
     }
 
     return vertices;
+  }
+
+  this.offscreen = function () {
+    if (this.pos.x > g.width + this.rmax || this.pos.x < 0 - this.rmax) {
+      return true;
+    }
+    if (this.pos.y > g.height + this.rmax || this.pos.y < 0 - this.rmax) {
+      return true;
+    }
+    return false;
   }
 }
 

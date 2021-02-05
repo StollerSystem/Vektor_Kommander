@@ -103,6 +103,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
   });
 
   this.update = function () {
+    this.edges();
     Entity.prototype.update.call(this);
     // this.vel.mult(boostStabilizer);
     if (this.isDestroyed) {

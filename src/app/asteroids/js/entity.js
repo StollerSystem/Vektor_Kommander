@@ -23,7 +23,7 @@ Entity.prototype.update = function() {
   this.vel.add(force);
 
   this.pos.add(this.vel);
-  this.edges();
+  // this.edges();
 }
 
 Entity.prototype.setAccel = function(magnitude)
@@ -31,22 +31,22 @@ Entity.prototype.setAccel = function(magnitude)
   this.accelMagnitude = magnitude;
 }
 
-Entity.prototype.edges = function() {
-  if (this.pos.x > this.g.width + this.rmax) {
-    this.pos.x = -this.rmax;    
-    this.tailEdge = true;
-  } else if (this.pos.x < -this.rmax) {
-    this.pos.x = this.g.width + this.rmax;
-    this.tailEdge = true;
-  }
-  if (this.pos.y > this.g.height + this.rmax) {
-    this.pos.y = -this.rmax;
-    this.tailEdge = true;
-  } else if (this.pos.y < -this.rmax) {
-    this.pos.y = this.g.height + this.rmax;
-    this.tailEdge = true;
-  }
-}
+// Entity.prototype.edges = function() {
+//   if (this.pos.x > this.g.width + this.rmax) {
+//     this.pos.x = -this.rmax;    
+//     // this.tailEdge = true;
+//   } else if (this.pos.x < -this.rmax) {
+//     this.pos.x = this.g.width + this.rmax;
+//     // this.tailEdge = true;
+//   }
+//   if (this.pos.y > this.g.height + this.rmax) {
+//     this.pos.y = -this.rmax;
+//     // this.tailEdge = true;
+//   } else if (this.pos.y < -this.rmax) {
+//     this.pos.y = this.g.height + this.rmax;
+//     // this.tailEdge = true;
+//   }
+// }
 
 Entity.prototype.setRotation = function(rot) {
   this.rotation = rot;
