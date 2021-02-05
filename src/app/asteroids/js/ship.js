@@ -47,7 +47,10 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     }
     title = false;
 
-    let shootPos = scope.pos.add(g.createVector(this.r * 2, this.r / 4))
+    let shootPos = g.createVector(scope.pos.x + 30 * g.cos(scope.heading), scope.pos.y + 30 * g.sin(scope.heading));
+    
+    // console.log(scope.pos)
+    // console.log(shootPos)
     var laser = new Laser(shootPos, scope.vel, scope.heading, g, rgbColor2, false);
     if (score > 0) {
       score -= 5;
@@ -63,6 +66,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
   input.registerAsListener(g.RIGHT_ARROW, function (char, code, press) {
     // title = false;
     scope.setRotation(press ? 0.08 : 0);
+    // console.log(scope.heading)
     // if (press) {
     //   rocketSoundEffects[1].play();
     // } else {
@@ -72,6 +76,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
   input.registerAsListener(g.LEFT_ARROW, function (char, code, press) {
     // title = false;
     scope.setRotation(press ? -0.08 : 0);
+    // console.log(scope.heading)
     // if (press) {
     //   rocketSoundEffects[1].play();
     // } else {
