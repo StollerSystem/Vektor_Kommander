@@ -2,7 +2,7 @@ import * as p5 from 'p5';
 import Entity from './entity.js';
 import { lineIntersect } from '../utility/utility.js';
 
-export default function Laser(spos, svel, angle, g, rgbColor2, enemy, heading) {  
+export default function Laser(spos, svel, angle, g, color, enemy, heading) {  
   
   Entity.call(this, spos.x, spos.y, 4, g);
   this.pos = g.createVector(spos.x, spos.y);
@@ -21,7 +21,7 @@ export default function Laser(spos, svel, angle, g, rgbColor2, enemy, heading) {
     if (enemy) {
       g.push();
       var trans = g.random(1, .8)
-      g.stroke(`rgba(${rgbColor2[2]},${rgbColor2[1]},${rgbColor2[0]},${trans})`);
+      g.stroke(`rgba(${color[2]},${color[1]},${color[0]},${trans})`);
       g.strokeWeight(this.r*1.5);
       g.point(this.pos.x, this.pos.y);
       g.pop();
@@ -30,7 +30,7 @@ export default function Laser(spos, svel, angle, g, rgbColor2, enemy, heading) {
       g.push();
       var size = this.r * (g.random(2, 10))
       var trans2 = g.random(.4, .05)
-      g.stroke(`rgba(${rgbColor2[2]},${rgbColor2[0]},${rgbColor2[1]},${trans2}) `);
+      g.stroke(`rgba(${color[2]},${color[0]},${color[1]},${trans2}) `);
       g.strokeWeight(size);
       g.point(this.pos.x, this.pos.y);
       g.pop();
@@ -39,7 +39,7 @@ export default function Laser(spos, svel, angle, g, rgbColor2, enemy, heading) {
       // PLAYER LASER
       g.push();
       var trans = g.random(1, .8)
-      g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
+      g.stroke(`rgba(${color[0]},${color[1]},${color[2]},${trans})`);
       g.strokeWeight(1);
       g.translate(this.pos.x, this.pos.y)
       g.rotate(this.heading)
@@ -50,7 +50,7 @@ export default function Laser(spos, svel, angle, g, rgbColor2, enemy, heading) {
       g.push();
       var size = this.r * (g.random(1, 5))
       var trans2 = g.random(.4, .05)
-      g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans2}) `);
+      g.stroke(`rgba(${color[0]},${color[1]},${color[2]},${trans2}) `);
       g.strokeWeight(size);
       g.translate(this.pos.x, this.pos.y)
       g.rotate(this.heading)

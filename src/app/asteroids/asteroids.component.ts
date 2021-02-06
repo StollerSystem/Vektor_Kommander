@@ -36,6 +36,7 @@ export class AsteroidsComponent implements OnInit {
     var rgbColor2: any;
     var rgbColor3: any;
     var rgbColor4: any;
+    var rgbColor5: any;
     var pts: any;
     var title: any = false;
     var stageClear: any = false;
@@ -93,7 +94,7 @@ export class AsteroidsComponent implements OnInit {
 
       const spawnEnemy = function () {
         var radius = g.random(20, 30)
-        enemies.push(new Enemy(radius, g, addDust, level, rgbColor4, rgbColor2, lasers))
+        enemies.push(new Enemy(radius, g, addDust, level, rgbColor5, rgbColor2, lasers))
       }
 
       g.preload = () => {
@@ -119,12 +120,16 @@ export class AsteroidsComponent implements OnInit {
         let c4b = ran1 === 3 ? 0 : 255;
         let c4c = ran1 === 2 ? 0 : 255;
         rgbColor4 = [Math.round(g.random(0, c4a)), Math.round(g.random(0, c4b)), Math.round(g.random(0, c4c))]
-
+        let c5a = ran1 === 1 ? 0 : 255;
+        let c5b = ran1 === 3 ? 0 : 255;
+        let c5c = ran1 === 2 ? 0 : 255;
+        rgbColor5 = [Math.round(g.random(0, c5a)), Math.round(g.random(0, c5b)), Math.round(g.random(0, c5c))]
         // COLOR SCHEME #1
         // rgbColor1 = [116, 238, 21]
         // rgbColor2 = [255, 0, 0]
         // rgbColor3 = [77, 238, 234]
         // rgbColor4 = [240, 0, 255]
+        // rgbColor5 = [240, 0, 255]
 
         console.log(rgbColor1)
         console.log(rgbColor2)
@@ -249,8 +254,8 @@ export class AsteroidsComponent implements OnInit {
                 score += 500;
                 // enemies[k].destroy();
                 let dustVel = p5.Vector.add(lasers[i].vel.mult(0.5), enemies[k].vel);
-                addDust(enemies[k].pos, dustVel, 10, .01, rgbColor3, 1, g);
-                addDebris(enemies[k].pos, enemies[k].vel, 10, 30, g, rgbColor4)
+                addDust(enemies[k].pos, dustVel, 10, .01, rgbColor5, 1, g);
+                addDebris(enemies[k].pos, enemies[k].vel, 10, 30, g, rgbColor5)
                 enemies.splice(j, 1);
                 lasers.splice(i, 1);
                 break;

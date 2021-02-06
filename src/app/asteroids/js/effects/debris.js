@@ -1,6 +1,6 @@
 import * as p5 from 'p5';
 
-export default function Debris(pos, vel, n, r, g, rgbColor4) {
+export default function Debris(pos, vel, n, r, g, color) {
 
   this.destroyFrames = 1000;
   this.r = r
@@ -29,7 +29,7 @@ export default function Debris(pos, vel, n, r, g, rgbColor4) {
       g.push();
       let transNum = (.8 * ((this.destroyFrames--) / 1000))
       let trans = transNum > 0 ? transNum : 0;
-      g.stroke(`rgba(${rgbColor4[0]},${rgbColor4[1]},${rgbColor4[2]},${trans})`);
+      g.stroke(`rgba(${color[0]},${color[1]},${color[2]},${trans})`);
       g.strokeWeight(g.random(.5,2))
       var d = this.debrisParts[i];
       g.translate(d.pos.x, d.pos.y);

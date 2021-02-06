@@ -7,7 +7,7 @@ import VaporTrail from '../effects/vapor-trail.js';
 import Thruster from '../effects/thruster.js';
 
 
-export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust) {
+export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust) {
   Entity.call(this, 200, g.height / 2, 20, g);
   this.isDestroyed = false;
   this.destroyFrames = 1000;
@@ -16,7 +16,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
   this.rmax2 = this.rmax * this.rmax;
   // this.tailEdge = true; //if true will hide vapor trail
   // this.tailSkip = false;//tail effect toggles between true/false
-  var trailColor = rgbColor3;
+  var trailColor = color2;
   this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r)
 
   g.keyReleased = () => {
@@ -33,9 +33,9 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
       return;
     }
     let shootPos = g.createVector(scope.pos.x + 30 * g.cos(scope.heading), scope.pos.y + 30 * g.sin(scope.heading));
-    var laser = new Laser(shootPos, scope.vel, scope.heading, g, rgbColor2, false, scope.heading);
+    var laser = new Laser(shootPos, scope.vel, scope.heading, g, color1, false, scope.heading);
     var dustVel = laser.vel.copy();
-    addDust(shootPos, dustVel.mult(.5), 4, .045, rgbColor2, 5, g);
+    addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5, g);
     lasers.push(laser);
     // var effect = laserSoundEffects[floor(random() * laserSoundEffects.length)];
     // laser.playSoundEffect(effect);
@@ -179,7 +179,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
         g.push();
         let transNum = (1 * ((this.destroyFrames--) / 1000))
         let trans = transNum > 0 ? transNum : 0;
-        g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},${trans})`);
+        g.stroke(`rgba(${color2[0]},${color2[1]},${color2[2]},${trans})`);
         var bp = this.brokenParts[i];
         g.fill(0);
         g.translate(bp.pos.x, bp.pos.y);
@@ -201,28 +201,28 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
       g.fill(0);
       // shield up effect 
       var shieldTrans = g.random(1, .3)
-      var shieldCol = `rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},${shieldTrans})`
+      var shieldCol = `rgba(${color2[0]},${color2[1]},${color2[2]},${shieldTrans})`
       var weight = this.shields > 0 ? g.random(1.5, 4) : g.random(1, 1.5);
-      var shipColor = this.shields > 0 ? shieldCol : `rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`;
+      var shipColor = this.shields > 0 ? shieldCol : `rgba(${color2[0]},${color2[1]},${color2[2]},1)`;
       g.stroke(shipColor);
       g.strokeWeight(weight)
 
       // thruster animations
       if (this.accelMagnitude > 0) {
         var thrustEnd = g.random(-75, -30)
-        Thruster(g, rgbColor2, this.r - 52, this.r - 10, this.r - 52, -this.r + 10, thrustEnd, 0)
+        Thruster(g, color1, this.r - 52, this.r - 10, this.r - 52, -this.r + 10, thrustEnd, 0)
       }
       if (this.accelMagnitude < 0) {
         var thrustEnd = g.random(70, 50)
-        Thruster(g, rgbColor2, this.r * 2 - 9, this.r / 2-1, this.r * 2.5 - 9, 1, thrustEnd, this.r / 4)
+        Thruster(g, color1, this.r * 2 - 9, this.r / 2-1, this.r * 2.5 - 9, 1, thrustEnd, this.r / 4)
       }
       if (this.rotation > 0) {
         var thrustEnd = g.random(-25, -10)
-        Thruster(g, rgbColor2, 25, -4, 30, -3, 27.5, thrustEnd)        
+        Thruster(g, color1, 25, -4, 30, -3, 27.5, thrustEnd)        
       }
       if (this.rotation < 0) {
         var thrustEnd = g.random(30, 10)
-        Thruster(g, rgbColor2, 25, this.r/2, 30, this.r/2, 27.5, thrustEnd)        
+        Thruster(g, color1, 25, this.r/2, 30, this.r/2, 27.5, thrustEnd)        
       }
 
       // THE SHIP

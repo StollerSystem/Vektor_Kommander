@@ -1,7 +1,7 @@
 import * as p5 from 'p5';
 import Entity from './entity.js';
 
-export default function Asteroid(pos, r, size, g, rgbColor1) {
+export default function Asteroid(pos, r, size, g, color) {
 
   r = r != null ? r * 0.5 : g.random(80, 105);
   if (pos == null) {
@@ -40,7 +40,7 @@ export default function Asteroid(pos, r, size, g, rgbColor1) {
 
   this.render = function() {
     g.push();
-    g.stroke(`rgba(${rgbColor1[0]},${rgbColor1[1]},${rgbColor1[2]},1)`);
+    g.stroke(`rgba(${color[0]},${color[1]},${color[2]},1)`);
     g.strokeWeight(g.random(1,1.5))
     g.fill(0)
     g.translate(this.pos.x, this.pos.y);
@@ -62,8 +62,8 @@ export default function Asteroid(pos, r, size, g, rgbColor1) {
   this.breakup = function() {
     if(size > 0)
       return [
-        new Asteroid(this.pos, this.r, this.size-1, g, rgbColor1),
-        new Asteroid(this.pos, this.r, this.size-1, g, rgbColor1)
+        new Asteroid(this.pos, this.r, this.size-1, g, color),
+        new Asteroid(this.pos, this.r, this.size-1, g, color)
       ];
     else
       return [];

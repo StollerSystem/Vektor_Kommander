@@ -2,7 +2,7 @@ import * as p5 from 'p5';
 import Entity from './entity.js';
 import Laser from './laser.js';
 
-export default function Enemy(r, g, addDust, level, rgbColor4, rgbColor2, lasers) {
+export default function Enemy(r, g, addDust, level, color1, color2, lasers) {
 
   var outOfBounds = [
     g.createVector(g.random(g.width), -r),
@@ -45,9 +45,9 @@ export default function Enemy(r, g, addDust, level, rgbColor4, rgbColor2, lasers
 
   var scope = this;
   this.shootLaser = function () {
-    var laser = new Laser(scope.pos, scope.vel, scope.heading, g, rgbColor2, true);
+    var laser = new Laser(scope.pos, scope.vel, scope.heading, g, color2, true);
     var dustVel = laser.vel.copy();
-    addDust(scope.pos, dustVel.mult(.5), 4, .045, rgbColor2, 5, g);
+    addDust(scope.pos, dustVel.mult(.5), 4, .045, color2, 5, g);
     lasers.push(laser);
   }
 
@@ -55,13 +55,13 @@ export default function Enemy(r, g, addDust, level, rgbColor4, rgbColor2, lasers
     g.push();
     g.translate(this.pos.x, this.pos.y);
     g.rotate(this.heading);
-    g.stroke(`rgba(${rgbColor4[0]},${rgbColor4[1]},${rgbColor4[2]},${1})`);
+    g.stroke(`rgba(${color1[0]},${color1[1]},${color1[2]},${1})`);
     g.strokeWeight(g.random(1, 2.5))
     g.fill(0);
     g.beginShape();
     g.vertex(this.r / 2, this.r / 2)
     g.vertex(this.r * this.point, 0)
-    g.vertex(this.r / 2, -this.r / 2)
+     g.vertex(this.r / 2, -this.r / 2)
     g.vertex(0, -this.r * this.point)
     g.vertex(-this.r / 2, -this.r / 2)
     g.vertex(-this.r * this.point, 0)
