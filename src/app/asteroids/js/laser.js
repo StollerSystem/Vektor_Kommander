@@ -17,7 +17,7 @@ export default function Laser(spos, svel, angle, g, rgbColor2, enemy, heading) {
   this.vel.add(svel);  
 
   this.render = function () {
-    // laser bolt
+    // ENEMY BLASTER BALL
     if (enemy) {
       g.push();
       var trans = g.random(1, .8)
@@ -36,7 +36,7 @@ export default function Laser(spos, svel, angle, g, rgbColor2, enemy, heading) {
       g.pop();
 
     } else {
-
+      // PLAYER LASER
       g.push();
       var trans = g.random(1, .8)
       g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
@@ -64,10 +64,7 @@ export default function Laser(spos, svel, angle, g, rgbColor2, enemy, heading) {
     sound.play();    
   }
 
-  this.hits = function (asteroid) {
-    // Evaluate if the asteroid was hit based on the range of the laser if one
-    // of these conditions hold, then there is no need to check that the laser
-    // intersected the asteroid.
+  this.hits = function (asteroid) {    
     let dist2 = (this.pos.x - asteroid.pos.x) * (this.pos.x - asteroid.pos.x)
       + (this.pos.y - asteroid.pos.y) * (this.pos.y - asteroid.pos.y);
     if (dist2 <= asteroid.rmin2) {
@@ -75,11 +72,7 @@ export default function Laser(spos, svel, angle, g, rgbColor2, enemy, heading) {
     }
     if (dist2 >= asteroid.rmax2) {
       return false;
-    }
-
-    // Evaluate if the laser intersected the asteroid, hit detection is
-    // evaluated based on hitting the line between adjacent vertices as these
-    // are the edges that form the asteroid.
+    }    
     var last_pos = p5.Vector.sub(this.pos, this.vel);
     var asteroid_vertices = asteroid.vertices();
     for (var i = 0; i < asteroid_vertices.length - 1; i++) {

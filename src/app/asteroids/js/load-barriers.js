@@ -11,7 +11,6 @@ export default function loadBarrier(e, x, y, vx, size, color) {
       blocks.push(newBarrierBlock)
     }
   }
-
-  console.log(blocks.length)
+  // console.log(blocks.length)
   return blocks
 }

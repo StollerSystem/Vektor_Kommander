@@ -1,7 +1,6 @@
 import * as p5 from 'p5';
 import Entity from './entity.js';
 import Laser from './laser';
-// import { addDust } from './utility.js'
 
 export default function Enemy(r, g, addDust, level, rgbColor4, rgbColor2, lasers) {
 
@@ -23,14 +22,14 @@ export default function Enemy(r, g, addDust, level, rgbColor4, rgbColor2, lasers
   this.rotation = g.random(.03, .1);
   this.recentlyEdged = 100;
 
-  this.update = function () {
-    // console.log(this.recentlyEdged)
+  this.update = function () {    
     Entity.prototype.update.call(this);
     this.recentlyEdged -= 1;
     this.edges();
     var changeCourse = g.random(1, 100)
     var shoot = g.random(1, 25)
-    // ENEMY AI
+
+    // ENEMY "AI"
     if (changeCourse <= this.crazyness && this.recentlyEdged <= 0 ) {
       this.recentlyEdged = 100;
       this.setAccel(1)
@@ -73,6 +72,7 @@ export default function Enemy(r, g, addDust, level, rgbColor4, rgbColor2, lasers
     g.pop();
   }
 
+  // HITBOX
   this.vertices = function () {
     var vertices = [
       p5.Vector.add(g.createVector(this.r / 2, this.r / 2), this.pos),

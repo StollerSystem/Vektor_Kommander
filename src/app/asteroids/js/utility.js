@@ -1,5 +1,4 @@
 import * as p5 from 'p5';
-// import Dust from './dust.js';
 
 function cross(v1, v2) {
   return v1.x * v2.y - v2.x * v1.y;
@@ -18,9 +17,3 @@ export function lineIntersect(l1v1, l1v2, l2v1, l2v2) {
     return false;
   }
 }
-
-//  export function addDust (pos, vel, n, trans, color, weight, g) {
-//   for (var i = 0; i < n; i++) {
-//     dust.push(new Dust(pos, vel, trans, color, weight, g, rgbColor1, rgbColor2, rgbColor3));
-//   }
-// }
