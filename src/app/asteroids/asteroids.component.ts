@@ -99,25 +99,32 @@ export class AsteroidsComponent implements OnInit {
       g.preload = () => {
 
         // RANDOMIZE COLORS
-        // let ran1 = Math.round(g.random(1, 3))
-        // let c1a = ran1 === 1 ? 0 : 255;
-        // let c1b = ran1 === 2 ? 0 : 255;
-        // let c1c = ran1 === 3 ? 0 : 255;
-        // rgbColor1 = [Math.round(g.random(0, c1a)), Math.round(g.random(0, c1b)), Math.round(g.random(0, c1c))]
-        // let c2a = ran1 === 3 ? 0 : 255;
-        // let c2b = ran1 === 1 ? 0 : 255;
-        // let c2c = ran1 === 2 ? 0 : 255;
-        // rgbColor2 = [Math.round(g.random(0, c2a)), Math.round(g.random(0, c2b)), Math.round(g.random(0, c2c))]
-        // let c3a = ran1 === 2 ? 0 : 255;
-        // let c3b = ran1 === 3 ? 0 : 255;
-        // let c3c = ran1 === 1 ? 0 : 255;
-        // rgbColor3 = [Math.round(g.random(0, c3a)), Math.round(g.random(0, c3b)), Math.round(g.random(0, c3c))]
-        // rgbColor4 = [Math.round(g.random(0, 255)), Math.round(g.random(0, 255)), Math.round(g.random(0, 255))]
+        let ran1 = Math.round(g.random(1, 3))
+        let c1x = ran1 === 3 ? 255 : 0;
+        let c1y = ran1 === 1 ? 255 : 0;
+        let c1z = ran1 === 2 ? 255 : 0;
+        let c1a = ran1 === 1 ? 0 : 240;
+        let c1b = ran1 === 2 ? 0 : 240;
+        let c1c = ran1 === 3 ? 0 : 240;
+        rgbColor1 = [Math.round(g.random(c1x, c1a)), Math.round(g.random(c1y, c1b)), Math.round(g.random(c1z, c1c))]
+        let c2a = ran1 === 3 ? 0 : 255;
+        let c2b = ran1 === 1 ? 0 : 255;
+        let c2c = ran1 === 2 ? 0 : 255;
+        rgbColor2 = [Math.round(g.random(0, c2a)), Math.round(g.random(0, c2b)), Math.round(g.random(0, c2c))]
+        let c3a = ran1 === 2 ? 0 : 255;
+        let c3b = ran1 === 3 ? 0 : 255;
+        let c3c = ran1 === 1 ? 0 : 255;
+        rgbColor3 = [Math.round(g.random(0, c3a)), Math.round(g.random(0, c3b)), Math.round(g.random(0, c3c))]
+        let c4a = ran1 === 1 ? 0 : 255;
+        let c4b = ran1 === 3 ? 0 : 255;
+        let c4c = ran1 === 2 ? 0 : 255;
+        rgbColor4 = [Math.round(g.random(0, c4a)), Math.round(g.random(0, c4b)), Math.round(g.random(0, c4c))]
 
-        rgbColor1 = [116, 238, 21]
-        rgbColor2 = [255, 0, 0]
-        rgbColor3 = [77, 238, 234]
-        rgbColor4 = [240, 0, 255]
+        // COLOR SCHEME #1
+        // rgbColor1 = [116, 238, 21]
+        // rgbColor2 = [255, 0, 0]
+        // rgbColor3 = [77, 238, 234]
+        // rgbColor4 = [240, 0, 255]
 
         console.log(rgbColor1)
         console.log(rgbColor2)
