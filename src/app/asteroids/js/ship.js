@@ -3,6 +3,7 @@ import { input } from './input';
 import Laser from './laser';
 import * as p5 from 'p5';
 import { lineIntersect } from './utility';
+import VaporTrail from './vapor-trail';
 
 
 export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust) {
@@ -14,16 +15,8 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
   this.rmax2 = this.rmax * this.rmax;
   this.tailEdge = true; //if true will hide vapor trail
   this.tailSkip = false;//tail effect toggles between true/false
-
-
-  // magic for tail effect
-  this.lastPos = new Array(30);
-  for (var i = 0; i < this.lastPos.length; i++) {
-    this.lastPos[i] = new Array(3);
-    this.lastPos[i][0] = g.createVector(this.pos.x, this.pos.y);
-    this.lastPos[i][1] = this.heading;
-    this.lastPos[i][2] = 1;
-  }
+  var trailColor = rgbColor3;
+  this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r)  
 
   g.keyReleased = () => {
     input.handleEvent(g.key, g.keyCode, false);
@@ -32,7 +25,6 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
   g.keyPressed = () => {
     input.handleEvent(g.key, g.keyCode, true);
   }
-
 
   var scope = this;  
   input.registerAsListener(" ".charCodeAt(0), function (char, code, press) {
@@ -98,24 +90,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     if (this.shields > 0 && !title) {
       this.shields -= 1;
     }
-
-    // More tail effect magic 
-    this.tailSkip = !this.tailSkip;
-    if (this.tailSkip === false) {
-      for (var i = this.lastPos.length - 1; i > 0; i--) {
-        this.lastPos[i][0] = this.lastPos[i - 1][0].sub(g.createVector(5, 0))        
-        this.lastPos[i][1] = this.lastPos[i - 1][1];
-        this.lastPos[i][2] = this.lastPos[i - 1][2];
-      }
-      this.lastPos[0][0] = g.createVector(this.pos.x - (this.r + 10) * g.cos(this.heading), this.pos.y - (this.r + 10) * g.sin(this.heading));
-      this.lastPos[0][1] = this.heading;
-      // if (this.tailEdge) {
-      //   this.lastPos[0][2] = 0;
-      //   this.tailEdge = false;
-      // } else {
-      //   this.lastPos[0][2] = 1;
-      // }
-    }
+    this.vaporTrail.update(this.pos, this.heading);    
   }
 
   this.brokenParts = [];
@@ -168,7 +143,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     // soundArray[g.floor(g.random(0,soundArray.length))].play();
   }
 
-  //HITBOX
+  //HITBOX <- NOT RIGHT
   this.vertices = function () {
     var shipVertices = [
       p5.Vector.add(g.createVector(-this.r, this.r), this.pos),
@@ -217,29 +192,8 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
         }
         g.pop();
       }
-    } else {
-      //TAIL EFFECT     
-      for (var i = this.lastPos.length - 2; i >= 0; i--) {
-        g.push();        
-        if (this.shields < 170) {
-          g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},${this.lastPos[i][2] / g.random(4, 6)})`)
-        } else {
-          g.stroke(0);
-        }
-        g.fill(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},${this.lastPos[i][2] / g.random(4, 6)})`);
-        g.beginShape();
-        g.vertex(this.lastPos[i][0].x + g.sin(this.lastPos[i][1]) * -1 * ((this.lastPos.length - i / 1.05) / this.lastPos.length) * this.r, this.lastPos[i][0].y - g.cos(this.lastPos[i][1]) * -1 * ((this.lastPos.length - i / 1.05) / this.lastPos.length) * this.r);
-
-        g.vertex(this.lastPos[i + 1][0].x + g.sin(this.lastPos[i + 1][1]) * -1 * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r, this.lastPos[i + 1][0].y - g.cos(this.lastPos[i + 1][1]) * -1 * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r);
-
-        g.vertex(this.lastPos[i + 1][0].x + g.sin(this.lastPos[i + 1][1]) * (+1) * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r, this.lastPos[i + 1][0].y - g.cos(this.lastPos[i + 1][1]) * (+1) * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r);
-
-        g.vertex(this.lastPos[i][0].x + g.sin(this.lastPos[i][1]) * (+1) * ((this.lastPos.length - i / 1.05) / this.lastPos.length) * this.r, this.lastPos[i][0].y - g.cos(this.lastPos[i][1]) * (+1) * ((this.lastPos.length - i / 1.05) / this.lastPos.length) * this.r);
-        g.endShape(g.CLOSE);
-        g.pop();
-      }
-
-      // draw ship...
+    } else {        
+      this.vaporTrail.render();      
       g.push();
       g.translate(this.pos.x, this.pos.y);
       g.rotate(this.heading);
