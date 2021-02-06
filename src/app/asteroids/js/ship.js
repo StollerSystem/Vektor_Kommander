@@ -51,10 +51,10 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     
     // console.log(scope.pos)
     // console.log(shootPos)
-    var laser = new Laser(shootPos, scope.vel, scope.heading, g, rgbColor2, false);
+    var laser = new Laser(shootPos, scope.vel, scope.heading, g, rgbColor2, false, scope.heading);
     if (score > 0) {
       score -= 5;
-    }
+     }
 
     var dustVel = laser.vel.copy();
     addDust(shootPos, dustVel.mult(.5), 4, .045, 2, 5, g);

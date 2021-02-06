@@ -135,8 +135,6 @@ export class AsteroidsComponent implements OnInit {
 
       g.draw = () => {
 
-        console.log(ship.heading)
-
         // STARS
         for (let i = 0; i < stars.length; i++) {
           stars[i].move()
@@ -279,7 +277,7 @@ export class AsteroidsComponent implements OnInit {
                   // enemies[k].destroy();
                   let dustVel = p5.Vector.add(lasers[i].vel.mult(0.5), barriers[k][j].vel);
                   // addDust(barriers[k][j].pos, dustVel, 10, .01, 2, 3, g);
-                  addDebris(barriers[k][j].pos, barriers[k][j].vel.add(g.createVector(g.random(-1, -2), g.random(.1, -.1))), 2, 9, g, [255, 255, 255]);
+                  addDebris(barriers[k][j].pos, barriers[k][j].vel.add(g.createVector(g.random(-1, -2), g.random(.1, -.1))), 2, 15, g, rgbColor4);
                   if (j - 1 >= 0) {
                     barriers[k][j - 1].vel.add(g.createVector(g.random(-1, -2), g.random(1, -1)))
                     // console.log(barriers[k][j+1].rotation)
@@ -423,7 +421,7 @@ export class AsteroidsComponent implements OnInit {
           const size = g.round(g.random(10, 50))
           const x = g.width + size * 4;
 
-          barriers.push(loadBarriers(g, x, y, vx, size))
+          barriers.push(loadBarriers(g, x, y, vx, size, rgbColor4))
         }
       }
 
@@ -435,5 +433,5 @@ export class AsteroidsComponent implements OnInit {
     };
 
     let canvas = new p5(game);
-  };
+  }; 
 };

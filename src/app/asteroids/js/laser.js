@@ -7,10 +7,14 @@ export default function Laser(spos, svel, angle, g, rgbColor2, enemy, heading) {
   Entity.call(this, spos.x, spos.y, 4, g);
   this.pos = g.createVector(spos.x, spos.y);
   this.vel = p5.Vector.fromAngle(angle);
-  this.vel.mult(10);
-  this.vel.add(svel);  
   this.enemy = enemy ? enemy : false;
-  this.heading = heading;
+  this.heading = heading  ;
+  if (this.enemy) {
+    this.vel.mult(10);
+  } else {
+    this.vel.mult(20);
+  }
+  this.vel.add(svel);  
 
   this.render = function () {
     // laser bolt
@@ -22,22 +26,38 @@ export default function Laser(spos, svel, angle, g, rgbColor2, enemy, heading) {
       g.point(this.pos.x, this.pos.y);
       g.pop();
 
+      // glow effect
+      g.push();
+      var size = this.r * (g.random(2, 10))
+      var trans2 = g.random(.4, .05)
+      g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans2}) `);
+      g.strokeWeight(size);
+      g.point(this.pos.x, this.pos.y);
+      g.pop();
+
     } else {
+
       g.push();
       var trans = g.random(1, .8)
       g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
-      g.strokeWeight(this.r*1.5);
-      g.point(this.pos.x, this.pos.y);
+      g.strokeWeight(1);
+      g.translate(this.pos.x, this.pos.y)
+      g.rotate(this.heading)
+      g.line(0, 0, 25, 0)
+      g.pop();
+
+      // glow effect
+      g.push();
+      var size = this.r * (g.random(1, 5))
+      var trans2 = g.random(.4, .05)
+      g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans2}) `);
+      g.strokeWeight(size);
+      g.translate(this.pos.x, this.pos.y)
+      g.rotate(this.heading)
+      g.line(-10, 0, 10, 0)
       g.pop();
     }
-    // glow effect
-    g.push();
-    var size = this.r * (g.random(2, 10))
-    var trans2 = g.random(.4, .05)
-    g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans2}) `);
-    g.strokeWeight(size);
-    g.point(this.pos.x, this.pos.y);
-    g.pop();
+    
   }
 
   this.playSoundEffect = function (sound) {

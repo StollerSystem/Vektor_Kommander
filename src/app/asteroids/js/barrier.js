@@ -1,7 +1,7 @@
 import Entity from './entity';
 import * as p5 from 'p5';
 
-export default function Barrier(g, x, y, vx, vy) {
+export default function Barrier(g, x, y, vx, vy, color) {
 
   var pos = g.createVector(x,y)
   const colorArray = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink']
@@ -17,7 +17,7 @@ export default function Barrier(g, x, y, vx, vy) {
   this.render = function() {
     g.push()
     g.noFill()
-    g.stroke(255);
+    g.stroke(`rgba(${color[0]},${color[1]},${color[2]},${1})`);
     g.translate(this.pos.x, this.pos.y)
     g.rotate(this.heading)
     g.rectMode(g.CENTER)
