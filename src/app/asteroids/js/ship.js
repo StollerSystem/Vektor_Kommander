@@ -4,6 +4,7 @@ import Laser from './laser';
 import * as p5 from 'p5';
 import { lineIntersect } from './utility';
 import VaporTrail from './vapor-trail';
+import Thruster from './thruster';
 
 
 export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust) {
@@ -13,10 +14,10 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
   this.shields = shieldTime;
   this.rmax = this.r * 1.5;
   this.rmax2 = this.rmax * this.rmax;
-  this.tailEdge = true; //if true will hide vapor trail
-  this.tailSkip = false;//tail effect toggles between true/false
+  // this.tailEdge = true; //if true will hide vapor trail
+  // this.tailSkip = false;//tail effect toggles between true/false
   var trailColor = rgbColor3;
-  this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r)  
+  this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r)
 
   g.keyReleased = () => {
     input.handleEvent(g.key, g.keyCode, false);
@@ -26,12 +27,12 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     input.handleEvent(g.key, g.keyCode, true);
   }
 
-  var scope = this;  
+  var scope = this;
   input.registerAsListener(" ".charCodeAt(0), function (char, code, press) {
     if (!press) {
       return;
     }
-    let shootPos = g.createVector(scope.pos.x + 30 * g.cos(scope.heading), scope.pos.y + 30 * g.sin(scope.heading));    
+    let shootPos = g.createVector(scope.pos.x + 30 * g.cos(scope.heading), scope.pos.y + 30 * g.sin(scope.heading));
     var laser = new Laser(shootPos, scope.vel, scope.heading, g, rgbColor2, false, scope.heading);
     var dustVel = laser.vel.copy();
     addDust(shootPos, dustVel.mult(.5), 4, .045, rgbColor2, 5, g);
@@ -40,8 +41,8 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     // laser.playSoundEffect(effect);
   });
 
-  input.registerAsListener(g.RIGHT_ARROW, function (char, code, press) {    
-    scope.setRotation(press ? 0.06 : 0);    
+  input.registerAsListener(g.RIGHT_ARROW, function (char, code, press) {
+    scope.setRotation(press ? 0.06 : 0);
     // if (press) {
     //   rocketSoundEffects[1].play();
     // } else {
@@ -49,8 +50,8 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     // }
   });
 
-  input.registerAsListener(g.LEFT_ARROW, function (char, code, press) {    
-    scope.setRotation(press ? -0.06 : 0);    
+  input.registerAsListener(g.LEFT_ARROW, function (char, code, press) {
+    scope.setRotation(press ? -0.06 : 0);
     // if (press) {
     //   rocketSoundEffects[1].play();
     // } else {
@@ -58,7 +59,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     // }
   });
 
-  input.registerAsListener(g.UP_ARROW, function (char, code, press) {    
+  input.registerAsListener(g.UP_ARROW, function (char, code, press) {
     scope.setAccel(press ? 0.1 : 0);
     // if (press) {
     //   rocketSoundEffects[0].play();
@@ -67,7 +68,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     // }
   });
 
-  input.registerAsListener(g.DOWN_ARROW, function (char, code, press) {    
+  input.registerAsListener(g.DOWN_ARROW, function (char, code, press) {
     scope.setAccel(press ? -0.1 : 0);
     // if (press) {
     //   rocketSoundEffects[0].play();
@@ -78,7 +79,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
 
   this.update = function () {
     this.edges();
-    Entity.prototype.update.call(this);    
+    Entity.prototype.update.call(this);
     if (this.isDestroyed) {
       for (var i = 0; i < this.brokenParts.length; i++) {
         this.brokenParts[i].pos.add(this.brokenParts[i].vel);
@@ -90,7 +91,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
     if (this.shields > 0 && !title) {
       this.shields -= 1;
     }
-    this.vaporTrail.update(this.pos, this.heading);    
+    this.vaporTrail.update(this.pos, this.heading);
   }
 
   this.brokenParts = [];
@@ -108,15 +109,15 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
   this.hits = function (asteroid) {
     if (this.shields > 0) {
       return false;
-    }    
+    }
     var dist2 = (this.pos.x - asteroid.pos.x) * (this.pos.x - asteroid.pos.x)
       + (this.pos.y - asteroid.pos.y) * (this.pos.y - asteroid.pos.y);
     if (dist2 >= (asteroid.rmax + this.rmax2) * (asteroid.rmax + this.rmax2)) {
       return false;
-    }   
+    }
     if (dist2 <= asteroid.rmin2) {
       return true;
-    }    
+    }
     var shipVertices = [
       g.createVector(-2 / 3 * this.r, this.r).rotate(this.heading),
       g.createVector(-2 / 3 * this.r, -this.r).rotate(this.heading),
@@ -156,24 +157,24 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
   this.edges = function () {
     if (this.pos.x >= this.g.width - this.rmax) {
       let rebound = this.vel.x < 2 ? -2 : -this.vel.x / 2;
-      this.vel = g.createVector(rebound, 0);      
-    } else if (this.pos.x <= + this.rmax) {      
+      this.vel = g.createVector(rebound, 0);
+    } else if (this.pos.x <= + this.rmax) {
       if (this.vel.x < 0) {
         this.vel.x = 0
-      }      
+      }
     }
-    if (this.pos.y >= this.g.height - this.rmax) {     
+    if (this.pos.y >= this.g.height - this.rmax) {
       let rebound = this.vel.y < 2 ? -2 : this.vel.y / 2;
       this.vel = g.createVector(this.vel.x, rebound);
-      
+
     } else if (this.pos.y <= +this.rmax) {
       let rebound = this.vel.y > -2 ? 2 : -this.vel.y / 2;
-      this.vel = g.createVector(this.vel.x, rebound);      
+      this.vel = g.createVector(this.vel.x, rebound);
     }
   }
 
   this.render = function () {
-    if (this.isDestroyed) {      
+    if (this.isDestroyed) {
       for (var i = 0; i < this.brokenParts.length; i++) {
         g.push();
         let transNum = (1 * ((this.destroyFrames--) / 1000))
@@ -184,16 +185,16 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
         g.translate(bp.pos.x, bp.pos.y);
         g.rotate(bp.heading);
         if (i === 1) {
-          g.triangle(-this.r , this.r,
-            -this.r , this.r / 4,
-            this.r / 2 , this.r / 4);
+          g.triangle(-this.r, this.r,
+            -this.r, this.r / 4,
+            this.r / 2, this.r / 4);
         } else {
           g.line(-this.r / 2, -this.r / 2, this.r / 2, this.r / 2);
         }
         g.pop();
       }
-    } else {        
-      this.vaporTrail.render();      
+    } else {
+      this.vaporTrail.render();
       g.push();
       g.translate(this.pos.x, this.pos.y);
       g.rotate(this.heading);
@@ -206,6 +207,24 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
       g.stroke(shipColor);
       g.strokeWeight(weight)
 
+      // thruster animations
+      if (this.accelMagnitude > 0) {
+        var thrustEnd = g.random(-75, -30)
+        Thruster(g, rgbColor2, this.r - 52, this.r - 10, this.r - 52, -this.r + 10, thrustEnd, 0)
+      }
+      if (this.accelMagnitude < 0) {
+        var thrustEnd = g.random(70, 50)
+        Thruster(g, rgbColor2, this.r * 2 - 9, this.r / 2-1, this.r * 2.5 - 9, 1, thrustEnd, this.r / 4)
+      }
+      if (this.rotation > 0) {
+        var thrustEnd = g.random(-25, -10)
+        Thruster(g, rgbColor2, 25, -4, 30, -3, 27.5, thrustEnd)        
+      }
+      if (this.rotation < 0) {
+        var thrustEnd = g.random(30, 10)
+        Thruster(g, rgbColor2, 25, this.r/2, 30, this.r/2, 27.5, thrustEnd)        
+      }
+
       // THE SHIP
       g.curve(
         -1, 20,
@@ -213,71 +232,16 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
         this.r - 10, -this.r / 8,
         this.r * 2, 80,
       )
-      g.beginShape()      
+      g.beginShape()
       g.vertex(-this.r - 10, this.r / 2)
       g.vertex(this.r * 2 - 10, this.r / 2)
       g.vertex(this.r * 2.5 - 10, 0)
       g.vertex(-10, -this.r / 3)
       g.vertex(-this.r - 10, -this.r)
-      g.endShape(g.CLOSE)      
+      g.endShape(g.CLOSE)
       g.triangle(-this.r - 10, this.r,
         -this.r - 10, this.r / 4,
-        this.r / 2 - 10, this.r / 4);
-
-      // thruster animations
-      if (this.accelMagnitude > 0) {
-        g.push()
-        var trans = g.random(.9, .2)
-        g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
-        g.fill(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
-        g.strokeWeight(1)
-        g.translate(-this.r, 0);
-        var thrustEnd = g.random(-55, -10)
-        g.triangle(this.r - 32, this.r - 10,
-          this.r - 32, -this.r + 10,
-          thrustEnd, 0);
-        g.pop()
-      }
-      if (this.accelMagnitude < 0) {
-        g.push()
-        var trans = g.random(.9, .2)
-        g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
-        g.fill(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
-        g.strokeWeight(1)
-        g.translate(0, 0);
-        var thrustEnd = g.random(this.r * 4, this.r * 3)
-        g.triangle(this.r * 2 - 10, this.r / 2,
-          this.r * 2.5 - 10, 0,
-          thrustEnd, this.r / 4);
-        g.pop()
-      }
-      if (this.rotation > 0) {
-        g.push()
-        var trans = g.random(.9, .2)
-        g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
-        g.fill(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
-        g.strokeWeight(1)
-        g.translate(-this.r, 0);
-        var thrustEnd = g.random(-35, -10)
-        g.triangle(this.r + 25, -4,
-          this.r + 35, -3,
-          this.r + 30, thrustEnd);
-        g.pop()
-      }
-      if (this.rotation < 0) {
-        g.push()
-        var trans = g.random(.9, .2)
-        g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
-        g.fill(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
-        g.strokeWeight(1)
-        g.translate(-this.r, 0);
-        var thrustEnd = g.random(35, 10)
-        g.triangle(this.r + 25, this.r / 2,
-          this.r + 35, this.r / 2,
-          this.r + 30, thrustEnd);
-        g.pop()
-      }
-
+        this.r / 2 - 10, this.r / 4);      
       g.pop();
     }
   }

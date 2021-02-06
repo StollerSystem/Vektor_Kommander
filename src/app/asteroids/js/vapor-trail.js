@@ -39,6 +39,7 @@ export default function VaporTrail(g, pos, color, shields, r) {
       }      
       g.fill(`rgba(${color[0]},${color[1]},${color[2]},${this.lastPos[i][2] / g.random(4, 6)})`);
       g.beginShape();
+
       g.vertex(this.lastPos[i][0].x + g.sin(this.lastPos[i][1]) * -1 * ((this.lastPos.length - i / 1.05) / this.lastPos.length) * this.r, this.lastPos[i][0].y - g.cos(this.lastPos[i][1]) * -1 * ((this.lastPos.length - i / 1.05) / this.lastPos.length) * this.r);
 
       g.vertex(this.lastPos[i + 1][0].x + g.sin(this.lastPos[i + 1][1]) * -1 * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r, this.lastPos[i + 1][0].y - g.cos(this.lastPos[i + 1][1]) * -1 * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r);
@@ -46,6 +47,7 @@ export default function VaporTrail(g, pos, color, shields, r) {
       g.vertex(this.lastPos[i + 1][0].x + g.sin(this.lastPos[i + 1][1]) * (+1) * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r, this.lastPos[i + 1][0].y - g.cos(this.lastPos[i + 1][1]) * (+1) * ((this.lastPos.length - (i + 1) / 1.05) / this.lastPos.length) * this.r);
 
       g.vertex(this.lastPos[i][0].x + g.sin(this.lastPos[i][1]) * (+1) * ((this.lastPos.length - i / 1.05) / this.lastPos.length) * this.r, this.lastPos[i][0].y - g.cos(this.lastPos[i][1]) * (+1) * ((this.lastPos.length - i / 1.05) / this.lastPos.length) * this.r);
+      
       g.endShape(g.CLOSE);      
       g.pop();
     }
