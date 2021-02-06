@@ -1,5 +1,5 @@
 import * as p5 from 'p5';
-import Entity from './entity';
+import Entity from './entity.js';
 
 export default function Asteroid(pos, r, size, g, rgbColor1) {
 

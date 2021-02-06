@@ -1,4 +1,4 @@
-import Entity from './entity';
+import Entity from './entity.js';
 import * as p5 from 'p5';
 
 export default function Barrier(g, x, y, vx, vy, color) {

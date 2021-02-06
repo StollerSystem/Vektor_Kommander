@@ -1,10 +1,10 @@
-import Entity from './entity';
-import { input } from './input';
-import Laser from './laser';
 import * as p5 from 'p5';
-import { lineIntersect } from './utility';
-import VaporTrail from './vapor-trail';
-import Thruster from './thruster';
+import Entity from './entity.js';
+import Laser from './laser.js';
+import { input } from '../utility/input.js';
+import { lineIntersect } from '../utility/utility.js';
+import VaporTrail from '../effects/vapor-trail.js';
+import Thruster from '../effects/thruster.js';
 
 
 export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust) {

@@ -1,4 +1,4 @@
-import Barrier from './Barrier'
+import Barrier from '../entity/barrier.js'
 
 export default function loadBarrier(e, x, y, vx, size, color) {
   let blocks = [];

@@ -1,4 +1,4 @@
-import Star from './star'
+import Star from '../effects/star.js'
 
 export default function loadStars(g) {
   let stars = [];

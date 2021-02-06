@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import * as p5 from 'p5';
-import Ship from './js/ship.js';
-import Asteroid from './js/asteroid.js';
-import Enemy from './js/enemy.js'
-import { input } from './js/input.js';
-import Dust from './js/dust.js';
-import Hud from './js/hud.js';
-import Debris from './js/debris.js';
-import Star from './js/star.js';
-import loadStars from './js/load-stars.js';
-import loadBarriers from './js/load-barriers.js';
+import Ship from './js/entity/ship.js';
+import Asteroid from './js/entity/asteroid.js';
+import Enemy from './js/entity/enemy.js'
+import { input } from './js/utility/input.js';
+import Dust from './js/effects/dust.js';
+import Hud from './js/utility/hud.js';
+import Debris from './js/effects/debris.js';
+import Star from './js/effects/star.js';
+import loadStars from './js/utility/load-stars.js';
+import loadBarriers from './js/utility/load-barriers.js';
 
 @Component({
   selector: 'app-asteroids',
@@ -82,9 +82,9 @@ export class AsteroidsComponent implements OnInit {
 
       const spawnBarriers = function () {
         for (let i = 0; i < level + 1; i++) {
-          const y = g.random(0, g.height)
           const vx = -.4
           const size = g.round(g.random(10, 50))
+          const y = g.random(0 + size * 4, g.height - size * 4)
           const x = g.width + size * 4;
 
           barriers.push(loadBarriers(g, x, y, vx, size, rgbColor4))
@@ -178,12 +178,10 @@ export class AsteroidsComponent implements OnInit {
 
         // UPDATE ASTEROIDS AND CHECK FOR COLLISIONS 
         for (var i = 0; i < asteroids.length; i++) {
-
           if (asteroids[i].offscreen()) {
             asteroids.splice(i, 1);
             continue;
           }
-
           if (ship.hits(asteroids[i]) && canPlay) {
             canPlay = false;
             var dustVel = p5.Vector.add(ship.vel.mult(0.2), asteroids[i].vel);
@@ -236,7 +234,6 @@ export class AsteroidsComponent implements OnInit {
               break;
             }
           }
-
           // check enemies + laser collision???
           if (exists) {
             for (var k = enemies.length - 1; k >= 0; k--) {
@@ -253,21 +250,19 @@ export class AsteroidsComponent implements OnInit {
               }
             }
           }
-
-
           // check barrier + laser collision???
           if (exists) {
             for (var k = barriers.length - 1; k >= 0; k--) {
               for (var j = barriers[k].length - 1; j >= 0; j--) {
                 if (exists && lasers[i].hits(barriers[k][j])) {
-                  exists = false;                                 
+                  exists = false;
                   let dustVel = p5.Vector.add(lasers[i].vel.mult(0.2), barriers[k][j].vel);
                   addDust(barriers[k][j].pos, dustVel, 5, .01, rgbColor4, 3, g);
                   addDebris(barriers[k][j].pos, barriers[k][j].vel.add(g.createVector(g.random(-1, -2), g.random(.1, -.1))), 2, 15, g, rgbColor4);
                   if (j - 1 >= 0) {
-                    barriers[k][j - 1].vel.add(g.createVector(g.random(-1, -2), g.random(1, -1)))                    
-                    barriers[k][j - 1].setRotation(g.random(-.05, .05));                    
-                  }                  
+                    barriers[k][j - 1].vel.add(g.createVector(g.random(-1, -2), g.random(1, -1)))
+                    barriers[k][j - 1].setRotation(g.random(-.05, .05));
+                  }
                   barriers[k].splice(j, 1);
                   lasers.splice(i, 1);
                   break;
@@ -275,7 +270,6 @@ export class AsteroidsComponent implements OnInit {
               }
             }
           }
-
           // check player + laser collision???     
           if (exists) {
             if (lasers[i].hits(ship) && lasers[i].enemy && canPlay) {
@@ -284,7 +278,7 @@ export class AsteroidsComponent implements OnInit {
               lasers.splice(i, 1);
               addDust(ship.pos, dustVel, 15, .005, rgbColor3, 2.5, g);
               ship.destroy();
-              input.reset();              
+              input.reset();
               // ship.playSoundEffect(explosionSoundEffects);
               // rocketSoundEffects[0].stop();
               // rocketSoundEffects[1].stop();              
@@ -300,14 +294,14 @@ export class AsteroidsComponent implements OnInit {
             var dustVel = p5.Vector.add(ship.vel.mult(0.2), enemies[i].vel);
             addDust(ship.pos, dustVel, 15, .005, 3, 2.5, g);
             ship.destroy();
-            input.reset();            
+            input.reset();
             // ship.playSoundEffect(explosionSoundEffects);
             // rocketSoundEffects[0].stop();
             // rocketSoundEffects[1].stop();
             roundLoss(g)
           }
           enemies[i].update();
-        }        
+        }
 
         // UPDATE AND DESTROY BARRIERS
         for (let i = 0; i < barriers.length; i++) {
@@ -318,7 +312,7 @@ export class AsteroidsComponent implements OnInit {
               var dustVel = p5.Vector.add(ship.vel.mult(0.2), barriers[i][j].vel);
               addDust(ship.pos, dustVel, 15, .005, rgbColor3, 2.5, g);
               ship.destroy();
-              input.reset();              
+              input.reset();
               // ship.playSoundEffect(explosionSoundEffects);
               // rocketSoundEffects[0].stop();
               // rocketSoundEffects[1].stop();
@@ -349,48 +343,37 @@ export class AsteroidsComponent implements OnInit {
           }
         }
 
-        // UPDATE SHIP
         ship.update();
 
         // ALL RENDERS...
         g.background(0);
-
         for (let i = 0; i < barriers.length; i++) {
           for (let j = 0; j < barriers[i].length; j++) {
             barriers[i][j].render()
           }
         }
-
         for (let i = 0; i < stars.length; i++) {
           stars[i].show()
         }
-
         for (var i = 0; i < asteroids.length; i++) {
           asteroids[i].render();
         }
-
         for (var i = lasers.length - 1; i >= 0; i--) {
           lasers[i].render();
         }
-
         for (var i = dust.length - 1; i >= 0; i--) {
           dust[i].render();
         }
-
         for (var i = debris.length - 1; i >= 0; i--) {
           debris[i].render();
         }
-
         for (var i = enemies.length - 1; i >= 0; i--) {
           enemies[i].render();
         }
-
         ship.render();
-
         hud.render(stageClear, level, lives, score, title);
       }
     };
-
     let canvas = new p5(game);
   };
 };

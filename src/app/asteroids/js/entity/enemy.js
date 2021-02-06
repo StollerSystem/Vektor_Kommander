@@ -1,6 +1,6 @@
 import * as p5 from 'p5';
 import Entity from './entity.js';
-import Laser from './laser';
+import Laser from './laser.js';
 
 export default function Enemy(r, g, addDust, level, rgbColor4, rgbColor2, lasers) {
 
