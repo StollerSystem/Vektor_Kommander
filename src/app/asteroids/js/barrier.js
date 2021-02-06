@@ -7,10 +7,10 @@ export default function Barrier(g, x, y, vx, vy) {
   const colorArray = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink']
 
 
-  Entity.call(this, pos.x, pos.y, 20, g)
+  Entity.call(this, pos.x, pos.y, 30, g)
 
   this.vel = g.createVector(vx,vy) // SET VELOCITY
-  this.rotation = 1
+  // this.rotation = 1
 
   // Entity.prototype.setRotation.call(this, g.random(-0.03, 0.03));
 
@@ -18,8 +18,11 @@ export default function Barrier(g, x, y, vx, vy) {
     g.push()
     g.noFill()
     g.stroke(255);
-    g.strokeWeight(g.random(.5, .75));
-    g.rect(this.pos.x, this.pos.y, this.r, this.r)
+    g.translate(this.pos.x, this.pos.y)
+    g.rotate(this.heading)
+    g.rectMode(g.CENTER)
+    g.strokeWeight(g.random(.5, 1.5));
+    g.rect(0, 0, this.r, this.r)
     g.pop()
   }
 
@@ -34,13 +37,11 @@ export default function Barrier(g, x, y, vx, vy) {
   }
 
   this.offscreen = function () {
-    if (this.pos.x > g.width || this.pos.x < 0) {
+    if (this.pos.x < 0) {
       return true;
+    } else {      
+      return false;
     }
-    if (this.pos.y > g.height || this.pos.y < 0) {
-      return true;
-    }
-    return false;
   }
 
 }

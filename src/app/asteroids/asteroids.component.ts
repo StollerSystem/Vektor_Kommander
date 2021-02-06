@@ -109,11 +109,11 @@ export class AsteroidsComponent implements OnInit {
         // rgbColor3 = [Math.round(g.random(0, c3a)), Math.round(g.random(0, c3b)), Math.round(g.random(0, c3c))]
         // rgbColor4 = [Math.round(g.random(0, 255)), Math.round(g.random(0, 255)), Math.round(g.random(0, 255))]
 
-        rgbColor1 = [116,238,21]
-        rgbColor2 = [255,0,0]
-        rgbColor3 = [77,238,234]
-        rgbColor4 = [240,0,255]
-        
+        rgbColor1 = [116, 238, 21]
+        rgbColor2 = [255, 0, 0]
+        rgbColor3 = [77, 238, 234]
+        rgbColor4 = [240, 0, 255]
+
         console.log(rgbColor1)
         console.log(rgbColor2)
         console.log(rgbColor3)
@@ -134,6 +134,8 @@ export class AsteroidsComponent implements OnInit {
       }
 
       g.draw = () => {
+
+        console.log(ship.heading)
 
         // STARS
         for (let i = 0; i < stars.length; i++) {
@@ -166,8 +168,8 @@ export class AsteroidsComponent implements OnInit {
         }
         // RANDOM BARRIER SPAWN
         if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
-          let ranNum = g.random(750);
-          if (ranNum <= 1) {
+          let ranNum = g.random(350);
+          if (ranNum <= 1 && barriers.length < 5) {
             spawnBarriers();
           }
         }
@@ -265,6 +267,8 @@ export class AsteroidsComponent implements OnInit {
               }
             }
           }
+
+
           // check barrier + laser collision 
           if (exists) {
             for (var k = barriers.length - 1; k >= 0; k--) {
@@ -275,27 +279,23 @@ export class AsteroidsComponent implements OnInit {
                   // enemies[k].destroy();
                   let dustVel = p5.Vector.add(lasers[i].vel.mult(0.5), barriers[k][j].vel);
                   // addDust(barriers[k][j].pos, dustVel, 10, .01, 2, 3, g);
-                  addDebris(barriers[k][j].pos, barriers[k][j].vel.add(g.createVector(g.random(-1,-2),g.random(.1,-.1))), 2, 9, g, [255,255,255]);
-                  if (j+1 <= barriers[k].length-1) {
-                    barriers[k][j+1].vel.add(g.createVector(g.random(-1,-2),g.random(.2,-.2)))
+                  addDebris(barriers[k][j].pos, barriers[k][j].vel.add(g.createVector(g.random(-1, -2), g.random(.1, -.1))), 2, 9, g, [255, 255, 255]);
+                  if (j - 1 >= 0) {
+                    barriers[k][j - 1].vel.add(g.createVector(g.random(-1, -2), g.random(1, -1)))
                     // console.log(barriers[k][j+1].rotation)
                     // barriers[k][j+1].rotation += 1;
-                    barriers[k][j+1].setRotation(1);
+                    barriers[k][j - 1].setRotation(g.random(-.05,.05));
                     // console.log(barriers[k][j+1].rotation)
                   }
                   // barriers[k][j-1]
-
                   barriers[k].splice(j, 1);
                   lasers.splice(i, 1);
-                  break; 
+                  break;
                 }
-                
               }
-
-
-
             }
           }
+
           // check player + laser collision     
           if (exists) {
             // console.log(lasers[i].hits(ship))
@@ -333,17 +333,32 @@ export class AsteroidsComponent implements OnInit {
         }
 
         ship.update();
-        
+
         // UPDATE AND DESTROY BARRIERS
         for (let i = 0; i < barriers.length; i++) {
           for (let j = 0; j < barriers[i].length; j++) {
             barriers[i][j].update()
-            if (barriers[i][j].offscreen()) {
-              console.log("delete square!")
-              barriers[i].splice(j,1)
-              console.log(barriers.length)
-              // working! 
+            if (ship.hits(barriers[i][j]) && canPlay) {
+              canPlay = false;
+              var dustVel = p5.Vector.add(ship.vel.mult(0.2), barriers[i][j].vel);
+              addDust(ship.pos, dustVel, 15, .005, 3, 2.5, g);
+              ship.destroy();
+              input.reset();
+              // sounds - need to stop rocket sounds here
+              // ship.playSoundEffect(explosionSoundEffects);
+              // rocketSoundEffects[0].stop();
+              // rocketSoundEffects[1].stop();
+              roundLoss(g)
             }
+
+            if (barriers[i][j].offscreen()) {
+              // console.log(barriers)
+              barriers[i].splice(j, 1)
+              console.log(barriers.length)// working! 
+            }
+          }
+          if (barriers[i].length === 0) {
+            barriers.splice(i, 1)
           }
         }
 
@@ -401,18 +416,18 @@ export class AsteroidsComponent implements OnInit {
         }
       }
 
-      const spawnBarriers = function() {
+      const spawnBarriers = function () {
         for (let i = 0; i < level + 1; i++) {
           const y = g.random(0, g.height)
           const vx = -.4
           const size = g.round(g.random(10, 50))
-          const x = g.width + size;
+          const x = g.width + size * 4;
 
           barriers.push(loadBarriers(g, x, y, vx, size))
         }
       }
 
-      const spawnEnemy = function() {
+      const spawnEnemy = function () {
         var radius = g.random(20, 30)
         enemies.push(new Enemy(radius, g, addDust, level, rgbColor4, rgbColor2, lasers))
       }

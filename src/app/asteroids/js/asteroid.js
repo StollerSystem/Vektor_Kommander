@@ -10,7 +10,7 @@ export default function Asteroid(pos, r, size, g, rgbColor1) {
 
   Entity.call(this, pos.x, pos.y, r, g);
 
-  this.vel = g.createVector(g.random(-2,-4),g.random(.5,-.5))
+  this.vel = g.createVector(g.random(-2,-4),g.random(2,-2))
   this.total = g.floor(g.random(7, 15));
 
   //smaller asteroids go a bit faster

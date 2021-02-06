@@ -2,7 +2,7 @@ import * as p5 from 'p5';
 import Entity from './entity';
 import { lineIntersect } from './utility';
 
-export default function Laser(spos, svel, angle, g, rgbColor2, enemy) {  
+export default function Laser(spos, svel, angle, g, rgbColor2, enemy, heading) {  
   
   Entity.call(this, spos.x, spos.y, 4, g);
   this.pos = g.createVector(spos.x, spos.y);
@@ -10,15 +10,26 @@ export default function Laser(spos, svel, angle, g, rgbColor2, enemy) {
   this.vel.mult(10);
   this.vel.add(svel);  
   this.enemy = enemy ? enemy : false;
+  this.heading = heading;
 
   this.render = function () {
     // laser bolt
-    g.push();
-    var trans = g.random(1, .8)
-    g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
-    g.strokeWeight(this.r*1.5);
-    g.point(this.pos.x, this.pos.y);
-    g.pop();
+    if (enemy) {
+      g.push();
+      var trans = g.random(1, .8)
+      g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
+      g.strokeWeight(this.r*1.5);
+      g.point(this.pos.x, this.pos.y);
+      g.pop();
+
+    } else {
+      g.push();
+      var trans = g.random(1, .8)
+      g.stroke(`rgba(${rgbColor2[0]},${rgbColor2[1]},${rgbColor2[2]},${trans})`);
+      g.strokeWeight(this.r*1.5);
+      g.point(this.pos.x, this.pos.y);
+      g.pop();
+    }
     // glow effect
     g.push();
     var size = this.r * (g.random(2, 10))
