@@ -57,7 +57,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
      }
 
     var dustVel = laser.vel.copy();
-    addDust(shootPos, dustVel.mult(.5), 4, .045, 2, 5, g);
+    addDust(shootPos, dustVel.mult(.5), 4, .045, rgbColor2, 5, g);
 
     // var effect = laserSoundEffects[floor(random() * laserSoundEffects.length)];
     // laser.playSoundEffect(effect);
@@ -240,6 +240,7 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
 
   this.render = function () {
     if (this.isDestroyed) {
+
       // ship debris
       for (var i = 0; i < this.brokenParts.length; i++) {
         g.push();
@@ -247,11 +248,20 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
         let trans = transNum > 0 ? transNum : 0;
         g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},${trans})`);
         var bp = this.brokenParts[i];
+        g.fill(0);
         g.translate(bp.pos.x, bp.pos.y);
         g.rotate(bp.heading);
-        g.line(-this.r / 2, -this.r / 2, this.r / 2, this.r / 2);
+        if (i === 1) {
+          g.triangle(-this.r , this.r,
+            -this.r , this.r / 4,
+            this.r / 2 , this.r / 4);
+        } else {
+          g.line(-this.r / 2, -this.r / 2, this.r / 2, this.r / 2);
+        }
         g.pop();
       }
+
+
     } else {
       //render vapor tail      
       for (var i = this.lastPos.length - 2; i >= 0; i--) {
@@ -288,24 +298,20 @@ export default function Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, 
       g.stroke(shipColor);
       g.strokeWeight(weight)
 
+      // THE SHIP
       g.curve(
         -1, 20,
         0 - 10, -this.r / 3,
         this.r - 10, -this.r / 8,
         this.r * 2, 80,
       )
-
-      g.beginShape()
-
-      // g.vertex(-this.r, this.r)
+      g.beginShape()      
       g.vertex(-this.r - 10, this.r / 2)
       g.vertex(this.r * 2 - 10, this.r / 2)
       g.vertex(this.r * 2.5 - 10, 0)
       g.vertex(-10, -this.r / 3)
       g.vertex(-this.r - 10, -this.r)
-
-      g.endShape(g.CLOSE)
-      // g.point(0,0)
+      g.endShape(g.CLOSE)      
       g.triangle(-this.r - 10, this.r,
         -this.r - 10, this.r / 4,
         this.r / 2 - 10, this.r / 4);

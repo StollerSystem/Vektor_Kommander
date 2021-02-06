@@ -48,7 +48,7 @@ export default function Enemy(r, g, addDust, level, rgbColor4, rgbColor2, lasers
   this.shootLaser = function () {
     var laser = new Laser(scope.pos, scope.vel, scope.heading, g, rgbColor2, true);
     var dustVel = laser.vel.copy();
-    addDust(scope.pos, dustVel.mult(.5), 4, .045, 2, 5, g);
+    addDust(scope.pos, dustVel.mult(.5), 4, .045, rgbColor2, 5, g);
     lasers.push(laser);
   }
 

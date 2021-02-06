@@ -185,7 +185,7 @@ export class AsteroidsComponent implements OnInit {
           if (ship.hits(asteroids[i]) && canPlay) {
             canPlay = false;
             var dustVel = p5.Vector.add(ship.vel.mult(0.2), asteroids[i].vel);
-            addDust(ship.pos, dustVel, 15, .005, 3, 3, g);
+            addDust(ship.pos, dustVel, 15, .005, rgbColor3, 3, g);
             ship.destroy();
             input.reset();
             // sounds - need to stop rocket sounds here
@@ -225,7 +225,7 @@ export class AsteroidsComponent implements OnInit {
               }
               var dustVel = p5.Vector.add(lasers[i].vel.mult(0.2), asteroids[j].vel);
               var dustNum = (asteroids[j].size * 2 + 1) * 3;
-              addDust(asteroids[j].pos, dustVel, dustNum, .005, 1, 2.5, g);
+              addDust(asteroids[j].pos, dustVel, dustNum, .005, rgbColor1, 2.5, g);
               // The new smaller asteroids broken lasers are added to the same list
               // of asteroids, so they can be referenced the same way as their full
               // asteroid counterparts.
@@ -256,9 +256,8 @@ export class AsteroidsComponent implements OnInit {
                 score += 500;
                 // enemies[k].destroy();
                 let dustVel = p5.Vector.add(lasers[i].vel.mult(0.5), enemies[k].vel);
-                addDust(enemies[k].pos, dustVel, 10, .01, 2, 3, g);
-                addDebris(enemies[k].pos, enemies[k].vel, 10, 30, g, rgbColor4);
-                addDust
+                addDust(enemies[k].pos, dustVel, 10, .01, rgbColor3, 1, g);
+                addDebris(enemies[k].pos, enemies[k].vel, 10, 30, g, rgbColor4)            
                 enemies.splice(j, 1);
                 lasers.splice(i, 1);
                 break;
@@ -275,8 +274,8 @@ export class AsteroidsComponent implements OnInit {
                   exists = false;
                   // score += 500;
                   // enemies[k].destroy();
-                  let dustVel = p5.Vector.add(lasers[i].vel.mult(0.5), barriers[k][j].vel);
-                  // addDust(barriers[k][j].pos, dustVel, 10, .01, 2, 3, g);
+                  let dustVel = p5.Vector.add(lasers[i].vel.mult(0.2), barriers[k][j].vel);
+                  addDust(barriers[k][j].pos, dustVel, 5, .01, rgbColor4, 3, g);
                   addDebris(barriers[k][j].pos, barriers[k][j].vel.add(g.createVector(g.random(-1, -2), g.random(.1, -.1))), 2, 15, g, rgbColor4);
                   if (j - 1 >= 0) {
                     barriers[k][j - 1].vel.add(g.createVector(g.random(-1, -2), g.random(1, -1)))
@@ -301,7 +300,7 @@ export class AsteroidsComponent implements OnInit {
               canPlay = false;
               var dustVel = p5.Vector.add(ship.vel.mult(0.2), lasers[i].vel.mult(.2));
               lasers.splice(i, 1);
-              addDust(ship.pos, dustVel, 15, .005, 3, 2.5, g);
+              addDust(ship.pos, dustVel, 15, .005, rgbColor3, 2.5, g);
               ship.destroy();
               input.reset();
               // sounds - need to stop rocket sounds here
@@ -339,7 +338,7 @@ export class AsteroidsComponent implements OnInit {
             if (ship.hits(barriers[i][j]) && canPlay) {
               canPlay = false;
               var dustVel = p5.Vector.add(ship.vel.mult(0.2), barriers[i][j].vel);
-              addDust(ship.pos, dustVel, 15, .005, 3, 2.5, g);
+              addDust(ship.pos, dustVel, 15, .005, rgbColor3, 2.5, g);
               ship.destroy();
               input.reset();
               // sounds - need to stop rocket sounds here
