@@ -1,6 +1,6 @@
 import * as p5 from 'p5';
 
-export default function LaserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input) {
+export default function LaserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input) {
   var g = g;
   var exists = true;  
   for (var j = asteroids.length - 1; j >= 0; j--) {
@@ -54,8 +54,9 @@ export default function LaserCollision(g, lasers, i, asteroids, addDust, rgbColo
       for (var j = barriers[k].length - 1; j >= 0; j--) {
         if (exists && lasers[i].hits(barriers[k][j])) {
           exists = false;
-          let dustVel = p5.Vector.add(lasers[i].vel.mult(0.2), barriers[k][j].vel);
-          addDust(barriers[k][j].pos, dustVel, 5, .01, rgbColor4, 3, g);
+          //THIS LASER HIT DUST IS LEGIT
+          let dustVel = p5.Vector.add(lasers[i].vel.mult(0.05), barriers[k][j].vel);
+          addDust(barriers[k][j].pos, dustVel, 5, .02, rgbColor2, 3, g);
           addDebris(barriers[k][j].pos, barriers[k][j].vel.add(g.createVector(g.random(-1, -2), g.random(.1, -.1))), 2, 15, g, rgbColor4);
           if (j - 1 >= 0) {
             barriers[k][j - 1].vel.add(g.createVector(g.random(-1, -2), g.random(1, -1)))

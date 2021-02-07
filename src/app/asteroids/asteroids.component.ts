@@ -218,7 +218,7 @@ export class AsteroidsComponent implements OnInit {
             lasers.splice(i, 1);
             continue;
           }
-          LaserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input)          
+          LaserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input)          
         }
 
         // CHECK FOR COLLISION BEWTWEEN SHIP + ENEMY 
@@ -226,7 +226,7 @@ export class AsteroidsComponent implements OnInit {
           if (ship.hits(enemies[i]) && canPlay) {
             canPlay = false;
             var dustVel = p5.Vector.add(ship.vel.mult(0.2), enemies[i].vel);
-            addDust(ship.pos, dustVel, 15, .005, 3, 2.5, g);
+            addDust(ship.pos, dustVel, 15, .005, rgbColor3, 2.5, g);
             ship.destroy();
             input.reset();
             // ship.playSoundEffect(explosionSoundEffects);
