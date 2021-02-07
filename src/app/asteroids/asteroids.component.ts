@@ -10,6 +10,7 @@ import Debris from './js/effects/debris.js';
 import Star from './js/effects/star.js';
 import loadStars from './js/utility/load-stars.js';
 import loadBarriers from './js/utility/load-barriers.js';
+import LaserCollision from './js/utility/laser-collision.js'
 
 @Component({
   selector: 'app-asteroids',
@@ -211,92 +212,13 @@ export class AsteroidsComponent implements OnInit {
 
         //UPDATES ALL LASERS AND CHECKS FOR ALL COLLISIONS
         for (var i = lasers.length - 1; i >= 0; i--) {
-          var exists = true;
+          // var exists = true;
           lasers[i].update();
           if (lasers[i].offscreen()) {
             lasers.splice(i, 1);
             continue;
           }
-          // LASER HITS ASTEROIDS???
-          for (var j = asteroids.length - 1; j >= 0; j--) {
-            if (lasers[i].hits(asteroids[j])) {
-              exists = false;
-              // asteroids[j].playSoundEffect(explosionSoundEffects);
-              if (!lasers[i].enemy) {
-                score += points[asteroids[j].size];
-              }
-              var dustVel = p5.Vector.add(lasers[i].vel.mult(0.2), asteroids[j].vel);
-              var dustNum = (asteroids[j].size * 2 + 1) * 3;
-              addDust(asteroids[j].pos, dustVel, dustNum, .005, rgbColor1, 2.5, g);
-              var newAsteroids = asteroids[j].breakup();
-              asteroids = asteroids.concat(newAsteroids);
-              asteroids.splice(j, 1);
-              lasers.splice(i, 1);
-              // CHECK FOR NEXT LEVEL
-              // if (asteroids.length == 0) {
-              //   stageClear = true;
-              //   setTimeout(function () {
-              //     level++;
-              //     possibleEnemies += level;
-              //     stageClear = false;
-              //     spawnAsteroids();
-              //     ship.shields = shieldTime;
-              //   }, 4000)
-              // }
-              break;
-            }
-          }
-          // check enemies + laser collision???
-          if (exists) {
-            for (var k = enemies.length - 1; k >= 0; k--) {
-              if (lasers[i].hits(enemies[k]) && !lasers[i].enemy) {
-                exists = false;
-                score += 500;
-                // enemies[k].destroy();
-                let dustVel = p5.Vector.add(lasers[i].vel.mult(0.5), enemies[k].vel);
-                addDust(enemies[k].pos, dustVel, 10, .01, rgbColor5, 1, g);
-                addDebris(enemies[k].pos, enemies[k].vel, 10, 30, g, rgbColor5)
-                enemies.splice(j, 1);
-                lasers.splice(i, 1);
-                break;
-              }
-            }
-          }
-          // check barrier + laser collision???
-          if (exists) {
-            for (var k = barriers.length - 1; k >= 0; k--) {
-              for (var j = barriers[k].length - 1; j >= 0; j--) {
-                if (exists && lasers[i].hits(barriers[k][j])) {
-                  exists = false;
-                  let dustVel = p5.Vector.add(lasers[i].vel.mult(0.2), barriers[k][j].vel);
-                  addDust(barriers[k][j].pos, dustVel, 5, .01, rgbColor4, 3, g);
-                  addDebris(barriers[k][j].pos, barriers[k][j].vel.add(g.createVector(g.random(-1, -2), g.random(.1, -.1))), 2, 15, g, rgbColor4);
-                  if (j - 1 >= 0) {
-                    barriers[k][j - 1].vel.add(g.createVector(g.random(-1, -2), g.random(1, -1)))
-                    barriers[k][j - 1].setRotation(g.random(-.05, .05));
-                  }
-                  barriers[k].splice(j, 1);
-                  lasers.splice(i, 1);
-                  break;
-                }
-              }
-            }
-          }
-          // check player + laser collision???     
-          if (exists) {
-            if (lasers[i].hits(ship) && lasers[i].enemy && canPlay) {
-              canPlay = false;
-              var dustVel = p5.Vector.add(ship.vel.mult(0.2), lasers[i].vel.mult(.2));
-              lasers.splice(i, 1);
-              addDust(ship.pos, dustVel, 15, .005, rgbColor3, 2.5, g);
-              ship.destroy();
-              input.reset();
-              // ship.playSoundEffect(explosionSoundEffects);
-              // rocketSoundEffects[0].stop();
-              // rocketSoundEffects[1].stop();              
-              roundLoss(g);
-            }
-          }
+          LaserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input)          
         }
 
         // CHECK FOR COLLISION BEWTWEEN SHIP + ENEMY 
