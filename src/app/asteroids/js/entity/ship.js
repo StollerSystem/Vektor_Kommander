@@ -119,9 +119,11 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       return true;
     }
     var shipVertices = [
-      g.createVector(-2 / 3 * this.r, this.r).rotate(this.heading),
-      g.createVector(-2 / 3 * this.r, -this.r).rotate(this.heading),
-      g.createVector(4 / 3 * this.r, 0).rotate(this.heading)
+      g.createVector(-this.r - 10, this.r / 2).rotate(this.heading),
+      g.createVector(this.r * 2 - 10, this.r / 2).rotate(this.heading),
+      g.createVector(this.r * 2.2 - 10, 0).rotate(this.heading),
+      g.createVector(-10, -this.r / 3).rotate(this.heading),
+      g.createVector(-this.r - 10, -this.r).rotate(this.heading)
     ];
     for (var i = 0; i < shipVertices.length; i++) {
       shipVertices[i] = p5.Vector.add(shipVertices[i], this.pos);
@@ -147,12 +149,20 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
   //HITBOX <- NOT RIGHT
   this.vertices = function () {
     var shipVertices = [
-      p5.Vector.add(g.createVector(-this.r, this.r), this.pos),
-      p5.Vector.add(g.createVector(-this.r, -this.r), this.pos),
-      p5.Vector.add(g.createVector(4 / 3 * this.r, 0), this.pos)
+      p5.Vector.add(g.createVector(-this.r - 10, this.r / 2), this.pos),
+      p5.Vector.add(g.createVector(this.r * 2 - 10, this.r / 2), this.pos),
+      p5.Vector.add(g.createVector(this.r * 2.2 - 10, 0), this.pos),
+      p5.Vector.add(g.createVector(-10, -this.r / 3), this.pos),
+      p5.Vector.add(g.createVector(-this.r - 10, -this.r), this.pos),
     ]
     return shipVertices;
   }
+
+  // g.vertex(-this.r - 10, this.r / 2)
+  //     g.vertex(this.r * 2 - 10, this.r / 2)
+  //     g.vertex(this.r * 2.5 - 10, 0)
+  //     g.vertex(-10, -this.r / 3)
+  //     g.vertex(-this.r - 10, -this.r)
 
   this.edges = function () {
     if (this.pos.x >= this.g.width - this.rmax) {
@@ -214,15 +224,15 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       }
       if (this.accelMagnitude < 0) {
         var thrustEnd = g.random(70, 50)
-        Thruster(g, color1, this.r * 2 - 9, this.r / 2-1, this.r * 2.5 - 9, 1, thrustEnd, this.r / 4)
+        Thruster(g, color1, this.r * 2 - 9, this.r / 2 - 1, this.r * 2.5 - 9, 1, thrustEnd, this.r / 4)
       }
       if (this.rotation > 0) {
         var thrustEnd = g.random(-25, -10)
-        Thruster(g, color1, 25, -4, 30, -3, 27.5, thrustEnd)        
+        Thruster(g, color1, 25, -4, 30, -3, 27.5, thrustEnd)
       }
       if (this.rotation < 0) {
         var thrustEnd = g.random(30, 10)
-        Thruster(g, color1, 25, this.r/2, 30, this.r/2, 27.5, thrustEnd)        
+        Thruster(g, color1, 25, this.r / 2, 30, this.r / 2, 27.5, thrustEnd)
       }
 
       // THE SHIP
@@ -241,7 +251,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       g.endShape(g.CLOSE)
       g.triangle(-this.r - 10, this.r,
         -this.r - 10, this.r / 4,
-        this.r / 2 - 10, this.r / 4);      
+        this.r / 2 - 10, this.r / 4);
       g.pop();
     }
   }
