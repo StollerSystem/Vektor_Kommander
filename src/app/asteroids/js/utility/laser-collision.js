@@ -54,7 +54,7 @@ export default function LaserCollision(g, lasers, i, asteroids, addDust, rgbColo
       for (var j = barriers[k].length - 1; j >= 0; j--) {
         if (exists && lasers[i].hits(barriers[k][j])) {
           exists = false;
-          //THIS LASER HIT DUST IS LEGIT
+           //THIS LASER HIT DUST IS LEGIT
           let dustVel = p5.Vector.add(lasers[i].vel.mult(0.05), barriers[k][j].vel);
           addDust(barriers[k][j].pos, dustVel, 5, .02, rgbColor2, 3, g);
           addDebris(barriers[k][j].pos, barriers[k][j].vel.add(g.createVector(g.random(-1, -2), g.random(.1, -.1))), 2, 15, g, rgbColor4);
