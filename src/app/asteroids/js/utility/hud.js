@@ -29,7 +29,7 @@ export default function Hud(g, rgbColor1, rgbColor3, pts) {
 
   ];
 
-  this.render = function (stageClear, level, lives, score, title) {
+  this.render = function (stageClear, level, lives, score, laserCharge) {
     var scoreString = "" + score;
     var x = 75 - (scoreString.length * (size + padding)/3);
     // var x = 100 
@@ -41,46 +41,49 @@ export default function Hud(g, rgbColor1, rgbColor3, pts) {
     }
 
     drawLives(lives);
+    drawLaserCharge(laserCharge);
 
     if (lives < 0) {
       g.push();
+      g.textFont('Montserrat')
+      g.textAlign(g.CENTER)
       g.textSize(150);
-      // g.textFont(mainFont)
-      g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
-      g.strokeWeight(g.random(1,1.5))
-      g.fill(0);
-      g.text("GAME OVER!", (g.width / 2) - 300, g.height / 2);
+      g.fill(255)
+      // g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
+      g.stroke(255)
+      g.strokeWeight(g.random(1,3))
+      g.text("GAME OVER", (g.width / 2), g.height / 2);
       g.pop();
     }
 
-    if (title) {
-      g.push();
-      g.textSize(25);
-      // g.textFont(mainFont)
-      g.stroke(`rgba(${rgbColor1[0]},${rgbColor1[1]},${rgbColor1[2]},1)`);
-      g.strokeWeight(g.random(1,1.5))
-      g.fill(`rgba(${rgbColor1[0]},${rgbColor1[1]},${rgbColor1[2]},1)`);
-      g.text("'UP_ARROW: FORWARD THRUST' - 'LEFT/RIGHT_ARROW: ROTATIONAL THRUST' - 'SPACE_BAR: BLASTER'", (g.width / 2 -410) , g.height / 3 +50);
-      g.pop();
+    // if (title) {
+    //   g.push();
+    //   g.textSize(25);
+    //   // g.textFont(mainFont)
+    //   g.stroke(`rgba(${rgbColor1[0]},${rgbColor1[1]},${rgbColor1[2]},1)`);
+    //   g.strokeWeight(g.random(1,1.5))
+    //   g.fill(`rgba(${rgbColor1[0]},${rgbColor1[1]},${rgbColor1[2]},1)`);
+    //   g.text("'UP_ARROW: FORWARD THRUST' - 'LEFT/RIGHT_ARROW: ROTATIONAL THRUST' - 'SPACE_BAR: BLASTER'", (g.width / 2 -410) , g.height / 3 +50);
+    //   g.pop();
 
-      g.push();
-      g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
-      g.strokeWeight(g.random(1,1.5))
-      g.translate((g.width / 2) - 575, g.height / 3);      
-      g.noFill();
-      let rotX = g.sin(g.frameCount / 20) * 10;
-      let rotY = g.cos(g.frameCount / 20) * 10;
-      //draw the 3d lines
-      // for (let i = 0; i < pts.length; i++) {
-      //   g.line(pts[i].x, pts[i].y, pts[i].x - rotX, pts[i].y - rotY);
-      // }
-      // g.textFont(mainFont);
-      g.textSize(200);
-      g.text('ASTRO-BLASTER', 0, 0);
-      g.fill(0);
-      // g.text('ASTRO-BLASTER', -rotX, -rotY);
-      g.pop();
-    }
+    //   g.push();
+    //   g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
+    //   g.strokeWeight(g.random(1,1.5))
+    //   g.translate((g.width / 2) - 575, g.height / 3);      
+    //   g.noFill();
+    //   let rotX = g.sin(g.frameCount / 20) * 10;
+    //   let rotY = g.cos(g.frameCount / 20) * 10;
+    //   //draw the 3d lines
+    //   // for (let i = 0; i < pts.length; i++) {
+    //   //   g.line(pts[i].x, pts[i].y, pts[i].x - rotX, pts[i].y - rotY);
+    //   // }
+    //   // g.textFont(mainFont);
+    //   g.textSize(200);
+    //   g.text('ASTRO-BLASTER', 0, 0);
+    //   g.fill(0);
+    //   // g.text('ASTRO-BLASTER', -rotX, -rotY);
+    //   g.pop();
+    // }
 
     if (stageClear) {
       
@@ -105,7 +108,7 @@ export default function Hud(g, rgbColor1, rgbColor3, pts) {
     g.strokeWeight(g.random(1,1.5))
     g.fill(0);
     g.translate(g.width-150,20)
-    var top = g.createVector((g.width / 2) + lifeWidth * 2, padding * 2 + size * 2);
+    // var top = g.createVector((g.width / 2) + lifeWidth * 2, padding * 2 + size * 2);
     for (var i = 0; i < lives; i++) {
       g.translate(35,0)
       g.curve(
@@ -126,6 +129,18 @@ export default function Hud(g, rgbColor1, rgbColor3, pts) {
         r / 2 - 10, r / 4);
     }
     g.pop();
+  }
+
+  function drawLaserCharge(laserCharge) {
+    // console.log(laserCharge)
+    
+    g.push();
+    g.stroke(255)
+    g.fill(`rgba(${-(laserCharge-1000)/5},${laserCharge/5},${0},.5)`);
+    g.strokeWeight(g.random(1,2))    
+    g.rect(g.width/2-100,20, laserCharge/5, 15)
+    g.pop()
+
   }
 
   //draws the digit based on the digit map

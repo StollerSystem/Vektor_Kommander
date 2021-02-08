@@ -49,6 +49,8 @@ export class AsteroidsComponent implements OnInit {
     let stars: any = [];
     let barriers: any = [];
     let splash: any;
+    var laserCharge = 1000;
+    let splashScreen: boolean = true;
     // var laserSoundEffects: any = [];
     // var explosionSoundEffects: any = [];
     // var rocketSoundEffects: any = [];
@@ -65,12 +67,19 @@ export class AsteroidsComponent implements OnInit {
       debris.push(new Debris(pos, vel, n, r, g, rgbColor4));
     }
 
+    const reduceLaserCharge = function () {
+      if (laserCharge >100) {
+        laserCharge -= 100;
+        return true
+      }
+    }
+
     const roundLoss = function (g: any) {
       let game = g;
       setTimeout(function () {
         lives--;
         if (lives >= 0) {
-          ship = new Ship(game, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust);
+          ship = new Ship(game, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge);
           canPlay = true;
         }
       }, 3000);
@@ -117,6 +126,14 @@ export class AsteroidsComponent implements OnInit {
           debris.shift()
         }
       }
+
+      const checkLaserCharge = function () {
+        if (laserCharge < 1000) {
+          laserCharge += 5;
+        }
+      }
+
+     
 
       g.preload = () => {
 
@@ -172,7 +189,7 @@ export class AsteroidsComponent implements OnInit {
       g.setup = () => {
         g.frameRate(50)
         g.createCanvas(g.windowWidth * .9, g.windowHeight * .9);
-        ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust);
+        ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge);
         hud = new Hud(g, rgbColor1, rgbColor3, pts);
         stars = loadStars(g);
         splash = new Splash();
@@ -186,10 +203,17 @@ export class AsteroidsComponent implements OnInit {
       }
 
       g.draw = () => {
+
+        if (!splashScreen) {
+          g.background(0);
+          splash.render(g);
+        } else {
       
         // CHECK FOR FX CREATING LAAAAG
         checkDust();
         checkDebris();
+        checkLaserCharge();
+        // console.log(laserCharge)
         // console.log("DUST: "+dust.length)
         // console.log("DEBRIS: "+debris.length)
 
@@ -323,8 +347,6 @@ export class AsteroidsComponent implements OnInit {
         // ALL RENDERS...
         g.background(0);
 
-        splash.render(g)
-
         for (let i = 0; i < barriers.length; i++) {
           for (let j = 0; j < barriers[i].length; j++) {
             barriers[i][j].render()
@@ -351,8 +373,9 @@ export class AsteroidsComponent implements OnInit {
 
 
         ship.render();
-        hud.render(stageClear, level, lives, score, title);
+        hud.render(stageClear, level, lives, score, laserCharge);
       }
+    }
     };
     let canvas = new p5(game);
   };

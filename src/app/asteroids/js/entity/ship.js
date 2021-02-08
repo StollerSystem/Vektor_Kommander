@@ -7,7 +7,7 @@ import VaporTrail from '../effects/vapor-trail.js';
 import Thruster from '../effects/thruster.js';
 
 
-export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust) {
+export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge) {
   Entity.call(this, 200, g.height / 2, 20, g);
   this.isDestroyed = false;
   this.destroyFrames = 1000;
@@ -32,11 +32,15 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     if (!press) {
       return;
     }
-    let shootPos = g.createVector(scope.pos.x + 30 * g.cos(scope.heading), scope.pos.y + 30 * g.sin(scope.heading));
-    var laser = new Laser(shootPos, scope.vel, scope.heading, g, color1, false, scope.heading);
-    var dustVel = laser.vel.copy();
-    addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5, g);
-    lasers.push(laser);
+
+    if (reduceLaserCharge()) {
+      let shootPos = g.createVector(scope.pos.x + 30 * g.cos(scope.heading), scope.pos.y + 30 * g.sin(scope.heading));
+      var laser = new Laser(shootPos, scope.vel, scope.heading, g, color1, false, scope.heading);
+      var dustVel = laser.vel.copy();
+      addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5, g);
+      lasers.push(laser);
+            
+    }
     // var effect = laserSoundEffects[floor(random() * laserSoundEffects.length)];
     // laser.playSoundEffect(effect);
   });
