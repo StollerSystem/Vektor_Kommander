@@ -98,6 +98,20 @@ export class AsteroidsComponent implements OnInit {
         enemies.push(new Enemy(radius, g, addDust, level, rgbColor5, rgbColor2, lasers))
       }
 
+      const checkDust = function () {
+        while (dust.length > 40) {
+          // console.log("too much dust!")
+          dust.shift()
+        }
+      }
+
+      const checkDebris = function () {
+        if (debris.length > 8) {
+          // console.log("too much debris!")
+          debris.shift()
+        }
+      }
+
       g.preload = () => {
 
         // RANDOMIZE COLORS
@@ -139,6 +153,7 @@ export class AsteroidsComponent implements OnInit {
       }
 
       g.setup = () => {
+        g.frameRate(50)
         g.createCanvas(g.windowWidth * .9, g.windowHeight * .9);
         ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust);
         hud = new Hud(g, rgbColor1, rgbColor3, pts);
@@ -151,6 +166,12 @@ export class AsteroidsComponent implements OnInit {
       }
 
       g.draw = () => {
+
+        // CHECK FOR FX CREATING LAAAAG
+        checkDust();
+        checkDebris();
+        // console.log("DUST: "+dust.length)
+        // console.log("DEBRIS: "+debris.length)
 
         // STARS
         for (let i = 0; i < stars.length; i++) {
