@@ -19,9 +19,9 @@ export default function Asteroid(pos, r, size, g, color) {
     case 2:
       this.vel.mult(1); break;
     case 1:
-      this.vel.mult(1.5); break;
+      this.vel.mult(1.25); break;
     case 0:
-      this.vel.mult(2); break;
+      this.vel.mult(1.75); break;
   }
 
 

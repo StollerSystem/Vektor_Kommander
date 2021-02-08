@@ -1,6 +1,7 @@
 import * as p5 from 'p5';
 
-export default function LaserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input) {
+export default function LaserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore) {
+  const points = [200, 100, 50, 25];
   var g = g;
   var exists = true;  
   for (var j = asteroids.length - 1; j >= 0; j--) {
@@ -10,6 +11,7 @@ export default function LaserCollision(g, lasers, i, asteroids, addDust, rgbColo
       // asteroids[j].playSoundEffect(explosionSoundEffects);
       if (!lasers[i].enemy) {
         // score += points[asteroids[j].size];
+        addToScore(points[asteroids[j].size])
       }
       var dustVel = p5.Vector.add(lasers[i].vel.mult(0.2), asteroids[j].vel);
       var dustNum = (asteroids[j].size * 2 + 1) * 3;
@@ -39,6 +41,10 @@ export default function LaserCollision(g, lasers, i, asteroids, addDust, rgbColo
     for (var k = enemies.length - 1; k >= 0; k--) {
       if (lasers[i].hits(enemies[k]) && !lasers[i].enemy) {
         exists = false;
+        if (!lasers[i].enemy) {
+          // score += points[asteroids[j].size];
+          addToScore(100)
+        }
         let dustVel = p5.Vector.add(lasers[i].vel.mult(0.5), enemies[k].vel);
         addDust(enemies[k].pos, dustVel, 10, .01, rgbColor5, 1, g);
         addDebris(enemies[k].pos, enemies[k].vel, 10, 30, g, rgbColor5)
@@ -54,6 +60,10 @@ export default function LaserCollision(g, lasers, i, asteroids, addDust, rgbColo
       for (var j = barriers[k].length - 1; j >= 0; j--) {
         if (exists && lasers[i].hits(barriers[k][j])) {
           exists = false;
+          if (!lasers[i].enemy) {
+            // score += points[asteroids[j].size];
+            addToScore(10)
+          }
            //THIS LASER HIT DUST IS LEGIT
           let dustVel = p5.Vector.add(lasers[i].vel.mult(0.05), barriers[k][j].vel);
           addDust(barriers[k][j].pos, dustVel, 5, .02, rgbColor2, 3, g);

@@ -6,11 +6,12 @@ import Enemy from './js/entity/enemy.js'
 import { input } from './js/utility/input.js';
 import Dust from './js/effects/dust.js';
 import Hud from './js/utility/hud.js';
+import Splash from './js/utility/splash.js'
 import Debris from './js/effects/debris.js';
 import Star from './js/effects/star.js';
 import loadStars from './js/utility/load-stars.js';
 import loadBarriers from './js/utility/load-barriers.js';
-import LaserCollision from './js/utility/laser-collision.js'
+import LaserCollision from './js/utility/laser-collision.js';
 
 @Component({
   selector: 'app-asteroids',
@@ -43,10 +44,11 @@ export class AsteroidsComponent implements OnInit {
     var stageClear: any = false;
     var score: any = 0;
     var lives: any = 3;
-    const points: any = [200, 100, 50, 25];
+    // const points: any = [200, 100, 50, 25];
     var level: any = 0;
     let stars: any = [];
     let barriers: any = [];
+    let splash: any;
     // var laserSoundEffects: any = [];
     // var explosionSoundEffects: any = [];
     // var rocketSoundEffects: any = [];
@@ -98,6 +100,10 @@ export class AsteroidsComponent implements OnInit {
         enemies.push(new Enemy(radius, g, addDust, level, rgbColor5, rgbColor2, lasers))
       }
 
+      const addToScore = function (add) {
+        score += add;
+      }
+
       const checkDust = function () {
         while (dust.length > 40) {
           // console.log("too much dust!")
@@ -114,6 +120,8 @@ export class AsteroidsComponent implements OnInit {
 
       g.preload = () => {
 
+
+
         // RANDOMIZE COLORS
         let ran1 = Math.round(g.random(1, 3))
         let c1x = ran1 === 3 ? 255 : 0;
@@ -123,18 +131,27 @@ export class AsteroidsComponent implements OnInit {
         let c1b = ran1 === 2 ? 0 : 240;
         let c1c = ran1 === 3 ? 0 : 240;
         rgbColor1 = [Math.round(g.random(c1x, c1a)), Math.round(g.random(c1y, c1b)), Math.round(g.random(c1z, c1c))]
+        let c2x = ran1 === 2 ? 255 : 0;
+        let c2y = ran1 === 3 ? 255 : 0;
+        let c2z = ran1 === 1 ? 255 : 0;
         let c2a = ran1 === 3 ? 0 : 255;
         let c2b = ran1 === 1 ? 0 : 255;
         let c2c = ran1 === 2 ? 0 : 255;
-        rgbColor2 = [Math.round(g.random(0, c2a)), Math.round(g.random(0, c2b)), Math.round(g.random(0, c2c))]
+        rgbColor2 = [Math.round(g.random(c2x, c2a)), Math.round(g.random(c2y, c2b)), Math.round(g.random(c2z, c2c))]
+        let c3x = ran1 === 1 ? 255 : 0;
+        let c3y = ran1 === 2 ? 255 : 0;
+        let c3z = ran1 === 3 ? 255 : 0;
         let c3a = ran1 === 2 ? 0 : 255;
         let c3b = ran1 === 3 ? 0 : 255;
         let c3c = ran1 === 1 ? 0 : 255;
-        rgbColor3 = [Math.round(g.random(0, c3a)), Math.round(g.random(0, c3b)), Math.round(g.random(0, c3c))]
+        rgbColor3 = [Math.round(g.random(c3x, c3a)), Math.round(g.random(c3y, c3b)), Math.round(g.random(c3z, c3c))]
+        let c4x = ran1 === 2 ? 255 : 0;
+        let c4y = ran1 === 1 ? 255 : 0;
+        let c4z = ran1 === 3 ? 255 : 0;
         let c4a = ran1 === 1 ? 0 : 255;
         let c4b = ran1 === 3 ? 0 : 255;
         let c4c = ran1 === 2 ? 0 : 255;
-        rgbColor4 = [Math.round(g.random(0, c4a)), Math.round(g.random(0, c4b)), Math.round(g.random(0, c4c))]
+        rgbColor4 = [Math.round(g.random(c4x, c4a)), Math.round(g.random(c4y, c4b)), Math.round(g.random(c4z, c4c))]
         let c5a = ran1 === 1 ? 0 : 255;
         let c5b = ran1 === 3 ? 0 : 255;
         let c5c = ran1 === 2 ? 0 : 255;
@@ -157,7 +174,10 @@ export class AsteroidsComponent implements OnInit {
         g.createCanvas(g.windowWidth * .9, g.windowHeight * .9);
         ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust);
         hud = new Hud(g, rgbColor1, rgbColor3, pts);
-        stars = loadStars(g)
+        stars = loadStars(g);
+        splash = new Splash();
+        // g.textFont(myFont);
+        // g.text('hello', 10, 50)
         // pts = mainFont.textToPoints('ASTRO-BLASTER', 0, 0, 200, {
         //   sampleFactor: 0.25,
         //   simplifyThreshold: 0
@@ -166,7 +186,7 @@ export class AsteroidsComponent implements OnInit {
       }
 
       g.draw = () => {
-
+      
         // CHECK FOR FX CREATING LAAAAG
         checkDust();
         checkDebris();
@@ -239,7 +259,7 @@ export class AsteroidsComponent implements OnInit {
             lasers.splice(i, 1);
             continue;
           }
-          LaserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input)          
+          LaserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore)          
         }
 
         // CHECK FOR COLLISION BEWTWEEN SHIP + ENEMY 
@@ -302,6 +322,9 @@ export class AsteroidsComponent implements OnInit {
 
         // ALL RENDERS...
         g.background(0);
+
+        splash.render(g)
+
         for (let i = 0; i < barriers.length; i++) {
           for (let j = 0; j < barriers[i].length; j++) {
             barriers[i][j].render()
@@ -325,6 +348,8 @@ export class AsteroidsComponent implements OnInit {
         for (var i = enemies.length - 1; i >= 0; i--) {
           enemies[i].render();
         }
+
+
         ship.render();
         hud.render(stageClear, level, lives, score, title);
       }

@@ -9,5 +9,5 @@ export default function Thruster(g, color, v1x, v1y, v2x, v2y, v3x, v3y) {
     v1x, v1y,
     v2x, v2y,
     v3x, v3y);
-  g.pop()
+   g.pop()
 }

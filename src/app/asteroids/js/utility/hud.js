@@ -1,17 +1,18 @@
 export default function Hud(g, rgbColor1, rgbColor3, pts) {
-  var size = 20;
+  var size = 30;
   var padding = 10;
   var lifeWidth = 20;
+  var r = 8;
 
   // digitMaps is used to create line representations of digits 0 through 9,
   // the diagram below indicates the mapping of the digitMaps array index to
   // its visual line.
   /*
-   --0--
-   1   2
-   --3--
-   4   5
-   --6--
+  --0--
+  1   2
+  --3--
+  4   5
+  --6--
   */
   var digitMaps = [
     // Return a digit map
@@ -29,14 +30,15 @@ export default function Hud(g, rgbColor1, rgbColor3, pts) {
   ];
 
   this.render = function (stageClear, level, lives, score, title) {
-    // var scoreString = "" + score;
-    // var x = (g.width - (scoreString.length * (size + padding))) / 2;
-    // var digitPos = g.createVector(x, padding);
-    // for (var i = 0; i < scoreString.length; i++) {
-    //   var dmap = digitMaps[scoreString.charAt(i)];
-    //   drawDigit(dmap, i, digitPos);
-    //   digitPos.x += size + padding;
-    // }
+    var scoreString = "" + score;
+    var x = 75 - (scoreString.length * (size + padding)/3);
+    // var x = 100 
+    var digitPos = g.createVector(x, padding);
+    for (var i = 0; i < scoreString.length; i++) {
+      var dmap = digitMaps[scoreString.charAt(i)];
+      drawDigit(dmap, i, digitPos);
+      digitPos.x += size + padding;
+    }
 
     drawLives(lives);
 
@@ -98,18 +100,32 @@ export default function Hud(g, rgbColor1, rgbColor3, pts) {
   }
 
   function drawLives(lives) {
-    // g.push();
-    // g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
-    // g.strokeWeight(g.random(1,1.5))
-    // g.fill(0);
-    // var top = g.createVector((g.width / 2) + lifeWidth * 2, padding * 2 + size * 2);
-    // for (var i = 0; i < lives; i++) {
-    //   g.triangle(top.x, top.y,
-    //     top.x - lifeWidth / 2, top.y + 25,
-    //     top.x + lifeWidth / 2, top.y + 25);
-    //   top.x -= 20 + padding;
-    // }
-    // g.pop();
+    g.push();
+    g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
+    g.strokeWeight(g.random(1,1.5))
+    g.fill(0);
+    g.translate(g.width-150,20)
+    var top = g.createVector((g.width / 2) + lifeWidth * 2, padding * 2 + size * 2);
+    for (var i = 0; i < lives; i++) {
+      g.translate(35,0)
+      g.curve(
+        -1, 20,
+        0 - 10, -r / 3,
+        r - 10, -r / 8,
+        r * 2, 30,
+      )
+      g.beginShape()
+      g.vertex(-r - 10, r / 2)
+      g.vertex(r * 2 - 10, r / 2)
+      g.vertex(r * 2.5 - 10, 0)
+      g.vertex(-10, -r / 3)
+      g.vertex(-r - 10, -r)
+      g.endShape(g.CLOSE)
+      g.triangle(-r - 10, r,
+        -r - 10, r / 4,
+        r / 2 - 10, r / 4);
+    }
+    g.pop();
   }
 
   //draws the digit based on the digit map
