@@ -4,7 +4,7 @@ export default function Splash() {
 
   const colorArray = ['red', 'blue', 'green', 'yellow', 'red', 'orange', 'pink', 'purple', 'cyan']
 
-  this.render = function (g, stars) {
+  this.render = function (g, stars, windowWidth) {
 
     for (let i = 0; i < stars.length; i++) {
       stars[i].move(1.25)
@@ -28,29 +28,29 @@ export default function Splash() {
 
     g.push()
     g.fill(255)
-    g.strokeWeight(g.random(1, 3))
+    g.strokeWeight(g.random(1, 3*(windowWidth/1800)))
     g.stroke(255)
-    g.textSize(100)
+    g.textSize(100*(windowWidth/1800))
     g.textAlign(g.CENTER)
     g.textFont('Montserrat')
-    g.text('EUCLID COMMANDER', centerX, centerY * .85)
+    g.text('VEKTOR KOMMANDER', centerX, centerY * .85)
     g.pop()
 
     g.push()
     g.fill(255)
-    g.strokeWeight(g.random(.5, 3))
+    g.strokeWeight(g.random(.5, 3*(windowWidth/1800)))
     g.stroke(255)
     g.textAlign(g.CENTER)
-    g.textSize(35)
+    g.textSize(35*(windowWidth/1800))
     g.textFont('Montserrat')
     g.text('PRESS <ENTER> TO START', centerX, centerY)
     g.pop()
 
     g.push()
     g.fill(255)
-    g.strokeWeight(g.random(.5, 2))
+    g.strokeWeight(g.random(.5, 2*(windowWidth/1800)))
     g.stroke(255)
-    g.textSize(20)
+    g.textSize(20*(windowWidth/1800))
     g.textFont('Montserrat')
     g.textAlign(g.RIGHT)
     g.text('⇧', centerX / 1.075, centerY / .70)
@@ -66,18 +66,18 @@ export default function Splash() {
 
     
     // THE SHIP
-    const r = 20
+    const r = 20*(windowWidth/1800)
 
     g.push()
     g.stroke(255)
     g.fill(0)
-    g.strokeWeight(g.random(.5, 2))
+    g.strokeWeight(g.random(.5, 2*(windowWidth/1800)))
     g.translate(centerX,centerY / .55)
     g.curve(
       -1, 20,
       0 - 10, -r / 3,
       r - 10, -r / 8,
-      r * 2, 80,
+      r * 2, 80*(windowWidth/1800),
     )
     g.beginShape()
     g.vertex(-r - 10, r / 2)

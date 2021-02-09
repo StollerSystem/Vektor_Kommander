@@ -26,6 +26,7 @@ export class AsteroidsComponent implements OnInit {
 
   ngOnInit(): void {
 
+    var windowWidth: any;
     var ship: any;
     var hud: any
     var asteroids: any = [];
@@ -160,10 +161,14 @@ export class AsteroidsComponent implements OnInit {
       }
 
       g.setup = () => {
+
+        windowWidth = g.windowWidth;
+        // console.log(g.windowHeight)
         g.frameRate(60)
-        g.createCanvas(g.windowWidth * .98, g.windowHeight * .75);
+        g.createCanvas(windowWidth * .98, windowWidth/2);
+        console.log("w:"+g.width+" h:"+g.height)
         ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge);
-        hud = new Hud(g, rgbColor1, rgbColor3, pts);
+        hud = new Hud(g, rgbColor1, rgbColor3, pts, windowWidth);
         stars = loadStars(g);
         splash = new Splash();
         // g.textFont(myFont);
@@ -192,7 +197,7 @@ export class AsteroidsComponent implements OnInit {
             beginGameSequence = g.frameCount;
           });
           g.background(0);
-          splash.render(g, stars);
+          splash.render(g, stars, windowWidth);
 
         } else {
       
