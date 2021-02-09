@@ -1,6 +1,6 @@
 import * as p5 from 'p5';
 
-export default function LaserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore) {
+export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore) {
   const points = [200, 100, 50, 25];
   var g = g;
   var exists = true;  

@@ -11,7 +11,9 @@ import Debris from './js/effects/debris.js';
 import Star from './js/effects/star.js';
 import loadStars from './js/utility/load-stars.js';
 import loadBarriers from './js/utility/load-barriers.js';
-import LaserCollision from './js/utility/laser-collision.js';
+import hyperDrive from './js/effects/hyper-drive.js'
+import laserCollision from './js/utility/laser-collision.js';
+import randomColors from './js/utility/random-colors.js';
 
 @Component({
   selector: 'app-asteroids',
@@ -43,8 +45,7 @@ export class AsteroidsComponent implements OnInit {
     var title: any = false;
     var stageClear: any = false;
     var score: any = 0;
-    var lives: any = 3;
-    // const points: any = [200, 100, 50, 25];
+    var lives: any = 3;    
     var level: any = 0;
     let stars: any = [];
     let barriers: any = [];
@@ -103,6 +104,7 @@ export class AsteroidsComponent implements OnInit {
           const y = g.random(0 + size * 4, g.height - size * 4)
           const x = g.width + size * 6;
 
+          barrierSensor.push()
           barriers.push(loadBarriers(g, x, y, vx, size, rgbColor4))
         }
       }
@@ -117,25 +119,22 @@ export class AsteroidsComponent implements OnInit {
       }
 
       const checkDust = function () {
-        while (dust.length > 40) {
-          // console.log("too much dust!")
-          dust.shift()
+        while (dust.length > 40) {          
+          dust.shift();
         }
       }
 
       const checkDebris = function () {
-        if (debris.length > 8) {
-          // console.log("too much debris!")
-          debris.shift()
+        if (debris.length > 8) {          
+          debris.shift();
         }
       }
 
       const checkLaserCharge = function () {
         if (laserCharge < 0) {
           laserCharge = 0;
-          laserOverHeat = true 
-          setTimeout(function () {
-            // console.log("over heat timeout")
+          laserOverHeat = true;
+          setTimeout(function () {            
             laserOverHeat = false;
             laserCharge = 1;
           }, 2500);
@@ -143,59 +142,21 @@ export class AsteroidsComponent implements OnInit {
         if (laserCharge < 1270 && !laserOverHeat) {
           laserCharge += 5;
         }        
-      }
-
-     
+      }     
 
       g.preload = () => {
-
-
-
-        // RANDOMIZE COLORS
-        let ran1 = Math.round(g.random(1, 3))
-        let c1x = ran1 === 3 ? 255 : 0;
-        let c1y = ran1 === 1 ? 255 : 0;
-        let c1z = ran1 === 2 ? 255 : 0;
-        let c1a = ran1 === 1 ? 0 : 240;
-        let c1b = ran1 === 2 ? 0 : 240;
-        let c1c = ran1 === 3 ? 0 : 240;
-        rgbColor1 = [Math.round(g.random(c1x, c1a)), Math.round(g.random(c1y, c1b)), Math.round(g.random(c1z, c1c))]
-        let c2x = ran1 === 2 ? 255 : 0;
-        let c2y = ran1 === 3 ? 255 : 0;
-        let c2z = ran1 === 1 ? 255 : 0;
-        let c2a = ran1 === 3 ? 0 : 255;
-        let c2b = ran1 === 1 ? 0 : 255;
-        let c2c = ran1 === 2 ? 0 : 255;
-        rgbColor2 = [Math.round(g.random(c2x, c2a)), Math.round(g.random(c2y, c2b)), Math.round(g.random(c2z, c2c))]
-        let c3x = ran1 === 1 ? 255 : 0;
-        let c3y = ran1 === 2 ? 255 : 0;
-        let c3z = ran1 === 3 ? 255 : 0;
-        let c3a = ran1 === 2 ? 0 : 255;
-        let c3b = ran1 === 3 ? 0 : 255;
-        let c3c = ran1 === 1 ? 0 : 255;
-        rgbColor3 = [Math.round(g.random(c3x, c3a)), Math.round(g.random(c3y, c3b)), Math.round(g.random(c3z, c3c))]
-        let c4x = ran1 === 2 ? 255 : 0;
-        let c4y = ran1 === 1 ? 255 : 0;
-        let c4z = ran1 === 3 ? 255 : 0;
-        let c4a = ran1 === 1 ? 0 : 255;
-        let c4b = ran1 === 3 ? 0 : 255;
-        let c4c = ran1 === 2 ? 0 : 255;
-        rgbColor4 = [Math.round(g.random(c4x, c4a)), Math.round(g.random(c4y, c4b)), Math.round(g.random(c4z, c4c))]
-        let c5a = ran1 === 1 ? 0 : 255;
-        let c5b = ran1 === 3 ? 0 : 255;
-        let c5c = ran1 === 2 ? 0 : 255;
-        rgbColor5 = [Math.round(g.random(0, c5a)), Math.round(g.random(0, c5b)), Math.round(g.random(0, c5c))]
-        // COLOR SCHEME #1
-        // rgbColor1 = [116, 238, 21]
-        // rgbColor2 = [255, 0, 0]
-        // rgbColor3 = [77, 238, 234]
-        // rgbColor4 = [240, 0, 255]
-        // rgbColor5 = [240, 0, 255]
-
+        
+        let random_Colors = randomColors(g);
+        rgbColor1 = random_Colors[0]
+        rgbColor2 = random_Colors[1]
+        rgbColor3 = random_Colors[2]
+        rgbColor4 = random_Colors[3]
+        rgbColor5 = random_Colors[4]
         console.log(rgbColor1)
         console.log(rgbColor2)
         console.log(rgbColor3)
         console.log(rgbColor4)
+        console.log(rgbColor5)
       }
 
       g.setup = () => {
@@ -245,27 +206,28 @@ export class AsteroidsComponent implements OnInit {
 
         // STARS
         if (g.frameCount-beginGameSequence < 175) {
-          for (let i = 0; i < stars.length; i++) {
-            if (g.frameCount-beginGameSequence < 100) {
-            easeInStars = easeInStars/Math.pow(1.000008, g.frameCount-beginGameSequence)
-            // easeInStars = easeInStars/((g.frameCount-beginGameSequence))
-            } 
-            else {
-            easeInStars += (g.frameCount-beginGameSequence)/1000000
-              if (easeInStars >= 1.25) {
-                easeInStars = 1.25
-              }
-            }
-            stars[i].move(easeInStars)
-            if (stars[i].x <= 0) {
-              let windowX = g.width
-              let randomY = g.random(0, g.height)
-              let randomSize = g.random(.1, 25)
-              const newStar = new Star(windowX, randomY, randomSize, g);
-              stars.push(newStar)
-              stars.splice(i, 1)
-            }
-          }
+          hyperDrive(g, stars, easeInStars, beginGameSequence)
+          // for (let i = 0; i < stars.length; i++) {
+          //   if (g.frameCount-beginGameSequence < 100) {
+          //   easeInStars = easeInStars/Math.pow(1.000008, g.frameCount-beginGameSequence)
+          //   } 
+          //   else {
+          //   easeInStars += (g.frameCount-beginGameSequence)/1000000
+          //     if (easeInStars >= 1.25) {
+          //       easeInStars = 1.25
+          //     }
+          //   }
+          //   stars[i].move(easeInStars)
+          //   if (stars[i].x <= 0) {
+          //     let windowX = g.width
+          //     let randomY = g.random(0, g.height)
+          //     let randomSize = g.random(.1, 25)
+          //     const newStar = new Star(windowX, randomY, randomSize, g);
+          //     stars.push(newStar)
+          //     stars.splice(i, 1)
+          //   }
+          // }
+          
         } else {
           for (let i = 0; i < stars.length; i++) {
             stars[i].move(1.25)
@@ -333,7 +295,7 @@ export class AsteroidsComponent implements OnInit {
             lasers.splice(i, 1);
             continue;
           }
-          LaserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore)          
+          laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore)          
         }
 
         // CHECK FOR COLLISION BEWTWEEN SHIP + ENEMY 
