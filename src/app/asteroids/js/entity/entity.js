@@ -1,6 +1,6 @@
 import * as p5 from 'p5';
 
-export default function Entity(x, y, radius, g)
+export default function Entity(x, y, radius, g, windowMod)
 {  
   this.g = g;
   this.pos = g.createVector(x, y);
@@ -10,13 +10,17 @@ export default function Entity(x, y, radius, g)
   this.rotation = 0;
   this.vel = g.createVector(0, 0);
   this.accelMagnitude = 0;  
+  this.windowMod = windowMod != null ? windowMod : 1;  
+  this.velMod = g.createVector(parseFloat(this.windowMod),parseFloat(this.windowMod))
+  // console.log(this.velMod)
 }
 
 Entity.prototype.update = function() {
   this.heading += this.rotation;  
   var force = p5.Vector.fromAngle(this.heading);
-  force.mult(this.accelMagnitude);
-  this.vel.add(force);
+  force.mult(this.accelMagnitude);  
+  this.vel.add(force);  
+  this.vel.mult(this.velMod)
   this.pos.add(this.vel);  
 }
 

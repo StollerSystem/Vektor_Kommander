@@ -8,17 +8,19 @@ import Thruster from '../effects/thruster.js';
 
 
 export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth) {
-  Entity.call(this, 200, g.height / 2, 20 * (windowWidth / 1800), g);
+  this.w = windowWidth / 1800;
+  var velMod = this.w > .6 ? 1 : .98
+  Entity.call(this, 200, g.height / 2, 20 * this.w, g, velMod);
   this.isDestroyed = false;
   this.destroyFrames = 1000;
   this.shields = shieldTime;
   this.rmax = this.r * 1.5;
   this.rmax2 = this.rmax * this.rmax;
-  this.w = windowWidth / 1800
   // this.tailEdge = true; //if true will hide vapor trail
   // this.tailSkip = false;//tail effect toggles between true/false
   var trailColor = color2;
-  this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r)
+  var trailLength = Math.round(20*this.w)
+  this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r, trailLength)
 
   g.keyReleased = () => {
     input.handleEvent(g.key, g.keyCode, false);
@@ -38,7 +40,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
       var laser = new Laser(shootPos, scope.vel, scope.heading, g, color1, false, scope.heading, scope.w);
       var dustVel = laser.vel.copy();
-      addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5*scope.w, g);
+      addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
       lasers.push(laser);
 
     }
@@ -171,7 +173,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
 
   this.edges = function () {
     if (this.pos.x >= this.g.width - this.rmax) {
-      let rebound = this.vel.x < 2 ? -2 : -this.vel.x / 2;
+      let rebound = this.vel.x < 2 ? -2 * this.w : -this.vel.x / 2;
       this.vel = g.createVector(rebound, 0);
     } else if (this.pos.x <= + this.rmax) {
       if (this.vel.x < 0) {
@@ -179,11 +181,11 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       }
     }
     if (this.pos.y >= this.g.height - this.rmax) {
-      let rebound = this.vel.y < 2 ? -2 : this.vel.y / 2;
+      let rebound = this.vel.y < 2 ? -2 * this.w : this.vel.y / 2;
       this.vel = g.createVector(this.vel.x, rebound);
 
     } else if (this.pos.y <= +this.rmax) {
-      let rebound = this.vel.y > -2 ? 2 : -this.vel.y / 2;
+      let rebound = this.vel.y > -2 ? 2 * this.w : -this.vel.y / 2;
       this.vel = g.createVector(this.vel.x, rebound);
     }
   }

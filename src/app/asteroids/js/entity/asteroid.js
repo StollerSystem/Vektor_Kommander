@@ -9,7 +9,7 @@ export default function Asteroid(pos, r, size, g, color, windowWidth) {
     pos = g.createVector(g.width + r, g.random(g.height));
   }
 
-  Entity.call(this, pos.x, pos.y, r, g);
+  Entity.call(this, pos.x, pos.y, r, g, null);
 
   this.vel = g.createVector(g.random(-2, -4), g.random(2, -2))
   this.total = g.floor(g.random(7, 15));

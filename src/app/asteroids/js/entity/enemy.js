@@ -3,7 +3,7 @@ import Entity from './entity.js';
 import Laser from './laser.js';
 
 export default function Enemy(r, g, addDust, level, color1, color2, lasers, windowWidth) {
-  
+
   this.w = windowWidth / 1800;  
 
   var outOfBounds = [
@@ -15,7 +15,7 @@ export default function Enemy(r, g, addDust, level, color1, color2, lasers, wind
   var r = r;
   var pos = outOfBounds[g.floor(g.random(0, 4))]
   var radius = r*this.w;
-  Entity.call(this, pos.x, pos.y, radius, g)
+  Entity.call(this, pos.x, pos.y, radius, g, null)
   
   this.crazyness = g.random(1, 2 + level / 4);
   this.shotThresh = g.random(1, 1.5 + level / 5);

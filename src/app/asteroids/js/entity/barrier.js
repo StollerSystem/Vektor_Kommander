@@ -5,9 +5,10 @@ export default function Barrier(g, x, y, vx, vy, color, w) {
 
   var pos = g.createVector(x, y)
   const colorArray = ['blue', 'red', 'green', 'yellow', 'purple', 'orange', 'pink']
+
   var r = 30 * (w / 1800);
 
-  Entity.call(this, pos.x, pos.y, r, g)
+  Entity.call(this, pos.x, pos.y, r, g, null)
 
   this.vel = g.createVector(vx, vy) // SET VELOCITY
   // this.rotation = 1

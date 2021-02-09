@@ -1,8 +1,9 @@
-export default function VaporTrail(g, pos, color, shields, r) {
+export default function VaporTrail(g, pos, color, shields, r, length) {
   this.pos = pos
   this.shields = shields;
   this.tailSkip = false;
-  this.lastPos = new Array(20);
+  this.len = length
+  this.lastPos = new Array(this.len);
   this.r = r;
   
   for (var i = 0; i < this.lastPos.length; i++) {

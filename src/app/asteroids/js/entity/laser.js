@@ -4,7 +4,7 @@ import { lineIntersect } from '../utility/utility.js';
 
 export default function Laser(spos, svel, angle, g, color, enemy, heading, windowWidthMod) {
 
-  Entity.call(this, spos.x, spos.y, 4, g);
+  Entity.call(this, spos.x, spos.y, 4, g, null);
   this.pos = g.createVector(spos.x, spos.y);
   this.vel = p5.Vector.fromAngle(angle);
   this.enemy = enemy ? enemy : false;
