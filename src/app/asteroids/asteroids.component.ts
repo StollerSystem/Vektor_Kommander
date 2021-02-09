@@ -49,8 +49,9 @@ export class AsteroidsComponent implements OnInit {
     let stars: any = [];
     let barriers: any = [];
     let splash: any;
-    var laserCharge = 1000;
+    var laserCharge = 1270;
     let splashScreen: boolean = true;
+    let beginGameSequence: number = 0;
     // var laserSoundEffects: any = [];
     // var explosionSoundEffects: any = [];
     // var rocketSoundEffects: any = [];
@@ -187,8 +188,8 @@ export class AsteroidsComponent implements OnInit {
       }
 
       g.setup = () => {
-        g.frameRate(50)
-        g.createCanvas(g.windowWidth * .9, g.windowHeight * .9);
+        g.frameRate(60)
+        g.createCanvas(g.windowWidth * .98, g.windowHeight * .75);
         ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge);
         hud = new Hud(g, rgbColor1, rgbColor3, pts);
         stars = loadStars(g);
@@ -204,9 +205,20 @@ export class AsteroidsComponent implements OnInit {
 
       g.draw = () => {
 
-        if (!splashScreen) {
+        if (splashScreen) {
+          g.keyReleased = () => {
+            input.handleEvent(g.key, g.keyCode, false);
+          }
+        
+          g.keyPressed = () => {
+            input.handleEvent(g.key, g.keyCode, true);
+          }
+          input.registerAsListener(g.ENTER, function (char, code, press) {
+            splashScreen = false;
+            beginGameSequence = g.frameCount;
+          });
           g.background(0);
-          splash.render(g);
+          splash.render(g, stars);
         } else {
       
         // CHECK FOR FX CREATING LAAAAG
@@ -218,15 +230,30 @@ export class AsteroidsComponent implements OnInit {
         // console.log("DEBRIS: "+debris.length)
 
         // STARS
-        for (let i = 0; i < stars.length; i++) {
-          stars[i].move()
-          if (stars[i].x <= 0) {
-            let windowX = g.width
-            let randomY = g.random(0, g.height)
-            let randomSize = g.random(0.1, 7)
-            const newStar = new Star(windowX, randomY, randomSize, g);
-            stars.push(newStar)
-            stars.splice(i, 1)
+        console.log(beginGameSequence)
+        if (g.frameCount-beginGameSequence < 200) {
+          for (let i = 0; i < stars.length; i++) {
+            stars[i].move()
+            if (stars[i].x <= 0) {
+              let windowX = g.width
+              let randomY = g.random(0, g.height)
+              let randomSize = g.random(3, 25)
+              const newStar = new Star(windowX, randomY, randomSize, g);
+              stars.push(newStar)
+              stars.splice(i, 1)
+            }
+          }
+        } else {
+          for (let i = 0; i < stars.length; i++) {
+            stars[i].move()
+            if (stars[i].x <= 0) {
+              let windowX = g.width
+              let randomY = g.random(0, g.height)
+              let randomSize = g.random(0.1, 7)
+              const newStar = new Star(windowX, randomY, randomSize, g);
+              stars.push(newStar)
+              stars.splice(i, 1)
+            }
           }
         }
 

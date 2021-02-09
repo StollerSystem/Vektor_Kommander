@@ -21,7 +21,7 @@ export default function Barrier(g, x, y, vx, vy, color) {
     g.translate(this.pos.x, this.pos.y)
     g.rotate(this.heading)
     g.rectMode(g.CENTER)
-    g.strokeWeight(g.random(.5, 1.5));
+    g.strokeWeight(g.random(1, 1.75));
     g.rect(0, 0, this.r, this.r)
     g.pop()
     // GLOW?

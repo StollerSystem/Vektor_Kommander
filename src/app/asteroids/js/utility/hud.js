@@ -1,21 +1,10 @@
 export default function Hud(g, rgbColor1, rgbColor3, pts) {
   var size = 30;
   var padding = 10;
-  var lifeWidth = 20;
+  
   var r = 8;
-
-  // digitMaps is used to create line representations of digits 0 through 9,
-  // the diagram below indicates the mapping of the digitMaps array index to
-  // its visual line.
-  /*
-  --0--
-  1   2
-  --3--
-  4   5
-  --6--
-  */
-  var digitMaps = [
-    // Return a digit map
+  
+  var digitMaps = [    
     [true, true, true, false, true, true, true], //0
     [false, false, true, false, false, true, false], //1
     [true, false, true, true, true, false, true], //2
@@ -54,52 +43,21 @@ export default function Hud(g, rgbColor1, rgbColor3, pts) {
       g.strokeWeight(g.random(1,3))
       g.text("GAME OVER", (g.width / 2), g.height / 2);
       g.pop();
-    }
+    }    
 
-    // if (title) {
+    // if (stageClear) {      
+    //   // if (!stageSoundEffect.isPlaying() && !soundPlayed) {        
+    //   //   stageSoundEffect.play();
+    //   // }
     //   g.push();
-    //   g.textSize(25);
+    //   g.textSize(100);
     //   // g.textFont(mainFont)
     //   g.stroke(`rgba(${rgbColor1[0]},${rgbColor1[1]},${rgbColor1[2]},1)`);
-    //   g.strokeWeight(g.random(1,1.5))
-    //   g.fill(`rgba(${rgbColor1[0]},${rgbColor1[1]},${rgbColor1[2]},1)`);
-    //   g.text("'UP_ARROW: FORWARD THRUST' - 'LEFT/RIGHT_ARROW: ROTATIONAL THRUST' - 'SPACE_BAR: BLASTER'", (g.width / 2 -410) , g.height / 3 +50);
-    //   g.pop();
-
-    //   g.push();
-    //   g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
-    //   g.strokeWeight(g.random(1,1.5))
-    //   g.translate((g.width / 2) - 575, g.height / 3);      
-    //   g.noFill();
-    //   let rotX = g.sin(g.frameCount / 20) * 10;
-    //   let rotY = g.cos(g.frameCount / 20) * 10;
-    //   //draw the 3d lines
-    //   // for (let i = 0; i < pts.length; i++) {
-    //   //   g.line(pts[i].x, pts[i].y, pts[i].x - rotX, pts[i].y - rotY);
-    //   // }
-    //   // g.textFont(mainFont);
-    //   g.textSize(200);
-    //   g.text('ASTRO-BLASTER', 0, 0);
+    //   g.strokeWeight(g.random(2,3))
     //   g.fill(0);
-    //   // g.text('ASTRO-BLASTER', -rotX, -rotY);
+    //   g.text(`STAGE ${level+1} CLEAR!`, (g.width / 2) - 250, g.height / 3);
     //   g.pop();
     // }
-
-    if (stageClear) {
-      
-      // if (!stageSoundEffect.isPlaying() && !soundPlayed) {        
-      //   stageSoundEffect.play();
-      // }
-
-      g.push();
-      g.textSize(100);
-      // g.textFont(mainFont)
-      g.stroke(`rgba(${rgbColor1[0]},${rgbColor1[1]},${rgbColor1[2]},1)`);
-      g.strokeWeight(g.random(2,3))
-      g.fill(0);
-      g.text(`STAGE ${level+1} CLEAR!`, (g.width / 2) - 250, g.height / 3);
-      g.pop();
-    }
   }
 
   function drawLives(lives) {
@@ -107,8 +65,7 @@ export default function Hud(g, rgbColor1, rgbColor3, pts) {
     g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
     g.strokeWeight(g.random(1,1.5))
     g.fill(0);
-    g.translate(g.width-150,20)
-    // var top = g.createVector((g.width / 2) + lifeWidth * 2, padding * 2 + size * 2);
+    g.translate(g.width-150,20)    
     for (var i = 0; i < lives; i++) {
       g.translate(35,0)
       g.curve(
@@ -131,12 +88,10 @@ export default function Hud(g, rgbColor1, rgbColor3, pts) {
     g.pop();
   }
 
-  function drawLaserCharge(laserCharge) {
-    // console.log(laserCharge)
-    
+  function drawLaserCharge(laserCharge) {    
     g.push();
     g.stroke(255)
-    g.fill(`rgba(${-(laserCharge-1000)/5},${laserCharge/5},${0},.5)`);
+    g.fill(`rgba(${-(laserCharge-1270)/5},${laserCharge/5},${40},.5)`);
     g.strokeWeight(g.random(1,2))    
     g.rect(g.width/2-100,20, laserCharge/5, 15)
     g.pop()
@@ -147,7 +102,7 @@ export default function Hud(g, rgbColor1, rgbColor3, pts) {
   function drawDigit(digitMap, index, pos) {
     g.push();
     g.stroke(`rgba(${rgbColor1[0]},${rgbColor1[1]},${rgbColor1[2]},1)`);
-    g.strokeWeight(g.random(1,1.5))
+    g.strokeWeight(g.random(2,2.5))
     for (var i = 0; i < digitMap.length; i++) {
       if (digitMap[i] === true)
         drawLine(i, pos);
