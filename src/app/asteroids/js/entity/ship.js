@@ -33,12 +33,12 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     if (!press) {
       return;
     }
-    let offSet = 30 * scope.w;
+    let offSet = 29 * scope.w;
     if (reduceLaserCharge()) {
       let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
-      var laser = new Laser(shootPos, scope.vel, scope.heading, g, color1, false, scope.heading);
+      var laser = new Laser(shootPos, scope.vel, scope.heading, g, color1, false, scope.heading, scope.w);
       var dustVel = laser.vel.copy();
-      addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5, g);
+      addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5*scope.w, g);
       lasers.push(laser);
 
     }

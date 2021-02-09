@@ -1,21 +1,22 @@
 import * as p5 from 'p5';
 import Entity from './entity.js';
 
-export default function Asteroid(pos, r, size, g, color) {
+export default function Asteroid(pos, r, size, g, color, windowWidth) {
+  this.w = windowWidth / 1800;
 
-  r = r != null ? r * 0.5 : g.random(80, 105);
+  r = r != null ? r * 0.5 : g.random(80 * this.w, 105 * this.w);
   if (pos == null) {
-    pos = g.createVector(g.width+r, g.random(g.height));
+    pos = g.createVector(g.width + r, g.random(g.height));
   }
 
   Entity.call(this, pos.x, pos.y, r, g);
 
-  this.vel = g.createVector(g.random(-2,-4),g.random(2,-2))
+  this.vel = g.createVector(g.random(-2, -4), g.random(2, -2))
   this.total = g.floor(g.random(7, 15));
 
   //smaller asteroids go a bit faster
   this.size = size;
-  switch(size) {
+  switch (size) {
     case 2:
       this.vel.mult(1); break;
     case 1:
@@ -38,10 +39,10 @@ export default function Asteroid(pos, r, size, g, color) {
 
   Entity.prototype.setRotation.call(this, g.random(-0.03, 0.03));
 
-  this.render = function() {
+  this.render = function () {
     g.push();
     g.stroke(`rgba(${color[0]},${color[1]},${color[2]},1)`);
-    g.strokeWeight(g.random(1,1.5))
+    g.strokeWeight(g.random(1, 1.5))
     g.fill(0)
     g.translate(this.pos.x, this.pos.y);
     g.rotate(this.heading);
@@ -55,23 +56,23 @@ export default function Asteroid(pos, r, size, g, color) {
     g.pop();
   }
 
-  this.playSoundEffect = function(soundArray){
-    soundArray[floor(random(0,soundArray.length))].play();
+  this.playSoundEffect = function (soundArray) {
+    soundArray[floor(random(0, soundArray.length))].play();
   }
 
-  this.breakup = function() {
-    if(size > 0)
+  this.breakup = function () {
+    if (size > 0)
       return [
-        new Asteroid(this.pos, this.r, this.size-1, g, color),
-        new Asteroid(this.pos, this.r, this.size-1, g, color)
+        new Asteroid(this.pos, this.r, this.size - 1, g, color),
+        new Asteroid(this.pos, this.r, this.size - 1, g, color)
       ];
     else
       return [];
   }
 
-  this.vertices = function() {
+  this.vertices = function () {
     var vertices = []
-    for(var i = 0; i < this.total; i++) {
+    for (var i = 0; i < this.total; i++) {
       var angle = this.heading + g.map(i, 0, this.total, 0, g.TWO_PI);
       var r = this.r + this.offset[i];
       var vec = g.createVector(r * g.cos(angle), r * g.sin(angle));

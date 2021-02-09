@@ -84,7 +84,7 @@ export class AsteroidsComponent implements OnInit {
       setTimeout(function () {
         lives--;
         if (lives >= 0) {
-          ship = new Ship(game, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge);
+          ship = new Ship(game, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth);
           canPlay = true;
         }
       }, 3000);
@@ -94,7 +94,7 @@ export class AsteroidsComponent implements OnInit {
 
       const spawnAsteroids = function () {
         for (var i = 0; i < level + 1; i++) {
-          asteroids.push(new Asteroid(null, null, 3, g, rgbColor1));
+          asteroids.push(new Asteroid(null, null, 3, g, rgbColor1,windowWidth));
         }
       }
 
@@ -112,7 +112,7 @@ export class AsteroidsComponent implements OnInit {
 
       const spawnEnemy = function () {
         var radius = g.random(20, 30)
-        enemies.push(new Enemy(radius, g, addDust, level, rgbColor5, rgbColor2, lasers))
+        enemies.push(new Enemy(radius, g, addDust, level, rgbColor5, rgbColor2, lasers, windowWidth))
       }
 
       const addToScore = function (add) {
@@ -177,7 +177,7 @@ export class AsteroidsComponent implements OnInit {
         //   sampleFactor: 0.25,
         //   simplifyThreshold: 0
         // });
-        spawnAsteroids();
+        // spawnAsteroids();
       }
 
       let easeInStars = 1.25
@@ -300,7 +300,7 @@ export class AsteroidsComponent implements OnInit {
             lasers.splice(i, 1);
             continue;
           }
-          laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore)          
+          laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth)          
         }
 
         // CHECK FOR COLLISION BEWTWEEN SHIP + ENEMY 

@@ -2,7 +2,9 @@ import * as p5 from 'p5';
 import Entity from './entity.js';
 import Laser from './laser.js';
 
-export default function Enemy(r, g, addDust, level, color1, color2, lasers) {
+export default function Enemy(r, g, addDust, level, color1, color2, lasers, windowWidth) {
+  
+  this.w = windowWidth / 1800;  
 
   var outOfBounds = [
     g.createVector(g.random(g.width), -r),
@@ -10,10 +12,11 @@ export default function Enemy(r, g, addDust, level, color1, color2, lasers) {
     g.createVector(g.random(g.width), g.height + r),
     g.createVector(-r, g.random(g.height))
   ]
+  var r = r;
   var pos = outOfBounds[g.floor(g.random(0, 4))]
-
-  Entity.call(this, pos.x, pos.y, r, g)
-
+  var radius = r*this.w;
+  Entity.call(this, pos.x, pos.y, radius, g)
+  
   this.crazyness = g.random(1, 2 + level / 4);
   this.shotThresh = g.random(1, 1.5 + level / 5);
   this.point = g.random(1, 2);
@@ -21,8 +24,9 @@ export default function Enemy(r, g, addDust, level, color1, color2, lasers) {
   this.vel.mult(4);
   this.rotation = g.random(.03, .1);
   this.recentlyEdged = 100;
+  
 
-  this.update = function () {    
+  this.update = function () {
     Entity.prototype.update.call(this);
     this.recentlyEdged -= 1;
     this.edges();
@@ -30,7 +34,7 @@ export default function Enemy(r, g, addDust, level, color1, color2, lasers) {
     var shoot = g.random(1, 25)
 
     // ENEMY "AI"
-    if (changeCourse <= this.crazyness && this.recentlyEdged <= 0 ) {
+    if (changeCourse <= this.crazyness && this.recentlyEdged <= 0) {
       this.recentlyEdged = 100;
       this.setAccel(1)
       this.vel = p5.Vector.random2D();
@@ -45,7 +49,7 @@ export default function Enemy(r, g, addDust, level, color1, color2, lasers) {
 
   var scope = this;
   this.shootLaser = function () {
-    var laser = new Laser(scope.pos, scope.vel, scope.heading, g, color2, true);
+    var laser = new Laser(scope.pos, scope.vel, scope.heading, g, color2, true, 0, this.w);
     var dustVel = laser.vel.copy();
     addDust(scope.pos, dustVel.mult(.5), 4, .045, color2, 5, g);
     lasers.push(laser);
@@ -61,7 +65,7 @@ export default function Enemy(r, g, addDust, level, color1, color2, lasers) {
     g.beginShape();
     g.vertex(this.r / 2, this.r / 2)
     g.vertex(this.r * this.point, 0)
-     g.vertex(this.r / 2, -this.r / 2)
+    g.vertex(this.r / 2, -this.r / 2)
     g.vertex(0, -this.r * this.point)
     g.vertex(-this.r / 2, -this.r / 2)
     g.vertex(-this.r * this.point, 0)
