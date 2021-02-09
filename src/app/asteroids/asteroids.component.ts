@@ -106,7 +106,7 @@ export class AsteroidsComponent implements OnInit {
           const x = g.width + size * 6;
 
           barrierSensor.push()
-          barriers.push(loadBarriers(g, x, y, vx, size, rgbColor4))
+          barriers.push(loadBarriers(g, x, y, vx, size, rgbColor4, windowWidth))
         }
       }
 
@@ -167,7 +167,7 @@ export class AsteroidsComponent implements OnInit {
         g.frameRate(60)
         g.createCanvas(windowWidth * .98, windowWidth/2);
         console.log("w:"+g.width+" h:"+g.height)
-        ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge);
+        ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth);
         hud = new Hud(g, rgbColor1, rgbColor3, pts, windowWidth);
         stars = loadStars(g);
         splash = new Splash();

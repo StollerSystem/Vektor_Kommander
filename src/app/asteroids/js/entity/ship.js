@@ -7,13 +7,14 @@ import VaporTrail from '../effects/vapor-trail.js';
 import Thruster from '../effects/thruster.js';
 
 
-export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge) {
-  Entity.call(this, 200, g.height / 2, 20, g);
+export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth) {
+  Entity.call(this, 200, g.height / 2, 20 * (windowWidth / 1800), g);
   this.isDestroyed = false;
   this.destroyFrames = 1000;
   this.shields = shieldTime;
   this.rmax = this.r * 1.5;
   this.rmax2 = this.rmax * this.rmax;
+  this.w = windowWidth / 1800
   // this.tailEdge = true; //if true will hide vapor trail
   // this.tailSkip = false;//tail effect toggles between true/false
   var trailColor = color2;
@@ -32,14 +33,14 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     if (!press) {
       return;
     }
-
+    let offSet = 30 * scope.w;
     if (reduceLaserCharge()) {
-      let shootPos = g.createVector(scope.pos.x + 30 * g.cos(scope.heading), scope.pos.y + 30 * g.sin(scope.heading));
+      let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
       var laser = new Laser(shootPos, scope.vel, scope.heading, g, color1, false, scope.heading);
       var dustVel = laser.vel.copy();
       addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5, g);
       lasers.push(laser);
-            
+
     }
     // var effect = laserSoundEffects[floor(random() * laserSoundEffects.length)];
     // laser.playSoundEffect(effect);
@@ -223,20 +224,20 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
 
       // thruster animations
       if (this.accelMagnitude > 0) {
-        var thrustEnd = g.random(-75, -30)
-        Thruster(g, color1, this.r - 52, this.r - 10, this.r - 52, -this.r + 10, thrustEnd, 0)
+        var thrustEnd = g.random(-75 * this.w, -30 * this.w)
+        Thruster(g, color1, this.r - 52 * this.w, this.r - 10 * this.w, this.r - 52 * this.w, -this.r + 10 * this.w, thrustEnd, 0)
       }
       if (this.accelMagnitude < 0) {
-        var thrustEnd = g.random(70, 50)
-        Thruster(g, color1, this.r * 2 - 9, this.r / 2 - 1, this.r * 2.5 - 9, 1, thrustEnd, this.r / 4)
+        var thrustEnd = g.random(70 * this.w, 50 * this.w)
+        Thruster(g, color1, this.r * 2 - 9 * this.w, this.r / 2 - 1 * this.w, this.r * 2.5 - 9 * this.w, 1 * this.w, thrustEnd, this.r / 4 * this.w)
       }
       if (this.rotation > 0) {
-        var thrustEnd = g.random(-25, -10)
-        Thruster(g, color1, 25, -4, 30, -3, 27.5, thrustEnd)
+        var thrustEnd = g.random(-25 * this.w, -10 * this.w)
+        Thruster(g, color1, 25 * this.w, -4 * this.w, 30 * this.w, -3 * this.w, 27.5 * this.w, thrustEnd)
       }
       if (this.rotation < 0) {
-        var thrustEnd = g.random(30, 10)
-        Thruster(g, color1, 25, this.r / 2, 30, this.r / 2, 27.5, thrustEnd)
+        var thrustEnd = g.random(30 * this.w, 10 * this.w)
+        Thruster(g, color1, 25 * this.w, this.r / 2 * this.w, 30 * this.w, this.r / 2 * this.w, 27.5 * this.w, thrustEnd)
       }
 
       // THE SHIP
@@ -244,7 +245,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
         -1, 20,
         0 - 10, -this.r / 3,
         this.r - 10, -this.r / 8,
-        this.r * 2, 80,
+        this.r * 2, this.r * 4,
       )
       g.beginShape()
       g.vertex(-this.r - 10, this.r / 2)
