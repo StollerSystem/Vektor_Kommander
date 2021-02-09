@@ -48,6 +48,7 @@ export class AsteroidsComponent implements OnInit {
     var level: any = 0;
     let stars: any = [];
     let barriers: any = [];
+    let barrierSensor: any = [];
     let splash: any;
     var laserCharge = 1270;
     var laserOverHeat = false;
@@ -100,7 +101,7 @@ export class AsteroidsComponent implements OnInit {
           const vx = -.4
           const size = g.round(g.random(10, 50))
           const y = g.random(0 + size * 4, g.height - size * 4)
-          const x = g.width + size * 4;
+          const x = g.width + size * 6;
 
           barriers.push(loadBarriers(g, x, y, vx, size, rgbColor4))
         }
@@ -213,6 +214,8 @@ export class AsteroidsComponent implements OnInit {
         spawnAsteroids();
       }
 
+      let easeInStars = 1.25
+
       g.draw = () => {
 
         if (splashScreen) {
@@ -241,15 +244,14 @@ export class AsteroidsComponent implements OnInit {
         // console.log("DEBRIS: "+debris.length)
 
         // STARS
-        if (g.frameCount-beginGameSequence < 100) {
+        if (g.frameCount-beginGameSequence < 175) {
           for (let i = 0; i < stars.length; i++) {
-            let easeInStars = 1.25;
-            if (g.frameCount-beginGameSequence < 50) {
-            easeInStars = easeInStars/Math.pow(1.1, g.frameCount-beginGameSequence)
+            if (g.frameCount-beginGameSequence < 100) {
+            easeInStars = easeInStars/Math.pow(1.000008, g.frameCount-beginGameSequence)
+            // easeInStars = easeInStars/((g.frameCount-beginGameSequence))
             } 
             else {
-            console.log('exiting hyperspace')
-            easeInStars = easeInStars/Math.pow(1.1, beginGameSequence-g.frameCount)
+            easeInStars += (g.frameCount-beginGameSequence)/1000000
               if (easeInStars >= 1.25) {
                 easeInStars = 1.25
               }
