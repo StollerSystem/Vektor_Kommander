@@ -20,7 +20,7 @@ export default function VaporTrail(g, pos, color, shields, r) {
     if (this.tailSkip === false) {
       
       for (var i = this.lastPos.length - 1; i > 0; i--) {
-        this.lastPos[i][0] = this.lastPos[i - 1][0].sub(g.createVector(5, 0))
+        this.lastPos[i][0] = this.lastPos[i - 1][0].sub(g.createVector(8, 0))
         this.lastPos[i][1] = this.lastPos[i - 1][1];
         this.lastPos[i][2] = this.lastPos[i - 1][2];
       }

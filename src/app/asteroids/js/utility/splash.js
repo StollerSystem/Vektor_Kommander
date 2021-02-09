@@ -7,7 +7,7 @@ export default function Splash() {
   this.render = function(g, stars) {
 
     for (let i = 0; i < stars.length; i++) {
-      stars[i].move()
+      stars[i].move(1.25)
       if (stars[i].x <= 0) {
         let windowX = g.width
         let randomY = g.random(0, g.height)

@@ -50,9 +50,10 @@ export class AsteroidsComponent implements OnInit {
     let barriers: any = [];
     let splash: any;
     var laserCharge = 1270;
+    var laserOverHeat = false;
     let splashScreen: boolean = true;
     let beginGameSequence: number = 0;
-    // var laserSoundEffects: any = [];
+    // var laserSoundEffects: any = []; 
     // var explosionSoundEffects: any = [];
     // var rocketSoundEffects: any = [];
     // var stageSoundEffect: any;
@@ -69,7 +70,7 @@ export class AsteroidsComponent implements OnInit {
     }
 
     const reduceLaserCharge = function () {
-      if (laserCharge >100) {
+      if (laserCharge >0) {
         laserCharge -= 100;
         return true
       }
@@ -129,9 +130,18 @@ export class AsteroidsComponent implements OnInit {
       }
 
       const checkLaserCharge = function () {
-        if (laserCharge < 1000) {
-          laserCharge += 5;
+        if (laserCharge < 0) {
+          laserCharge = 0;
+          laserOverHeat = true 
+          setTimeout(function () {
+            // console.log("over heat timeout")
+            laserOverHeat = false;
+            laserCharge = 1;
+          }, 2500);
         }
+        if (laserCharge < 1270 && !laserOverHeat) {
+          laserCharge += 5;
+        }        
       }
 
      
@@ -219,6 +229,7 @@ export class AsteroidsComponent implements OnInit {
           });
           g.background(0);
           splash.render(g, stars);
+
         } else {
       
         // CHECK FOR FX CREATING LAAAAG
@@ -230,14 +241,24 @@ export class AsteroidsComponent implements OnInit {
         // console.log("DEBRIS: "+debris.length)
 
         // STARS
-        console.log(beginGameSequence)
-        if (g.frameCount-beginGameSequence < 200) {
+        if (g.frameCount-beginGameSequence < 100) {
           for (let i = 0; i < stars.length; i++) {
-            stars[i].move()
+            let easeInStars = 1.25;
+            if (g.frameCount-beginGameSequence < 50) {
+            easeInStars = easeInStars/Math.pow(1.1, g.frameCount-beginGameSequence)
+            } 
+            else {
+            console.log('exiting hyperspace')
+            easeInStars = easeInStars/Math.pow(1.1, beginGameSequence-g.frameCount)
+              if (easeInStars >= 1.25) {
+                easeInStars = 1.25
+              }
+            }
+            stars[i].move(easeInStars)
             if (stars[i].x <= 0) {
               let windowX = g.width
               let randomY = g.random(0, g.height)
-              let randomSize = g.random(3, 25)
+              let randomSize = g.random(.1, 25)
               const newStar = new Star(windowX, randomY, randomSize, g);
               stars.push(newStar)
               stars.splice(i, 1)
@@ -245,7 +266,7 @@ export class AsteroidsComponent implements OnInit {
           }
         } else {
           for (let i = 0; i < stars.length; i++) {
-            stars[i].move()
+            stars[i].move(1.25)
             if (stars[i].x <= 0) {
               let windowX = g.width
               let randomY = g.random(0, g.height)
@@ -400,7 +421,7 @@ export class AsteroidsComponent implements OnInit {
 
 
         ship.render();
-        hud.render(stageClear, level, lives, score, laserCharge);
+        hud.render(stageClear, level, lives, score, laserCharge, laserOverHeat);
       }
     }
     };

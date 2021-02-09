@@ -11,7 +11,7 @@ export default function Star(x, y, size, e) {
     e.pop();
   };
 
-  this.move = function () {
-    this.x -= this.size/1.25
+  this.move = function (speed) {
+    this.x -= this.size/speed
   };
 }
