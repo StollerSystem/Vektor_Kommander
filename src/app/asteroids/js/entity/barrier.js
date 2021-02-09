@@ -23,18 +23,7 @@ export default function Barrier(g, x, y, vx, vy, color) {
     g.rectMode(g.CENTER)
     g.strokeWeight(g.random(1, 1.75));
     g.rect(0, 0, this.r, this.r)
-    g.pop()
-    // GLOW?
-    // g.push()
-    // g.noFill()
-    // var trans = g.random(.01,.3)
-    // g.stroke(`rgba(${color[0]},${color[2]},${color[1]},${trans})`);
-    // g.translate(this.pos.x, this.pos.y)
-    // g.rotate(this.heading)
-    // g.rectMode(g.CENTER)
-    // g.strokeWeight(g.random(1, 4.5));
-    // g.rect(0, 0, this.r, this.r)
-    // g.pop()
+    g.pop()    
   }
 
   this.vertices = function () {
