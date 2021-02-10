@@ -1,6 +1,6 @@
 import * as p5 from 'p5';
 
-export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth) {
+export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth, spawnPowerUp) {
   const points = [200, 100, 50, 25];
   var g = g;
   var exists = true;
@@ -65,9 +65,14 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
             // score += points[asteroids[j].size];
             addToScore(10)
           }
+          if (barriers[k][j].powerSquare) {
+            console.log("POWER SQUARE!")
+            spawnPowerUp(barriers[k][j].pos)
+          }
           //THIS LASER HIT DUST IS LEGIT
           let dustVel = p5.Vector.add(lasers[i].vel.mult(0.05), barriers[k][j].vel);
           addDust(barriers[k][j].pos, dustVel, 5, .02, rgbColor2, 3, g);
+          // DEBRIS
           addDebris(barriers[k][j].pos, barriers[k][j].vel.add(g.createVector(g.random(-1, -2), g.random(.1, -.1))), g.random(2, 4), 15 * w, g, rgbColor4);
           // BREAK OFF
           if (barriers[k][j].rotation === 0) {

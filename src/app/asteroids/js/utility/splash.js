@@ -2,7 +2,10 @@ import Star from '../effects/star.js'
 
 export default function Splash() {
 
-  const colorArray = ['red', 'blue', 'green', 'yellow', 'red', 'orange', 'pink', 'purple', 'cyan']
+  this.colorPicker = function(g, color) {
+    const colorOutput = g.round(g.random(color - 30, color + 30))
+    return colorOutput
+  }
 
   this.render = function (g, stars, windowWidth, ctx, logoPath, logo) {
 
@@ -25,28 +28,54 @@ export default function Splash() {
     const centerX = g.width / 2;
     const centerY = g.height / 2;
     const w = windowWidth / 1800;
-    const pathCenter = logo.center;
-  
+    const logoColor = `rgba(${this.colorPicker(g, logo.logoColor[0])},${this.colorPicker(g, logo.logoColor[1])},${this.colorPicker(g, logo.logoColor[2])},${.8})`
+
+    //LOGO SHADOW
     g.push()
-    g.translate((g.width / 2) - pathCenter * w, g.height / 15)
-    g.fill(logo.lowerTextColor)
-    g.scale(w, w)
-    g.stroke(logo.lowerTextColor)
+    g.translate((logo.logoX * w) - (10 * w), (logo.logoY * w) + (10*w))
+    g.fill(logoColor)
+    g.scale(logo.logoSize * w, logo.logoSize * w)
+    g.stroke(logoColor)
+    // ctx.fill(logoPath);
+    g.strokeWeight(g.random(0, 2));
+    ctx.stroke(logoPath);
+    g.pop();
+
+    //LOGO
+    g.push()
+    g.translate(logo.logoX * w, logo.logoY * w)
+    g.fill(`rgba(${this.colorPicker(g, logo.logoColor[0])},${this.colorPicker(g, logo.logoColor[1])},${this.colorPicker(g, logo.logoColor[2])},${1})`)
+    g.scale(logo.logoSize * w, logo.logoSize * w)
+    g.stroke(logo.logoColor)
     ctx.fill(logoPath);
     g.strokeWeight(g.random(0, 2));
     ctx.stroke(logoPath);
     g.pop();
 
+    //LOWER TEXT
     g.push()
     g.fill(logo.lowerTextColor)
     g.strokeWeight(g.random(.5, 3 * w))
+    g.scale(logo.lowerTextSize * w, logo.lowerTextSize * w)
     g.stroke(logo.lowerTextColor)
-    g.textAlign(g.CENTER)
     g.textSize(35 * w)
     g.textFont('Montserrat')
-    g.text(logo.lowerText, centerX, centerY / 2)
+    g.text(logo.lowerText, logo.lowerTextX * w, logo.lowerTextY * w)
     g.pop()
 
+    //TITLE SHADOW
+    g.push()
+    g.fill('rgba(255, 255, 255, .5)')
+    g.strokeWeight(g.random(1, 5 * w))
+    g.stroke('rgba(255, 255, 255, .5)')
+    g.textAlign(g.CENTER)
+    g.translate(-3, 3)
+    g.textSize(100 * w)
+    g.textFont('Montserrat')
+    g.text(logo.title, centerX, centerY)
+    g.pop()
+
+    //TITLE
     g.push()
     g.fill(255)
     g.strokeWeight(g.random(.5, 3 * w))
@@ -57,6 +86,7 @@ export default function Splash() {
     g.text(logo.title, centerX, centerY)
     g.pop()
 
+    //PRESS ENTER
     g.push()
     g.fill(255)
     g.strokeWeight(g.random(.5, 3 * w))
@@ -67,6 +97,7 @@ export default function Splash() {
     g.text('PRESS <ENTER> TO START', centerX, centerY + (g.height/8))
     g.pop()
 
+    // CONTROLS
     g.push()
     g.fill(255)
     g.strokeWeight(g.random(.5, 2 * w))

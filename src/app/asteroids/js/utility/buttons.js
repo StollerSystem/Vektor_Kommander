@@ -1,5 +1,4 @@
 export default function MobileButton(g, rad, key, code, x, y) {
-
   this.x = x
   this.y = y
   this.r = 60;

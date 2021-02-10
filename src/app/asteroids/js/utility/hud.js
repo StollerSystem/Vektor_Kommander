@@ -1,12 +1,8 @@
-// import MobileButton from './buttons'
-
 export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
   var windowWidth = windowWidth;
   var size = 30 * (windowWidth / 1800);
   var padding = 10 * (windowWidth / 1800);
-  var r = 9 * (windowWidth / 1800);
-
-  // var button1 = new MobileButton(g)
+  var r = 9 * (windowWidth / 1800);  
 
   var digitMaps = [
     [true, true, true, false, true, true, true], //0
@@ -24,8 +20,7 @@ export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
 
   this.render = function (stageClear, level, lives, score, laserCharge, laserOverHeat) {
     var scoreString = "" + score;
-    var x = 75 * (windowWidth / 1800) - (scoreString.length * (size + padding) / 3);
-    // var x = 100 
+    var x = 75 * (windowWidth / 1800) - (scoreString.length * (size + padding) / 3);    
     var digitPos = g.createVector(x, padding);
     for (var i = 0; i < scoreString.length; i++) {
       var dmap = digitMaps[scoreString.charAt(i)];
@@ -34,8 +29,7 @@ export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
     }
 
     drawLives(lives);
-    drawLaserCharge(laserCharge, laserOverHeat);
-    // button1.render();
+    drawLaserCharge(laserCharge, laserOverHeat);    
 
     if (lives < 0) {
       g.push();
@@ -101,7 +95,7 @@ export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
     let barColor = `rgba(${-Math.round((laserCharge - 1270) / 5)},${Math.round(laserCharge / 5)},${40},.5)`
 
     g.push();
-    // g.scale(.5)
+    
     g.stroke(borderColor)
     g.noFill();
     g.strokeWeight(g.random(1, 2))
@@ -113,7 +107,7 @@ export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
     g.fill(barColor);
     g.strokeWeight(g.random(1, 2))
     g.rect(g.width / 2 - 126 * w, 20 * w, (laserCharge / 5) * w, 15 * w)
-    // g.scale(w)
+    
     g.pop()
 
     if (laserOverHeat) {
@@ -127,11 +121,8 @@ export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
       g.text("OVER HEAT", (g.width / 2), 60 * (windowWidth / 1800));
       g.pop();
     }
-
-  }
+  }  
   
-
-  //draws the digit based on the digit map
   function drawDigit(digitMap, index, pos) {
     g.push();
     g.stroke(`rgba(${rgbColor1[0]},${rgbColor1[1]},${rgbColor1[2]},1)`);
@@ -142,16 +133,7 @@ export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
     }
     g.pop();
   }
-
-  // function drawMobileButtons() {
-  //   g.push();
-  //   g.stroke(255)
-  //   g.textSize(100)
-  //   g.text('⇧', g.width -200, g.height - 100)
-  //   g.pop();
-  // }
-
-  //draws a line based on the line map
+  
   function drawLine(lineMap, pos) {
     switch (lineMap) {
       case 0:

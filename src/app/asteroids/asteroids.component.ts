@@ -15,7 +15,8 @@ import hyperDrive from './js/effects/hyper-drive.js'
 import laserCollision from './js/utility/laser-collision.js';
 import randomColors from './js/utility/random-colors.js';
 import MobileButton from './js/utility/buttons.js'
-import logo1 from './img/sample-logo2.js'
+import logo1 from './img/apple-logo.js'
+import LaserEnergy from './js/powerups/laser-energy.js'
 
 @Component({
   selector: 'app-asteroids',
@@ -36,9 +37,10 @@ export class AsteroidsComponent implements OnInit {
     var buttons: any = [];
     var asteroids: any = [];
     var lasers: any = [];
-    var enemies = [];
-    var debris = [];
-    var possibleEnemies = 1;
+    var enemies: any = [];
+    var debris: any = [];
+    var powerUps: any = [];
+    var possibleEnemies: any = 1;
     var dust: any = [];
     var canPlay: any = true;
     var shieldTime: any = 180;
@@ -122,6 +124,10 @@ export class AsteroidsComponent implements OnInit {
         enemies.push(new Enemy(radius, g, addDust, level, rgbColor5, rgbColor2, lasers, windowWidth))
       }
 
+      const spawnPowerUp = function(pos: any) {
+        powerUps.push(new LaserEnergy(g,pos,windowWidth))
+      }
+
       const addToScore = function (add) {
         score += add;
       }
@@ -169,8 +175,7 @@ export class AsteroidsComponent implements OnInit {
 
       g.setup = () => {
 
-        windowWidth = g.windowWidth;
-        // console.log(g.windowHeight)
+        windowWidth = g.windowWidth;        
         g.frameRate(60)
         canvas = g.createCanvas(windowWidth * .98, windowWidth / 2);
         ctx = canvas.elt.getContext("2d");
@@ -178,7 +183,6 @@ export class AsteroidsComponent implements OnInit {
         console.log("w:" + g.width + " h:" + g.height)
 
         buttons[0] = new MobileButton(g, 0, g.UP_ARROW, 38, 120, g.height-120)
-
         buttons[1] = new MobileButton(g, g.PI, g.DOWN_ARROW, 40, 120, g.height-50)
         buttons[2] = new MobileButton(g, 3 * g.PI / 2, g.LEFT_ARROW, 37, 50, g.height-50)
         buttons[3] = new MobileButton(g, g.PI / 2, g.RIGHT_ARROW, 39, 190, g.height-50)
@@ -329,7 +333,7 @@ export class AsteroidsComponent implements OnInit {
               lasers.splice(i, 1);
               continue;
             }
-            laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth)
+            laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth, spawnPowerUp)
           }
 
           // CHECK FOR COLLISION BEWTWEEN SHIP + ENEMY 
@@ -388,6 +392,11 @@ export class AsteroidsComponent implements OnInit {
             }
           }
 
+          // UPDATE AND DESTROY POWERUPS
+          for (var i = powerUps.length - 1; i >= 0; i--) {
+            powerUps[i].update();            
+          }
+
           ship.update();
 
           // ALL RENDERS...
@@ -416,13 +425,16 @@ export class AsteroidsComponent implements OnInit {
           for (var i = enemies.length - 1; i >= 0; i--) {
             enemies[i].render();
           }
+          for (var i = powerUps.length - 1; i >= 0; i--) {
+            powerUps[i].render();
+          }
 
+          // RENDER MOBILE BUTTONS IF THE SCREEN IS AS SMALL AS AN IPAD 
           if (windowWidth <= 1024) {
             for (var i = buttons.length - 1; i >= 0; i--) {
               buttons[i].render();
             }
           }
-
 
           ship.render();
           hud.render(stageClear, level, lives, score, laserCharge, laserOverHeat);

@@ -8,19 +8,19 @@ import Thruster from '../effects/thruster.js';
 
 
 export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons) {
-  this.w = windowWidth / 1800;
-  // var velMod = this.w > .6 ? 1 : .98
+  this.w = windowWidth / 1800;  
   Entity.call(this, 200, g.height / 2, 20 * this.w, g, null);
   this.isDestroyed = false;
   this.destroyFrames = 1000;
   this.shields = shieldTime;
   this.rmax = this.r * 1.5;
   this.rmax2 = this.rmax * this.rmax;
+  this.buttons = buttons;
+
   var trailColor = color2;
   var trailLength = Math.round(20 * this.w)
   this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r, trailLength, this.w)
-  this.buttons = buttons;
-  // console.log(this.w)
+  
   g.keyReleased = () => {
     input.handleEvent(g.key, g.keyCode, false);
   }
@@ -29,11 +29,9 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     input.handleEvent(g.key, g.keyCode, true);
   }
 
-  g.mousePressed = () => {
-    // console.log("mouse click!");
+  g.mousePressed = () => {    
     for (var i = 0; i < this.buttons.length; i++) {
-      let key = this.buttons[i].clicked()
-      // console.log(key)
+      let key = this.buttons[i].clicked()      
       if (key) {
         input.handleEvent(key[0], key[1], true);
       }
@@ -60,7 +58,6 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       var dustVel = laser.vel.copy();
       addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
       lasers.push(laser);
-
     }
     // var effect = laserSoundEffects[floor(random() * laserSoundEffects.length)];
     // laser.playSoundEffect(effect);
