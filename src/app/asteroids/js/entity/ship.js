@@ -33,7 +33,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     // console.log("mouse click!");
     for (var i = 0; i < this.buttons.length; i++) {
       let key = this.buttons[i].clicked()
-      console.log(key)
+      // console.log(key)
       if (key) {
         input.handleEvent(key[0], key[1], true);
       }

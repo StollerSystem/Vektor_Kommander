@@ -26,11 +26,6 @@ export default function Splash() {
     const centerY = g.height / 2;
     const w = windowWidth / 1800;
     const pathCenter = logo.center;
-
-    g.push()
-    g.stroke(255);
-    g.line(g.width/2,0,g.width/2,g.height)
-    g.pop();
   
     g.push()
     g.translate((g.width / 2) - pathCenter * w, g.height / 15)
@@ -38,7 +33,7 @@ export default function Splash() {
     g.scale(w, w)
     g.stroke(logo.lowerTextColor)
     ctx.fill(logoPath);
-    g.strokeWeight(g.random(.25, 4));
+    g.strokeWeight(g.random(0, 2));
     ctx.stroke(logoPath);
     g.pop();
 
@@ -57,9 +52,19 @@ export default function Splash() {
     g.strokeWeight(g.random(.5, 3 * w))
     g.stroke(255)
     g.textAlign(g.CENTER)
+    g.textSize(100 * w)
+    g.textFont('Montserrat')
+    g.text(logo.title, centerX, centerY)
+    g.pop()
+
+    g.push()
+    g.fill(255)
+    g.strokeWeight(g.random(.5, 3 * w))
+    g.stroke(255)
+    g.textAlign(g.CENTER)
     g.textSize(35 * w)
     g.textFont('Montserrat')
-    g.text('PRESS <ENTER> TO START', centerX, centerY)
+    g.text('PRESS <ENTER> TO START', centerX, centerY + (g.height/8))
     g.pop()
 
     g.push()

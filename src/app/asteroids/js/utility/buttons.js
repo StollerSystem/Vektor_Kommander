@@ -1,18 +1,15 @@
-export default function MobileButton(g, char, key, code, x, y) {
+export default function MobileButton(g, rad, key, code, x, y) {
 
-  this.x = g.width - x
-  this.y = g.height - y
-  this.r = 50;
-  this.character = char
+  this.x = x
+  this.y = y
+  this.r = 60;
+  this.rad = rad
   this.key = key
   this.keyCode = code
 
   this.clicked = function () {
-    // console.log(g.mouseX,g.mouseY)
-    var d = g.dist(g.mouseX, g.mouseY, this.x, this.y);
-    // console.log(d)
-    if (d < this.r) {
-      console.log("YOU CLICKED " + this.character)
+    var d = g.dist(g.mouseX, g.mouseY, this.x, this.y);    
+    if (d < this.r) {      
       return [this.key, this.keyCode];
     } else {
       return false
@@ -21,9 +18,21 @@ export default function MobileButton(g, char, key, code, x, y) {
 
   this.render = function () {
     g.push();
-    g.stroke(255)
-    g.textSize(100)
-    g.text(this.character, this.x, this.y)
+    g.translate(this.x,this.y)
+    g.stroke('rgba(255,255,255,.3)')
+    g.strokeWeight(1)
+    g.fill('rgba(255,255,255,.05)')
+    g.ellipse(0,0,this.r,this.r)
+    if (this.keyCode != 32) {
+      g.push();
+      g.rotate(this.rad)
+      g.stroke('rgba(255,255,255,.3)')
+      g.strokeWeight(1.5)
+      g.line(-this.r/4,this.r/6,0,-this.r/4)
+      g.line(this.r/4,this.r/6,0,-this.r/4)
+      g.pop();
+    }
+    g.stroke(255)    
     g.pop();
   }
 }

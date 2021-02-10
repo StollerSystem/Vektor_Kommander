@@ -15,7 +15,7 @@ import hyperDrive from './js/effects/hyper-drive.js'
 import laserCollision from './js/utility/laser-collision.js';
 import randomColors from './js/utility/random-colors.js';
 import MobileButton from './js/utility/buttons.js'
-import logo1 from './img/vektor.js'
+import logo1 from './img/sample-logo2.js'
 
 @Component({
   selector: 'app-asteroids',
@@ -91,7 +91,7 @@ export class AsteroidsComponent implements OnInit {
       setTimeout(function () {
         lives--;
         if (lives >= 0) {
-          ship = new Ship(game, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth);
+          ship = new Ship(game, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons);
           canPlay = true;
         }
       }, 3000);
@@ -176,12 +176,13 @@ export class AsteroidsComponent implements OnInit {
         ctx = canvas.elt.getContext("2d");
 
         console.log("w:" + g.width + " h:" + g.height)
-        
-        buttons[0] = new MobileButton(g,'⇧',g.UP_ARROW,38,200,150)
-        buttons[1] = new MobileButton(g,'⇩',g.DOWN_ARROW,40,200,50)
-        buttons[2] = new MobileButton(g,'⇦',g.LEFT_ARROW,37,300,50)
-        buttons[3] = new MobileButton(g,'⇨',g.RIGHT_ARROW,39,100,50)
-        buttons[4] = new MobileButton(g,'O'," ".charCodeAt(0),32,g.width-100,50)
+
+        buttons[0] = new MobileButton(g, 0, g.UP_ARROW, 38, 120, g.height-120)
+
+        buttons[1] = new MobileButton(g, g.PI, g.DOWN_ARROW, 40, 120, g.height-50)
+        buttons[2] = new MobileButton(g, 3 * g.PI / 2, g.LEFT_ARROW, 37, 50, g.height-50)
+        buttons[3] = new MobileButton(g, g.PI / 2, g.RIGHT_ARROW, 39, 190, g.height-50)
+        buttons[4] = new MobileButton(g, 0, " ".charCodeAt(0), 32, g.width - 100, g.height-50)
 
 
         ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons);
@@ -415,8 +416,11 @@ export class AsteroidsComponent implements OnInit {
           for (var i = enemies.length - 1; i >= 0; i--) {
             enemies[i].render();
           }
-          for (var i = buttons.length - 1; i >= 0; i--) {
-            buttons[i].render();
+
+          if (windowWidth <= 1024) {
+            for (var i = buttons.length - 1; i >= 0; i--) {
+              buttons[i].render();
+            }
           }
 
 
