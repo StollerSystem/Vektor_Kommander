@@ -4,8 +4,8 @@ const logo1 = {
   center: 520,
   lowerText: "PROTEKT SPACE FROM VEKTOIDS",
   lowerTextSize: '50',
-  logoColor: 'white',
-  lowerTextColor: 'white'
+  logoColor: 'blue',
+  lowerTextColor: 'blue'
 }
 
 export default logo1

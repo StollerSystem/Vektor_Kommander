@@ -7,7 +7,7 @@ import VaporTrail from '../effects/vapor-trail.js';
 import Thruster from '../effects/thruster.js';
 
 
-export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth) {
+export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons) {
   this.w = windowWidth / 1800;
   // var velMod = this.w > .6 ? 1 : .98
   Entity.call(this, 200, g.height / 2, 20 * this.w, g, null);
@@ -19,13 +19,33 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
   var trailColor = color2;
   var trailLength = Math.round(20 * this.w)
   this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r, trailLength, this.w)
-  console.log(this.w)
+  this.buttons = buttons;
+  // console.log(this.w)
   g.keyReleased = () => {
     input.handleEvent(g.key, g.keyCode, false);
   }
 
   g.keyPressed = () => {
     input.handleEvent(g.key, g.keyCode, true);
+  }
+
+  g.mousePressed = () => {
+    // console.log("mouse click!");
+    for (var i = 0; i < this.buttons.length; i++) {
+      let key = this.buttons[i].clicked()
+      console.log(key)
+      if (key) {
+        input.handleEvent(key[0], key[1], true);
+      }
+    }
+  }
+
+  g.mouseReleased = () => {
+    input.handleEvent(g.UP_ARROW, 38, false);
+    input.handleEvent(g.DOWN_ARROW, 40, false);
+    input.handleEvent(g.LEFT_ARROW, 37, false);
+    input.handleEvent(g.RIGHT_ARROW, 39, false);
+    input.handleEvent(" ".charCodeAt(0), 32, false);
   }
 
   var scope = this;
@@ -63,6 +83,11 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     //   rocketSoundEffects[1].stop();
     // }
   });
+
+
+  // if (this.buttons[0].clicked()) {
+  //   console.log("SHIP BUTTON CHECK")
+  // }
 
   input.registerAsListener(g.UP_ARROW, function (char, code, press) {
     scope.setAccel(press ? 0.1 : 0);

@@ -1,8 +1,12 @@
+// import MobileButton from './buttons'
+
 export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
   var windowWidth = windowWidth;
   var size = 30 * (windowWidth / 1800);
   var padding = 10 * (windowWidth / 1800);
   var r = 9 * (windowWidth / 1800);
+
+  // var button1 = new MobileButton(g)
 
   var digitMaps = [
     [true, true, true, false, true, true, true], //0
@@ -31,6 +35,7 @@ export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
 
     drawLives(lives);
     drawLaserCharge(laserCharge, laserOverHeat);
+    // button1.render();
 
     if (lives < 0) {
       g.push();
@@ -124,6 +129,7 @@ export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
     }
 
   }
+  
 
   //draws the digit based on the digit map
   function drawDigit(digitMap, index, pos) {
@@ -136,6 +142,14 @@ export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
     }
     g.pop();
   }
+
+  // function drawMobileButtons() {
+  //   g.push();
+  //   g.stroke(255)
+  //   g.textSize(100)
+  //   g.text('⇧', g.width -200, g.height - 100)
+  //   g.pop();
+  // }
 
   //draws a line based on the line map
   function drawLine(lineMap, pos) {

@@ -4,7 +4,7 @@ export default function Splash() {
 
   const colorArray = ['red', 'blue', 'green', 'yellow', 'red', 'orange', 'pink', 'purple', 'cyan']
 
-  this.render = function (g, stars, windowWidth, ctx, mainLogo) {
+  this.render = function (g, stars, windowWidth, ctx, logoPath, logo) {
 
     for (let i = 0; i < stars.length; i++) {
       stars[i].move(1.25)
@@ -22,45 +22,51 @@ export default function Splash() {
       stars[i].show()
     }
 
-    const centerX = g.width / 2
-    const centerY = g.height / 2
-
-
-    // g.push()
-    // g.fill(255)
-    // g.strokeWeight(g.random(1, 3*(windowWidth/1800)))
-    // g.stroke(255)
-    // g.textSize(100*(windowWidth/1800))
-    // g.textAlign(g.CENTER)
-    // g.textFont('Montserrat')
-    // g.text('VEKTOR KOMMANDER', centerX, centerY * .85)
-    // g.pop()
+    const centerX = g.width / 2;
+    const centerY = g.height / 2;
+    const w = windowWidth / 1800;
+    const pathCenter = logo.center;
 
     g.push()
-    g.translate(0,g.height/3)
-    g.noFill()
-    g.scale(2*(windowWidth/1800), 1)
-    g.stroke(255)
-    ctx.fill(mainLogo);
-    g.strokeWeight(g.random(.25, 2));
-    ctx.stroke(mainLogo);    
+    g.stroke(255);
+    g.line(g.width/2,0,g.width/2,g.height)
+    g.pop();
+  
+    g.push()
+    g.translate((g.width / 2) - pathCenter * w, g.height / 15)
+    g.fill(logo.lowerTextColor)
+    g.scale(w, w)
+    g.stroke(logo.lowerTextColor)
+    ctx.fill(logoPath);
+    g.strokeWeight(g.random(.25, 4));
+    ctx.stroke(logoPath);
     g.pop();
 
     g.push()
+    g.fill(logo.lowerTextColor)
+    g.strokeWeight(g.random(.5, 3 * w))
+    g.stroke(logo.lowerTextColor)
+    g.textAlign(g.CENTER)
+    g.textSize(35 * w)
+    g.textFont('Montserrat')
+    g.text(logo.lowerText, centerX, centerY / 2)
+    g.pop()
+
+    g.push()
     g.fill(255)
-    g.strokeWeight(g.random(.5, 3*(windowWidth/1800)))
+    g.strokeWeight(g.random(.5, 3 * w))
     g.stroke(255)
     g.textAlign(g.CENTER)
-    g.textSize(35*(windowWidth/1800))
+    g.textSize(35 * w)
     g.textFont('Montserrat')
     g.text('PRESS <ENTER> TO START', centerX, centerY)
     g.pop()
 
     g.push()
     g.fill(255)
-    g.strokeWeight(g.random(.5, 2*(windowWidth/1800)))
+    g.strokeWeight(g.random(.5, 2 * w))
     g.stroke(255)
-    g.textSize(20*(windowWidth/1800))
+    g.textSize(20 * w)
     g.textFont('Montserrat')
     g.textAlign(g.RIGHT)
     g.text('⇧', centerX / 1.075, centerY / .70)
@@ -74,20 +80,20 @@ export default function Splash() {
     g.text('FIRE BLASTER', centerX, centerY / .625)
     g.pop()
 
-    
+
     // THE SHIP
-    const r = 20*(windowWidth/1800)
+    const r = 20 * w
 
     g.push()
     g.stroke(255)
     g.fill(0)
-    g.strokeWeight(g.random(.5, 2*(windowWidth/1800)))
-    g.translate(centerX,centerY / .55)
+    g.strokeWeight(g.random(.5, 2 * w))
+    g.translate(centerX, centerY / .55)
     g.curve(
       -1, 20,
       0 - 10, -r / 3,
       r - 10, -r / 8,
-      r * 2, 80*(windowWidth/1800),
+      r * 2, 80 * w,
     )
     g.beginShape()
     g.vertex(-r - 10, r / 2)
@@ -99,7 +105,7 @@ export default function Splash() {
     g.triangle(-r - 10, r,
       -r - 10, r / 4,
       r / 2 - 10, r / 4);
-    
+
     g.pop()
   }
 
