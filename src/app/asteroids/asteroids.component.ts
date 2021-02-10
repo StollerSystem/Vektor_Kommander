@@ -14,6 +14,7 @@ import loadBarriers from './js/utility/load-barriers.js';
 import hyperDrive from './js/effects/hyper-drive.js'
 import laserCollision from './js/utility/laser-collision.js';
 import randomColors from './js/utility/random-colors.js';
+import logo1 from './img/vektor.js'
 
 @Component({
   selector: 'app-asteroids',
@@ -26,6 +27,8 @@ export class AsteroidsComponent implements OnInit {
 
   ngOnInit(): void {
 
+    // let cnvs: any;
+    let ctx: any;
     var windowWidth: any;
     var ship: any;
     var hud: any
@@ -56,6 +59,8 @@ export class AsteroidsComponent implements OnInit {
     var laserOverHeat = false;
     let splashScreen: boolean = true;
     let beginGameSequence: number = 0;
+    let mainLogo: any = new Path2D(logo1)
+    console.log(mainLogo)
     // var laserSoundEffects: any = []; 
     // var explosionSoundEffects: any = [];
     // var rocketSoundEffects: any = [];
@@ -165,8 +170,11 @@ export class AsteroidsComponent implements OnInit {
         windowWidth = g.windowWidth;
         // console.log(g.windowHeight)
         g.frameRate(60)
-        g.createCanvas(windowWidth * .98, windowWidth/2);
+        canvas = g.createCanvas(windowWidth * .98, windowWidth/2);
+        ctx = canvas.elt.getContext("2d");
+
         console.log("w:"+g.width+" h:"+g.height)
+
         ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth);
         hud = new Hud(g, rgbColor1, rgbColor3, pts, windowWidth);
         stars = loadStars(g);
@@ -197,7 +205,7 @@ export class AsteroidsComponent implements OnInit {
             beginGameSequence = g.frameCount;
           });
           g.background(0);
-          splash.render(g, stars, windowWidth);
+          splash.render(g, stars, windowWidth, ctx, mainLogo);
 
         } else {
       

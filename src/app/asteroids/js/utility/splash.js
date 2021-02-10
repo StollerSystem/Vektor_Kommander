@@ -4,7 +4,7 @@ export default function Splash() {
 
   const colorArray = ['red', 'blue', 'green', 'yellow', 'red', 'orange', 'pink', 'purple', 'cyan']
 
-  this.render = function (g, stars, windowWidth) {
+  this.render = function (g, stars, windowWidth, ctx, mainLogo) {
 
     for (let i = 0; i < stars.length; i++) {
       stars[i].move(1.25)
@@ -26,15 +26,25 @@ export default function Splash() {
     const centerY = g.height / 2
 
 
+    // g.push()
+    // g.fill(255)
+    // g.strokeWeight(g.random(1, 3*(windowWidth/1800)))
+    // g.stroke(255)
+    // g.textSize(100*(windowWidth/1800))
+    // g.textAlign(g.CENTER)
+    // g.textFont('Montserrat')
+    // g.text('VEKTOR KOMMANDER', centerX, centerY * .85)
+    // g.pop()
+
     g.push()
-    g.fill(255)
-    g.strokeWeight(g.random(1, 3*(windowWidth/1800)))
+    g.translate(0,g.height/3)
+    g.noFill()
+    g.scale(2*(windowWidth/1800), 1)
     g.stroke(255)
-    g.textSize(100*(windowWidth/1800))
-    g.textAlign(g.CENTER)
-    g.textFont('Montserrat')
-    g.text('VEKTOR KOMMANDER', centerX, centerY * .85)
-    g.pop()
+    ctx.fill(mainLogo);
+    g.strokeWeight(g.random(.25, 2));
+    ctx.stroke(mainLogo);    
+    g.pop();
 
     g.push()
     g.fill(255)

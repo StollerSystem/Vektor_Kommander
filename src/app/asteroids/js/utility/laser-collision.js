@@ -3,8 +3,8 @@ import * as p5 from 'p5';
 export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth) {
   const points = [200, 100, 50, 25];
   var g = g;
-  var exists = true;  
-  var w = windowWidth /1800;
+  var exists = true;
+  var w = windowWidth / 1800;
   for (var j = asteroids.length - 1; j >= 0; j--) {
     // VS ASTEROIDS
     if (lasers[i].hits(asteroids[j])) {
@@ -48,7 +48,7 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
         }
         let dustVel = p5.Vector.add(lasers[i].vel.mult(0.5), enemies[k].vel);
         addDust(enemies[k].pos, dustVel, 10, .01, rgbColor5, 1, g);
-        addDebris(enemies[k].pos, enemies[k].vel, 10, 30*w, g, rgbColor5)
+        addDebris(enemies[k].pos, enemies[k].vel, 10, 30 * w, g, rgbColor5)
         enemies.splice(j, 1);
         lasers.splice(i, 1);
         break;
@@ -65,13 +65,17 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
             // score += points[asteroids[j].size];
             addToScore(10)
           }
-           //THIS LASER HIT DUST IS LEGIT
+          //THIS LASER HIT DUST IS LEGIT
           let dustVel = p5.Vector.add(lasers[i].vel.mult(0.05), barriers[k][j].vel);
           addDust(barriers[k][j].pos, dustVel, 5, .02, rgbColor2, 3, g);
-          addDebris(barriers[k][j].pos, barriers[k][j].vel.add(g.createVector(g.random(-1, -2), g.random(.1, -.1))), g.random(2,4), 15*w, g, rgbColor4);
-          if (j - 1 >= 0) {
-            barriers[k][j - 1].vel.add(g.createVector(g.random(-1, -2), g.random(1, -1)))
-            barriers[k][j - 1].setRotation(g.random(-.05, .05));
+          addDebris(barriers[k][j].pos, barriers[k][j].vel.add(g.createVector(g.random(-1, -2), g.random(.1, -.1))), g.random(2, 4), 15 * w, g, rgbColor4);
+          // BREAK OFF
+          if (barriers[k][j].rotation === 0) {
+            // console.log("square off")
+            if (j - 1 >= 0) {
+              barriers[k][j - 1].vel.add(g.createVector(g.random(-1, -2), g.random(1, -1)))
+              barriers[k][j - 1].setRotation(g.random(-.05, .05));
+            }
           }
           barriers[k].splice(j, 1);
           lasers.splice(i, 1);

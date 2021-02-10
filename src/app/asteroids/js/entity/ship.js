@@ -9,19 +9,17 @@ import Thruster from '../effects/thruster.js';
 
 export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth) {
   this.w = windowWidth / 1800;
-  var velMod = this.w > .6 ? 1 : .98
-  Entity.call(this, 200, g.height / 2, 20 * this.w, g, velMod);
+  // var velMod = this.w > .6 ? 1 : .98
+  Entity.call(this, 200, g.height / 2, 20 * this.w, g, null);
   this.isDestroyed = false;
   this.destroyFrames = 1000;
   this.shields = shieldTime;
   this.rmax = this.r * 1.5;
   this.rmax2 = this.rmax * this.rmax;
-  // this.tailEdge = true; //if true will hide vapor trail
-  // this.tailSkip = false;//tail effect toggles between true/false
   var trailColor = color2;
-  var trailLength = Math.round(20*this.w)
-  this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r, trailLength)
-
+  var trailLength = Math.round(20 * this.w)
+  this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r, trailLength, this.w)
+  console.log(this.w)
   g.keyReleased = () => {
     input.handleEvent(g.key, g.keyCode, false);
   }
@@ -231,7 +229,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       }
       if (this.accelMagnitude < 0) {
         var thrustEnd = g.random(70 * this.w, 50 * this.w)
-        Thruster(g, color1, this.r * 2 - 9 * this.w, this.r / 2 - 1 * this.w, this.r * 2.5 - 9 * this.w, 1 * this.w, thrustEnd, this.r / 4 * this.w)
+        Thruster(g, color1, this.r * 2 - (9 * this.w), this.r / 2 - this.w - 1, this.r * 2.5 - (9 * this.w), this.w + 1, thrustEnd, this.r / 4)
       }
       if (this.rotation > 0) {
         var thrustEnd = g.random(-25 * this.w, -10 * this.w)
@@ -243,22 +241,23 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       }
 
       // THE SHIP
+      let backSet = 10 * this.w;
       g.curve(
         -1, 20,
-        0 - 10, -this.r / 3,
-        this.r - 10, -this.r / 8,
+        0 - backSet, -this.r / 3,
+        this.r - backSet, -this.r / 8,
         this.r * 2, this.r * 4,
       )
       g.beginShape()
-      g.vertex(-this.r - 10, this.r / 2)
-      g.vertex(this.r * 2 - 10, this.r / 2)
-      g.vertex(this.r * 2.5 - 10, 0)
-      g.vertex(-10, -this.r / 3)
-      g.vertex(-this.r - 10, -this.r)
+      g.vertex(-this.r - backSet, this.r / 2)
+      g.vertex(this.r * 2 - backSet, this.r / 2)
+      g.vertex(this.r * 2.5 - backSet, 0)
+      g.vertex(0-backSet, -this.r / 3)
+      g.vertex(-this.r - backSet, -this.r)
       g.endShape(g.CLOSE)
-      g.triangle(-this.r - 10, this.r,
-        -this.r - 10, this.r / 4,
-        this.r / 2 - 10, this.r / 4);
+      g.triangle(-this.r - backSet, this.r,
+        -this.r - backSet, this.r / 4,
+        this.r / 2 - backSet, this.r / 4);
       g.pop();
     }
   }
