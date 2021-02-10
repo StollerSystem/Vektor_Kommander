@@ -5,13 +5,13 @@ const logo1 = {
 ,
   logoX: 570,
   logoY: 40,
-  logoSize: 2,
+  logoSize: 1,
   lowerText: "brought to you by APPLE INC.",
-  lowerTextX: 1220,
-  lowerTextY: 420,
-  lowerTextSize: 1,
+  lowerTextX: 750,
+  lowerTextY: 160,
+  lowerTextSize: .75,
   logoColor: [192, 52, 235],
-  lowerTextColor: [52, 235, 186]
+  lowerTextColor: [192, 52, 235]
 }
 
 export default logo1

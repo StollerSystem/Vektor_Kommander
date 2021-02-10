@@ -65,8 +65,8 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
             // score += points[asteroids[j].size];
             addToScore(10)
           }
-          if (barriers[k][j].powerSquare) {
-            console.log("POWER SQUARE!")
+          // IF POWER SQUARE SPAWN POWERUP
+          if (barriers[k][j].powerSquare) {            
             spawnPowerUp(barriers[k][j].pos)
           }
           //THIS LASER HIT DUST IS LEGIT

@@ -16,6 +16,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
   this.rmax = this.r * 1.5;
   this.rmax2 = this.rmax * this.rmax;
   this.buttons = buttons;
+  this.beginGame = false;
 
   var trailColor = color2;
   var trailLength = Math.round(20 * this.w)
@@ -28,17 +29,22 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
   g.keyPressed = () => {
     input.handleEvent(g.key, g.keyCode, true);
   }
+  
 
-  g.mousePressed = () => {    
+
+  g.mousePressed = () => {
+    console.log('press')
+    this.beginGame = true;  
     for (var i = 0; i < this.buttons.length; i++) {
       let key = this.buttons[i].clicked()      
       if (key) {
         input.handleEvent(key[0], key[1], true);
       }
     }
+    return false;
   }
 
-  g.mouseReleased = () => {
+  g.mouseReleased = () => { 
     input.handleEvent(g.UP_ARROW, 38, false);
     input.handleEvent(g.DOWN_ARROW, 40, false);
     input.handleEvent(g.LEFT_ARROW, 37, false);

@@ -124,8 +124,13 @@ export class AsteroidsComponent implements OnInit {
         enemies.push(new Enemy(radius, g, addDust, level, rgbColor5, rgbColor2, lasers, windowWidth))
       }
 
+      const laserPowerUp = function () {
+        laserOverHeat = false;
+        laserCharge = 2000;
+      }
+
       const spawnPowerUp = function(pos: any) {
-        powerUps.push(new LaserEnergy(g,pos,windowWidth))
+        powerUps.push(new LaserEnergy(g,pos,windowWidth,laserPowerUp))
       }
 
       const addToScore = function (add) {
@@ -158,6 +163,8 @@ export class AsteroidsComponent implements OnInit {
         }
       }
 
+      
+
       g.preload = () => {
 
         let random_Colors = randomColors(g);
@@ -177,7 +184,7 @@ export class AsteroidsComponent implements OnInit {
 
         windowWidth = g.windowWidth;        
         g.frameRate(60)
-        canvas = g.createCanvas(windowWidth * .98, windowWidth / 2);
+        canvas = g.createCanvas(windowWidth * .98, g.windowHeight * .95);
         ctx = canvas.elt.getContext("2d");
 
         console.log("w:" + g.width + " h:" + g.height)
@@ -231,6 +238,9 @@ export class AsteroidsComponent implements OnInit {
           });
           g.background(0);
           splash.render(g, stars, windowWidth, ctx, logoPath, logo1);
+          if (ship.beginGame) {
+            splashScreen = false
+          }
 
         } else {
 
@@ -352,6 +362,21 @@ export class AsteroidsComponent implements OnInit {
             enemies[i].update();
           }
 
+          // UPDATE AND CHECK FOR COLLISION WITH POWERUPS
+          for (var i = powerUps.length - 1; i >= 0; i--) {
+            powerUps[i].update();
+            if (powerUps[i].offscreen()) {
+              powerUps.splice(i, 1)
+            } else {
+              if (ship.hits(powerUps[i]) && canPlay) {
+                powerUps[i].powerUp()
+                powerUps.splice(i, 1)              
+              }
+            }
+          }
+
+
+
           // UPDATE AND DESTROY BARRIERS
           for (let i = 0; i < barriers.length; i++) {
             for (let j = 0; j < barriers[i].length; j++) {
@@ -392,10 +417,14 @@ export class AsteroidsComponent implements OnInit {
             }
           }
 
-          // UPDATE AND DESTROY POWERUPS
-          for (var i = powerUps.length - 1; i >= 0; i--) {
-            powerUps[i].update();            
-          }
+          // // UPDATE AND DESTROY POWERUPS
+          // for (var i = powerUps.length - 1; i >= 0; i--) {
+          //   powerUps[i].update();    
+          //   if (powerUps[i].offscreen()) {
+          //     powerUps.splice(i, 1)
+          //   }
+          // }
+          // console.log(powerUps.length)
 
           ship.update();
 

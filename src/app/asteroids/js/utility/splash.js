@@ -28,11 +28,13 @@ export default function Splash() {
     const centerX = g.width / 2;
     const centerY = g.height / 2;
     const w = windowWidth / 1800;
+    const h = g.height / 900
+    const windowSize = g.width / g.height
     const logoColor = `rgba(${this.colorPicker(g, logo.logoColor[0])},${this.colorPicker(g, logo.logoColor[1])},${this.colorPicker(g, logo.logoColor[2])},${.8})`
 
     //LOGO SHADOW
     g.push()
-    g.translate((logo.logoX * w) - (10 * w), (logo.logoY * w) + (10*w))
+    g.translate((logo.logoX * w) - (10 * w), (logo.logoY * h) + (10*w))
     g.fill(logoColor)
     g.scale(logo.logoSize * w, logo.logoSize * w)
     g.stroke(logoColor)
@@ -43,7 +45,7 @@ export default function Splash() {
 
     //LOGO
     g.push()
-    g.translate(logo.logoX * w, logo.logoY * w)
+    g.translate(logo.logoX * w, logo.logoY * h)
     g.fill(`rgba(${this.colorPicker(g, logo.logoColor[0])},${this.colorPicker(g, logo.logoColor[1])},${this.colorPicker(g, logo.logoColor[2])},${1})`)
     g.scale(logo.logoSize * w, logo.logoSize * w)
     g.stroke(logo.logoColor)
@@ -52,13 +54,21 @@ export default function Splash() {
     ctx.stroke(logoPath);
     g.pop();
 
+    //LOWER TEXT SHADOW
+    g.push()
+    g.strokeWeight(g.random(.5, 3 * w))
+    g.stroke(`rgba(${this.colorPicker(g, logo.lowerTextColor[0])},${this.colorPicker(g, logo.lowerTextColor[1])},${this.colorPicker(g, logo.lowerTextColor[2])},${.5})`)
+    g.textSize(35 * logo.lowerTextSize * w)
+    g.textFont('Montserrat')
+    g.text(logo.lowerText, logo.lowerTextX * w -1, logo.lowerTextY * w + 1)
+    g.pop()
+
     //LOWER TEXT
     g.push()
     g.fill(logo.lowerTextColor)
     g.strokeWeight(g.random(.5, 3 * w))
-    g.scale(logo.lowerTextSize * w, logo.lowerTextSize * w)
     g.stroke(logo.lowerTextColor)
-    g.textSize(35 * w)
+    g.textSize(35 * logo.lowerTextSize * w)
     g.textFont('Montserrat')
     g.text(logo.lowerText, logo.lowerTextX * w, logo.lowerTextY * w)
     g.pop()

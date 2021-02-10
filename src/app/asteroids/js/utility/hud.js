@@ -90,9 +90,15 @@ export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
   function drawLaserCharge(laserCharge, laserOverHeat) {
 
     let w = windowWidth / 1800
+    let barColor;
 
     let borderColor = laserOverHeat ? 'rgba(255,0,0,.5)' : 'rgba(255,255,255,.5)';
-    let barColor = `rgba(${-Math.round((laserCharge - 1270) / 5)},${Math.round(laserCharge / 5)},${40},.5)`
+    if (laserCharge > 1270) {
+      barColor = `rgba(${Math.round(g.random(0,240))},${255},${Math.round(g.random(0,240))},.5)`
+    } else {
+      barColor = `rgba(${-Math.round((laserCharge - 1270) / 5)},${Math.round(laserCharge / 5)},${40},.5)`
+
+    }
 
     g.push();
     

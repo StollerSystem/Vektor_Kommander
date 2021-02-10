@@ -8,7 +8,7 @@ export default function MobileButton(g, rad, key, code, x, y) {
 
   this.clicked = function () {
     var d = g.dist(g.mouseX, g.mouseY, this.x, this.y);    
-    if (d < this.r) {      
+    if (d < this.r/2) {      
       return [this.key, this.keyCode];
     } else {
       return false
