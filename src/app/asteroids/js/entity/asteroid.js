@@ -19,8 +19,7 @@ export default function Asteroid(pos, r, size, g, color, windowWidth) {
   //smaller asteroids go a bit faster
   this.size = size;
   switch (size) {
-    case 2:
-      let n = this.w.toFixed(2)
+    case 2:      
       this.vel.mult(1.1); break;      
     case 1:
       this.vel.mult(1.2); break;

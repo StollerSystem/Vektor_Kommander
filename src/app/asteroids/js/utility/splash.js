@@ -35,7 +35,7 @@ export default function Splash() {
 
     //LOGO SHADOW
     g.push()
-    g.translate((configInput.logo.x * w) - (10 * w), (configInput.logo.y * h) + (10*w))
+    g.translate((configInput.logo.x * w) - (g.random(4, 10) * w), (configInput.logo.y * h) + (g.random(4, 10)*w))
     g.fill(shadowColor)
     g.scale(configInput.logo.size * w, configInput.logo.size * w)
     ctx.fill(logoPath);
@@ -75,11 +75,11 @@ export default function Splash() {
 
     //TITLE SHADOW
     g.push()
-    g.fill('rgba(255, 255, 255, .5)')
+    g.fill('rgba(255, 255, 255, .3)')
     g.strokeWeight(g.random(1, 5 * w))
-    g.stroke('rgba(255, 255, 255, .5)')
+    g.stroke('rgba(255, 255, 255, .3)')
     g.textAlign(g.CENTER)
-    g.translate(-3, 3)
+    g.translate(g.random(-3, -5), g.random(2, 4))
     g.textSize(100 * w)
     g.textFont('Montserrat')
     g.text(configInput.title.text, centerX, centerY)

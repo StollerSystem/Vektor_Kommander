@@ -150,12 +150,14 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     if (dist2 <= asteroid.rmin2) {
       return true;
     }
+    // HITBOX
+    let backSet = 10 * this.w;
     var shipVertices = [
-      g.createVector(-this.r - 10, this.r / 2).rotate(this.heading),
-      g.createVector(this.r * 2 - 10, this.r / 2).rotate(this.heading),
-      g.createVector(this.r * 2.2 - 10, 0).rotate(this.heading),
-      g.createVector(-10, -this.r / 3).rotate(this.heading),
-      g.createVector(-this.r - 10, -this.r).rotate(this.heading)
+      g.createVector(-this.r - backSet, this.r / 2).rotate(this.heading),
+      g.createVector(this.r * 2 - backSet, this.r / 2).rotate(this.heading),
+      g.createVector(this.r * 2.2 - backSet, 0).rotate(this.heading),
+      g.createVector(0-backSet, -this.r / 3).rotate(this.heading),
+      g.createVector(-this.r - backSet, -this.r).rotate(this.heading)
     ];
     for (var i = 0; i < shipVertices.length; i++) {
       shipVertices[i] = p5.Vector.add(shipVertices[i], this.pos);
@@ -176,25 +178,20 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
 
   this.playSoundEffect = function (soundArray) {
     // soundArray[g.floor(g.random(0,soundArray.length))].play();
-  }
+  }  
 
-  //HITBOX <- NOT RIGHT
+  //HITBOX 
   this.vertices = function () {
+    let backSet = 10 * this.w;
     var shipVertices = [
-      p5.Vector.add(g.createVector(-this.r - 10, this.r / 2), this.pos),
-      p5.Vector.add(g.createVector(this.r * 2 - 10, this.r / 2), this.pos),
-      p5.Vector.add(g.createVector(this.r * 2.2 - 10, 0), this.pos),
-      p5.Vector.add(g.createVector(-10, -this.r / 3), this.pos),
-      p5.Vector.add(g.createVector(-this.r - 10, -this.r), this.pos),
+      p5.Vector.add(g.createVector(-this.r - backSet, this.r / 2), this.pos),
+      p5.Vector.add(g.createVector(this.r * 2 - backSet, this.r / 2), this.pos),
+      p5.Vector.add(g.createVector(this.r * 2.2 - backSet, 0), this.pos),
+      p5.Vector.add(g.createVector(0-backSet, -this.r / 3), this.pos),
+      p5.Vector.add(g.createVector(-this.r - backSet, -this.r), this.pos),
     ]
     return shipVertices;
-  }
-
-  // g.vertex(-this.r - 10, this.r / 2)
-  //     g.vertex(this.r * 2 - 10, this.r / 2)
-  //     g.vertex(this.r * 2.5 - 10, 0)
-  //     g.vertex(-10, -this.r / 3)
-  //     g.vertex(-this.r - 10, -this.r)
+  }  
 
   this.edges = function () {
     if (this.pos.x >= this.g.width - this.rmax) {

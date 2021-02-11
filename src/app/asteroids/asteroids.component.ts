@@ -227,7 +227,6 @@ export class AsteroidsComponent implements OnInit {
 
           // STARS
           if (g.frameCount - beginGameSequence < 175) {
-            // hyperDrive(g, stars, easeInStars, beginGameSequence)
             for (let i = 0; i < stars.length; i++) {
               if (g.frameCount - beginGameSequence < 100) {
                 easeInStars = easeInStars / Math.pow(1.000008, g.frameCount - beginGameSequence)
@@ -426,12 +425,12 @@ export class AsteroidsComponent implements OnInit {
           for (var i = lasers.length - 1; i >= 0; i--) {
             lasers[i].render();
           }
-          for (var i = dust.length - 1; i >= 0; i--) {
-            dust[i].render();
-          }
-          for (var i = debris.length - 1; i >= 0; i--) {
-            debris[i].render();
-          }
+          // for (var i = dust.length - 1; i >= 0; i--) {
+          //   dust[i].render();
+          // }
+          // for (var i = debris.length - 1; i >= 0; i--) {
+          //   debris[i].render();
+          // }
           for (var i = enemies.length - 1; i >= 0; i--) {
             enemies[i].render();
           }

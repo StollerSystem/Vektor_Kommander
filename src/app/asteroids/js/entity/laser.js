@@ -9,8 +9,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
   this.vel = p5.Vector.fromAngle(angle);
   this.enemy = enemy ? enemy : false;
   this.heading = heading;
-  this.w = windowWidthMod;
-  // console.log(this.w)
+  this.w = windowWidthMod;  
   if (this.enemy) {
     this.vel.mult(10);
   } else {
@@ -27,7 +26,6 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
       g.strokeWeight(this.r * 1.5 * this.w);
       g.point(this.pos.x, this.pos.y);
       g.pop();
-
       // glow effect
       g.push();
       var size = this.r * (g.random(2 * this.w, 10 * this.w))
@@ -47,7 +45,6 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
       g.rotate(this.heading)
       g.line(0, 0, 25 * this.w, 0)
       g.pop();
-
       // glow effect
       g.push();
       var size = this.r * (g.random(1 * this.w, 5 * this.w))
@@ -59,7 +56,6 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
       g.line(-10 * this.w, 0, 10 * this.w, 0)
       g.pop();
     }
-
   }
 
   this.playSoundEffect = function (sound) {

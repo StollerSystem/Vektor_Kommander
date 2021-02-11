@@ -18,11 +18,3 @@ export var input = {
     }
   }
 };
-
-// export function keyReleased() {
-//   input.handleEvent(key, keyCode, false);
-// }
-
-// export function keyPressed() {
-//   input.handleEvent(key, keyCode, true);
-// }

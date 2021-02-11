@@ -1,6 +1,6 @@
 import * as p5 from 'p5';
 
-export default function Dust(pos, vel, trans, color, weight, g, rgbColor1, rgbColor2, rgbColor3 ) {
+export default function Dust(pos, vel, trans, color, weight, g) {
   this.pos = pos.copy();
   this.vel = vel.copy();
   this.vel.add(p5.Vector.random2D().mult(g.random(0.5, 1.5)));
