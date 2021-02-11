@@ -13,7 +13,7 @@ export default function randomColors(g) {
   let c2a = ran1 === 3 ? 0 : 255;
   let c2b = ran1 === 1 ? 0 : 255;
   let c2c = ran1 === 2 ? 0 : 255;
-  const c2 = [Math.round(g.random(c2x, c2a)), Math.round(g.random(c2y, c2b)), Math.round(g.random(c2z, c2c))]
+  const c5 = [Math.round(g.random(c2x, c2a)), Math.round(g.random(c2y, c2b)), Math.round(g.random(c2z, c2c))]
   let c3x = ran1 === 1 ? 255 : 0;
   let c3y = ran1 === 2 ? 255 : 0;
   let c3z = ran1 === 3 ? 255 : 0;
@@ -28,9 +28,9 @@ export default function randomColors(g) {
   let c4b = ran1 === 3 ? 0 : 255;
   let c4c = ran1 === 2 ? 0 : 255;
   const c4 = [Math.round(g.random(c4x, c4a)), Math.round(g.random(c4y, c4b)), Math.round(g.random(c4z, c4c))]
-  let c5a = ran1 === 1 ? 0 : 255;
-  let c5b = ran1 === 3 ? 0 : 255;
-  let c5c = ran1 === 2 ? 0 : 255;
-  const c5 = [Math.round(g.random(0, c5a)), Math.round(g.random(0, c5b)), Math.round(g.random(0, c5c))]
+  // let c5a = ran1 === 1 ? 0 : 255;
+  // let c5b = ran1 === 3 ? 0 : 255;
+  // let c5c = ran1 === 2 ? 0 : 255;
+  const c2 = [255,0,64]
   return [c1,c2,c3,c4,c5]
 }

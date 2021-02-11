@@ -42,7 +42,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
       g.push();
       var trans = g.random(1, .8)
       g.stroke(`rgba(${color[0]},${color[1]},${color[2]},${trans})`);
-      g.strokeWeight(1 * this.w);
+      g.strokeWeight(3 * (this.w*1.2));
       g.translate(this.pos.x, this.pos.y)
       g.rotate(this.heading)
       g.line(0, 0, 25 * this.w, 0)

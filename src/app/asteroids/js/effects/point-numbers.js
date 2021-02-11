@@ -2,7 +2,7 @@ import * as p5 from 'p5';
 
 export default function PointNumber(pos, vel, color, g, text) {
 
-  console.log(g)
+  // console.log(g)
 
   this.pos = pos.copy();
   this.vel = vel.copy();
@@ -10,10 +10,11 @@ export default function PointNumber(pos, vel, color, g, text) {
   this.transparency = 1
   this.color = color;
   this.text = text;
+  this.trans = .005;
 
   this.update = function () {
     this.pos.add(this.vel);
-    this.trans = .005;
+    this.trans = .025;
     this.transparency -= this.trans;
   }
 
@@ -21,7 +22,10 @@ export default function PointNumber(pos, vel, color, g, text) {
     let transNum = (.8 * ((this.destroyFrames--) / 1000))
     let trans = transNum > 0 ? transNum : 0;
     g.push()
-    g.fill(255)
+    g.fill(`rgba(255, 255, 255, ${g.random(0, this.transparency)})`)
+    g.stroke(`rgba(255, 255, 255, ${this.transparency})`)
+    g.strokeWeight(g.random(.1, 2))
+    g.textFont('Montserrat')
     g.text(this.text, this.pos.x, this.pos.y)
     g.pop()
   }

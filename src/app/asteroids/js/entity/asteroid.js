@@ -23,9 +23,9 @@ export default function Asteroid(pos, r, size, g, color, windowWidth) {
       let n = this.w.toFixed(2)
       this.vel.mult(1.1); break;      
     case 1:
-      this.vel.mult(1.25); break;
+      this.vel.mult(1.2); break;
     case 0:
-      this.vel.mult(1.75); break;
+      this.vel.mult(1.4); break;
   }
 
 

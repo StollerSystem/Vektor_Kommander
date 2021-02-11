@@ -3,11 +3,11 @@ import Star from '../effects/star.js'
 export default function Splash() {
 
   this.colorPicker = function(g, color) {
-    const colorOutput = g.round(g.random(color - 30, color + 30))
+    const colorOutput = g.round(g.random(color - 50, color + 50))
     return colorOutput
   }
 
-  this.render = function (g, stars, windowWidth, ctx, logoPath, logo) {
+  this.render = function (g, stars, windowWidth, ctx, logoPath, config) {
 
     for (let i = 0; i < stars.length; i++) {
       stars[i].move(1.25)
@@ -25,19 +25,19 @@ export default function Splash() {
       stars[i].show()
     }
 
+    const configInput = config.default
     const centerX = g.width / 2;
     const centerY = g.height / 2;
     const w = windowWidth / 1800;
     const h = g.height / 900
     const windowSize = g.width / g.height
-    const logoColor = `rgba(${this.colorPicker(g, logo.logoColor[0])},${this.colorPicker(g, logo.logoColor[1])},${this.colorPicker(g, logo.logoColor[2])},${.5})`
+    const shadowColor = `rgba(${this.colorPicker(g, configInput.logo.color[0])},${this.colorPicker(g, configInput.logo.color[1])},${this.colorPicker(g, configInput.logo.color[2])},${.5})`
 
     //LOGO SHADOW
     g.push()
-    g.translate((logo.logoX * w) - (10 * w), (logo.logoY * h) + (10*w))
-    g.fill(logoColor)
-    g.scale(logo.logoSize * w, logo.logoSize * w)
-    // g.stroke(logoColor)
+    g.translate((configInput.logo.x * w) - (10 * w), (configInput.logo.y * h) + (10*w))
+    g.fill(shadowColor)
+    g.scale(configInput.logo.size * w, configInput.logo.size * w)
     ctx.fill(logoPath);
     g.strokeWeight(g.random(0, 1));
     ctx.stroke(logoPath);
@@ -45,32 +45,32 @@ export default function Splash() {
 
     //LOGO
     g.push()
-    g.translate(logo.logoX * w, logo.logoY * h)
-    g.fill(`rgba(${this.colorPicker(g, logo.logoColor[0])},${this.colorPicker(g, logo.logoColor[1])},${this.colorPicker(g, logo.logoColor[2])},${1})`)
-    g.scale(logo.logoSize * w, logo.logoSize * w)
-    g.stroke(logo.logoColor)
+    g.translate(configInput.logo.x * w, configInput.logo.y * h)
+    g.fill(`rgba(${this.colorPicker(g, configInput.logo.color[0])},${this.colorPicker(g, configInput.logo.color[1])},${this.colorPicker(g, configInput.logo.color[2])},${1})`)
+    g.scale(configInput.logo.size * w, configInput.logo.size * w)
+    g.stroke(configInput.logo.color)
     ctx.fill(logoPath);
-    g.strokeWeight(g.random(0, 2));
+    g.strokeWeight(g.random(0, 1));
     ctx.stroke(logoPath);
     g.pop();
 
     //LOWER TEXT SHADOW
     g.push()
     g.strokeWeight(g.random(.1, 2 * w))
-    g.stroke(`rgba(${this.colorPicker(g, logo.lowerTextColor[0])},${this.colorPicker(g, logo.lowerTextColor[1])},${this.colorPicker(g, logo.lowerTextColor[2])},${.5})`)
-    g.textSize(35 * logo.lowerTextSize * w)
+    g.stroke(`rgba(${this.colorPicker(g, configInput.detail.color[0])},${this.colorPicker(g, configInput.detail.color[1])},${this.colorPicker(g, configInput.detail.color[2])},${.5})`)
+    g.textSize(35 * configInput.detail.size * w)
     g.textFont('Montserrat')
-    g.text(logo.lowerText, logo.lowerTextX * w -1, logo.lowerTextY * w + 1)
+    g.text(configInput.detail.text, configInput.detail.x * w -1, configInput.detail.y * w + 1)
     g.pop()
 
     //LOWER TEXT
     g.push()
-    g.fill(logo.lowerTextColor)
+    g.fill(configInput.detail.color)
     g.strokeWeight(g.random(.5, 3 * w))
-    g.stroke(logo.lowerTextColor)
-    g.textSize(35 * logo.lowerTextSize * w)
+    g.stroke(configInput.detail.color)
+    g.textSize(35 * configInput.detail.size * w)
     g.textFont('Montserrat')
-    g.text(logo.lowerText, logo.lowerTextX * w, logo.lowerTextY * w)
+    g.text(configInput.detail.text, configInput.detail.x * w, configInput.detail.y * w)
     g.pop()
 
     //TITLE SHADOW
@@ -82,7 +82,7 @@ export default function Splash() {
     g.translate(-3, 3)
     g.textSize(100 * w)
     g.textFont('Montserrat')
-    g.text(logo.title, centerX, centerY)
+    g.text(configInput.title.text, centerX, centerY)
     g.pop()
 
     //TITLE
@@ -93,7 +93,7 @@ export default function Splash() {
     g.textAlign(g.CENTER)
     g.textSize(100 * w)
     g.textFont('Montserrat')
-    g.text(logo.title, centerX, centerY)
+    g.text(configInput.title.text, centerX, centerY)
     g.pop()
 
     //PRESS ENTER

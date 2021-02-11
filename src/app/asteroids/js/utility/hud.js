@@ -88,20 +88,19 @@ export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
   }
 
   function drawLaserCharge(laserCharge, laserOverHeat) {
-
     let w = windowWidth / 1800
     let barColor;
-
-    let borderColor = laserOverHeat ? 'rgba(255,0,0,.5)' : 'rgba(255,255,255,.5)';
+    // let borderColor = laserOverHeat ? 'rgba(255,0,0,.5)' : 'rgba(255,255,255,.5)';
+    let borderColor = laserOverHeat ? 'rgba(255,0,0,.5)' : laserCharge > 1275 ? 'rgba(0,0,255,.9)' : 'rgba(255,255,255,.5)';
+    let maxBorderWeight = laserCharge > 1275 ? 7 : 2;
+    
     if (laserCharge > 1270) {
-      barColor = `rgba(${Math.round(g.random(0,240))},${255},${Math.round(g.random(0,240))},.5)`
+      barColor = `rgba(${0},${255},${Math.round(g.random(0,240))},.8)`
     } else {
       barColor = `rgba(${-Math.round((laserCharge - 1270) / 5)},${Math.round(laserCharge / 5)},${40},.5)`
-
     }
 
-    g.push();
-    
+    g.push();    
     g.stroke(borderColor)
     g.noFill();
     g.strokeWeight(g.random(1, 2))
@@ -111,9 +110,8 @@ export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
     g.push();
     g.stroke(borderColor)
     g.fill(barColor);
-    g.strokeWeight(g.random(1, 2))
-    g.rect(g.width / 2 - 126 * w, 20 * w, (laserCharge / 5) * w, 15 * w)
-    
+    g.strokeWeight(g.random(1, maxBorderWeight))
+    g.rect(g.width / 2 - 126 * w, 20 * w, (laserCharge / 5) * w, 15 * w)    
     g.pop()
 
     if (laserOverHeat) {

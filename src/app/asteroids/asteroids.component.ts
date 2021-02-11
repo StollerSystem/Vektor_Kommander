@@ -1,3 +1,4 @@
+import * as config from "../../assets/config.json"
 import { Component, OnInit } from '@angular/core';
 import * as p5 from 'p5';
 import Ship from './js/entity/ship.js';
@@ -11,7 +12,7 @@ import Debris from './js/effects/debris.js';
 import Star from './js/effects/star.js';
 import loadStars from './js/utility/load-stars.js';
 import loadBarriers from './js/utility/load-barriers.js';
-import hyperDrive from './js/effects/hyper-drive.js'
+// import hyperDrive from './js/effects/hyper-drive.js'
 import laserCollision from './js/utility/laser-collision.js';
 import randomColors from './js/utility/random-colors.js';
 import MobileButton from './js/utility/buttons.js';
@@ -24,12 +25,14 @@ import PointNumber from './js/effects/point-numbers.js'
   templateUrl: './asteroids.component.html',
   styleUrls: ['./asteroids.component.css']
 })
+
 export class AsteroidsComponent implements OnInit {
 
   constructor() { }
 
   ngOnInit(): void {
 
+    console.log(config.logo.color)
     // let cnvs: any;
     let ctx: any;
     var windowWidth: any;
@@ -65,8 +68,8 @@ export class AsteroidsComponent implements OnInit {
     var laserOverHeat = false;
     let splashScreen: boolean = true;
     let beginGameSequence: number = 0;
-    let logoPath = new Path2D(logo1.path);
-
+    let logoPath = new Path2D(config.logo.path);
+    let easeInStars = 1.25;
     // var laserSoundEffects: any = []; 
     // var explosionSoundEffects: any = [];
     // var rocketSoundEffects: any = [];
@@ -170,64 +173,33 @@ export class AsteroidsComponent implements OnInit {
         }
       }
 
-
-
       g.preload = () => {
-
         let random_Colors = randomColors(g);
-        rgbColor1 = random_Colors[0]
-        rgbColor2 = random_Colors[1]
-        rgbColor3 = random_Colors[2]
-        rgbColor4 = random_Colors[3]
-        rgbColor5 = random_Colors[4]
-        console.log(rgbColor1)
-        console.log(rgbColor2)
-        console.log(rgbColor3)
-        console.log(rgbColor4)
-        console.log(rgbColor5)
+        rgbColor1 = config.gameColors.rocks ? config.gameColors.rocks : random_Colors[0]; // ROCKS/SCORE
+        rgbColor2 = random_Colors[1] // LASERS / THRUSTERS
+        rgbColor3 = config.gameColors.ship ? config.gameColors.ship : random_Colors[2]; // SHIP
+        rgbColor4 = config.gameColors.squares ? config.gameColors.squares : random_Colors[3]; // SQUARES
+        rgbColor5 = config.gameColors.enemy ? config.gameColors.enemy : random_Colors[4]; // ENEMY        
       }
 
       g.setup = () => {
-
         windowWidth = g.windowWidth;
         g.frameRate(60)
         canvas = g.createCanvas(windowWidth * .98, g.windowHeight * .95);
         ctx = canvas.elt.getContext("2d");
-
         console.log("w:" + g.width + " h:" + g.height)
-
+        // SET UP MOBILE BUTTONS
         buttons[0] = new MobileButton(g, 0, g.UP_ARROW, 38, 120, g.height - 120)
         buttons[1] = new MobileButton(g, g.PI, g.DOWN_ARROW, 40, 120, g.height - 50)
         buttons[2] = new MobileButton(g, 3 * g.PI / 2, g.LEFT_ARROW, 37, 50, g.height - 50)
         buttons[3] = new MobileButton(g, g.PI / 2, g.RIGHT_ARROW, 39, 190, g.height - 50)
-        buttons[4] = new MobileButton(g, 0, " ".charCodeAt(0), 32, g.width - 100, g.height - 50)
-
-
+        buttons[4] = new MobileButton(g, 0, " ".charCodeAt(0), 32, g.width - 100 * (windowWidth / 600), g.height - 50)
+        // LOAD INITIAL ASSETS
         ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons);
         hud = new Hud(g, rgbColor1, rgbColor3, pts, windowWidth);
         stars = loadStars(g);
         splash = new Splash();
-        // g.textFont(myFont);
-        // g.text('hello', 10, 50)
-        // pts = mainFont.textToPoints('ASTRO-BLASTER', 0, 0, 200, {
-        //   sampleFactor: 0.25,
-        //   simplifyThreshold: 0
-        // });
-        // spawnAsteroids();
-        // var button = g.createButton('⇧');
-        // button.position(g.width-50, g.height-50);
-        // button.mousePressed(console.log("BUTTON"));
-
-      }
-
-      // g.mousePressed = () => {
-      //   // console.log("mouse click!");
-      //   for (var i = 0; i < buttons.length; i++) {
-      //     buttons[i].clicked()
-      //   }
-      // }
-
-      let easeInStars = 1.25
+      }      
 
       g.draw = () => {
 
@@ -235,7 +207,6 @@ export class AsteroidsComponent implements OnInit {
           g.keyReleased = () => {
             input.handleEvent(g.key, g.keyCode, false);
           }
-
           g.keyPressed = () => {
             input.handleEvent(g.key, g.keyCode, true);
           }
@@ -244,48 +215,43 @@ export class AsteroidsComponent implements OnInit {
             beginGameSequence = g.frameCount;
           });
           g.background(0);
-          splash.render(g, stars, windowWidth, ctx, logoPath, logo1);
+          splash.render(g, stars, windowWidth, ctx, logoPath, config);
           if (ship.beginGame) {
             splashScreen = false
           }
-
         } else {
-
           // CHECK FOR FX CREATING LAAAAG
           checkDust();
           checkDebris();
-          checkLaserCharge();
-          // console.log(laserCharge)
-          // console.log("DUST: "+dust.length)
-          // console.log("DEBRIS: "+debris.length)
+          checkLaserCharge();          
 
           // STARS
           if (g.frameCount - beginGameSequence < 175) {
-            hyperDrive(g, stars, easeInStars, beginGameSequence)
-            // for (let i = 0; i < stars.length; i++) {
-            //   if (g.frameCount-beginGameSequence < 100) {
-            //   easeInStars = easeInStars/Math.pow(1.000008, g.frameCount-beginGameSequence)
-            //   } 
-            //   else {
-            //   easeInStars += (g.frameCount-beginGameSequence)/1000000
-            //     if (easeInStars >= 1.25) {
-            //       easeInStars = 1.25
-            //     }
-            //   }
-            //   stars[i].move(easeInStars)
-            //   if (stars[i].x <= 0) {
-            //     let windowX = g.width
-            //     let randomY = g.random(0, g.height)
-            //     let randomSize = g.random(.1, 25)
-            //     const newStar = new Star(windowX, randomY, randomSize, g);
-            //     stars.push(newStar)
-            //     stars.splice(i, 1)
-            //   }
-            // }
+            // hyperDrive(g, stars, easeInStars, beginGameSequence)
+            for (let i = 0; i < stars.length; i++) {
+              if (g.frameCount - beginGameSequence < 100) {
+                easeInStars = easeInStars / Math.pow(1.000008, g.frameCount - beginGameSequence)
+              }
+              else {
+                easeInStars += (g.frameCount - beginGameSequence) / 1000000
+                if (easeInStars >= .6) {
+                  easeInStars = .6
+                }
+              }
+              stars[i].move(easeInStars)
+              if (stars[i].x <= 0) {
+                let windowX = g.width
+                let randomY = g.random(0, g.height)
+                let randomSize = g.random(.1, 25)
+                const newStar = new Star(windowX, randomY, randomSize, g);
+                stars.push(newStar)
+                stars.splice(i, 1)
+              }
+            }
 
           } else {
             for (let i = 0; i < stars.length; i++) {
-              stars[i].move(1.25)
+              stars[i].move(.6)
               if (stars[i].x <= 0) {
                 let windowX = g.width
                 let randomY = g.random(0, g.height)
@@ -376,10 +342,11 @@ export class AsteroidsComponent implements OnInit {
               powerUps.splice(i, 1)
             } else {
               if (ship.hits(powerUps[i]) && canPlay) {
-                let color = [Math.round(g.random(50,250)),Math.round(g.random(50,250)),Math.round(g.random(50,250))]
+                let color = [Math.round(g.random(50, 250)), Math.round(g.random(50, 250)), Math.round(g.random(50, 250))]
                 powerUps[i].powerUp()
                 let dustVel = p5.Vector.add(ship.vel.mult(0.5), powerUps[i].vel);
                 addDust(ship.pos, dustVel, 7, .015, color, 5, g);
+                addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '250')
                 powerUps.splice(i, 1)
               }
             }
@@ -387,7 +354,7 @@ export class AsteroidsComponent implements OnInit {
 
 
 
-          // UPDATE AND DESTROY BARRIERS
+          // UPDATE AND DESTROY BARRIERS AND CHECK COLLISION
           for (let i = 0; i < barriers.length; i++) {
             for (let j = 0; j < barriers[i].length; j++) {
               barriers[i][j].update()
@@ -427,26 +394,23 @@ export class AsteroidsComponent implements OnInit {
             }
           }
 
-          for (var i = pointNumbers.length -1; i >= 0; i--) {
+          for (var i = pointNumbers.length - 1; i >= 0; i--) {
             pointNumbers[i].update();
-            if (pointNumbers[i].destroyFrames <= 0) {
+            if (pointNumbers[i].transparency <= 0) {
               pointNumbers.splice(i, 1)
             }
-          }
-
-          // // UPDATE AND DESTROY POWERUPS
-          // for (var i = powerUps.length - 1; i >= 0; i--) {
-          //   powerUps[i].update();    
-          //   if (powerUps[i].offscreen()) {
-          //     powerUps.splice(i, 1)
-          //   }
-          // }
-          // console.log(powerUps.length)
+          }          
 
           ship.update();
 
           // ALL RENDERS...
           g.background(0);
+
+          let fps = g.frameRate();
+          // console.log(fps.toFixed(2))
+          g.fill(255);
+          g.stroke(0);
+          g.text("FPS: " + fps.toFixed(2), 10, g.height - 10);
 
           for (let i = 0; i < barriers.length; i++) {
             for (let j = 0; j < barriers[i].length; j++) {
@@ -475,7 +439,7 @@ export class AsteroidsComponent implements OnInit {
             powerUps[i].render();
           }
 
-          for (var i = pointNumbers.length -1; i >= 0; i--) {
+          for (var i = pointNumbers.length - 1; i >= 0; i--) {
             pointNumbers[i].render();
           }
 
