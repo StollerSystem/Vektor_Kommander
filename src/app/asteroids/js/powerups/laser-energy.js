@@ -3,9 +3,9 @@ import * as p5 from 'p5';
 
 export default function LaserEnergy(g, pos, windowWidth, laserPowerUp) {
   this.w = windowWidth / 1800;
-  this.r = 15*this.w
-  this.b = Math.sqrt(Math.pow(this.r, 2) - Math.pow(this.r/2, 2))
-  
+  this.r = 15 * this.w
+  this.b = Math.sqrt(Math.pow(this.r, 2) - Math.pow(this.r / 2, 2))
+
 
   Entity.call(this, pos.x, pos.y, this.r, g, null)
 
@@ -16,9 +16,9 @@ export default function LaserEnergy(g, pos, windowWidth, laserPowerUp) {
   // HITBOX
   this.vertices = function () {
     var barrierVertices = [
-      p5.Vector.add(g.createVector(0, -this.r), this.pos),
-      p5.Vector.add(g.createVector(-this.r, this.r / 2), this.pos),
-      p5.Vector.add(g.createVector(this.r, this.r / 2), this.pos),      
+      p5.Vector.add(g.createVector(0, -this.r * 1.25), this.pos),
+      p5.Vector.add(g.createVector(-this.b * 1.25, this.r / 2 * 1.25), this.pos),
+      p5.Vector.add(g.createVector(this.b * 1.25, this.r / 2 * 1.25), this.pos),
     ]
     return barrierVertices;
   }
@@ -32,14 +32,10 @@ export default function LaserEnergy(g, pos, windowWidth, laserPowerUp) {
     g.push()
     g.translate(this.pos.x, this.pos.y);
     g.rotate(this.heading);
-    g.fill(`rgba(${Math.round(g.random(0,254))},${Math.round(g.random(0,254))},${Math.round(g.random(0,254))},1)`)
-    g.stroke(`rgba(${Math.round(g.random(0,254))},${Math.round(g.random(0,254))},${Math.round(g.random(0,254))},1)`)
+    g.fill(`rgba(${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},1)`)
+    g.stroke(`rgba(${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},1)`)
     g.strokeWeight(g.random(1, 3))
-    // g.ellipse(0,0,20,40)
-    let b = Math.sqrt(Math.pow(this.r, 2) - Math.pow(this.r/2, 2))
-
-    
-    g.triangle(0,-this.r,-b,this.r/2,b,this.r/2)
+    g.triangle(0, -this.r, -this.b, this.r / 2, this.b, this.r / 2)
     g.pop()
   }
 

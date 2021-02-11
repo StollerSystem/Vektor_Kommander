@@ -14,9 +14,10 @@ import loadBarriers from './js/utility/load-barriers.js';
 import hyperDrive from './js/effects/hyper-drive.js'
 import laserCollision from './js/utility/laser-collision.js';
 import randomColors from './js/utility/random-colors.js';
-import MobileButton from './js/utility/buttons.js'
-import logo1 from './img/planet-logo.js'
-import LaserEnergy from './js/powerups/laser-energy.js'
+import MobileButton from './js/utility/buttons.js';
+import logo1 from './img/planet-logo.js';
+import LaserEnergy from './js/powerups/laser-energy.js';
+import PointNumber from './js/effects/point-numbers.js'
 
 @Component({
   selector: 'app-asteroids',
@@ -39,6 +40,7 @@ export class AsteroidsComponent implements OnInit {
     var lasers: any = [];
     var enemies: any = [];
     var debris: any = [];
+    var pointNumbers: any = [];
     var powerUps: any = [];
     var possibleEnemies: any = 1;
     var dust: any = [];
@@ -63,13 +65,17 @@ export class AsteroidsComponent implements OnInit {
     var laserOverHeat = false;
     let splashScreen: boolean = true;
     let beginGameSequence: number = 0;
-    let logoPath = new Path2D(logo1.path)
+    let logoPath = new Path2D(logo1.path);
 
     // var laserSoundEffects: any = []; 
     // var explosionSoundEffects: any = [];
     // var rocketSoundEffects: any = [];
     // var stageSoundEffect: any;
     // var mainFont: any;
+
+    const addPointNumbers = function (pos: any, vel: any, color: any, g: any, text: string) {
+      pointNumbers.push(new PointNumber(pos, vel, color, g, text))
+    }
 
     const addDust = function (pos: any, vel: any, n: any, trans: any, color: any, weight: any, g: any) {
       for (var i = 0; i < n; i++) {
@@ -130,8 +136,8 @@ export class AsteroidsComponent implements OnInit {
         laserCharge = 2000;
       }
 
-      const spawnPowerUp = function(pos: any) {
-        powerUps.push(new LaserEnergy(g,pos,windowWidth,laserPowerUp))
+      const spawnPowerUp = function (pos: any) {
+        powerUps.push(new LaserEnergy(g, pos, windowWidth, laserPowerUp))
       }
 
       const addToScore = function (add) {
@@ -164,7 +170,7 @@ export class AsteroidsComponent implements OnInit {
         }
       }
 
-      
+
 
       g.preload = () => {
 
@@ -183,18 +189,18 @@ export class AsteroidsComponent implements OnInit {
 
       g.setup = () => {
 
-        windowWidth = g.windowWidth;        
+        windowWidth = g.windowWidth;
         g.frameRate(60)
         canvas = g.createCanvas(windowWidth * .98, g.windowHeight * .95);
         ctx = canvas.elt.getContext("2d");
 
         console.log("w:" + g.width + " h:" + g.height)
 
-        buttons[0] = new MobileButton(g, 0, g.UP_ARROW, 38, 120, g.height-120)
-        buttons[1] = new MobileButton(g, g.PI, g.DOWN_ARROW, 40, 120, g.height-50)
-        buttons[2] = new MobileButton(g, 3 * g.PI / 2, g.LEFT_ARROW, 37, 50, g.height-50)
-        buttons[3] = new MobileButton(g, g.PI / 2, g.RIGHT_ARROW, 39, 190, g.height-50)
-        buttons[4] = new MobileButton(g, 0, " ".charCodeAt(0), 32, g.width - 100, g.height-50)
+        buttons[0] = new MobileButton(g, 0, g.UP_ARROW, 38, 120, g.height - 120)
+        buttons[1] = new MobileButton(g, g.PI, g.DOWN_ARROW, 40, 120, g.height - 50)
+        buttons[2] = new MobileButton(g, 3 * g.PI / 2, g.LEFT_ARROW, 37, 50, g.height - 50)
+        buttons[3] = new MobileButton(g, g.PI / 2, g.RIGHT_ARROW, 39, 190, g.height - 50)
+        buttons[4] = new MobileButton(g, 0, " ".charCodeAt(0), 32, g.width - 100, g.height - 50)
 
 
         ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons);
@@ -344,7 +350,7 @@ export class AsteroidsComponent implements OnInit {
               lasers.splice(i, 1);
               continue;
             }
-            laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth, spawnPowerUp)
+            laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth, spawnPowerUp, addPointNumbers)
           }
 
           // CHECK FOR COLLISION BEWTWEEN SHIP + ENEMY 
@@ -370,8 +376,11 @@ export class AsteroidsComponent implements OnInit {
               powerUps.splice(i, 1)
             } else {
               if (ship.hits(powerUps[i]) && canPlay) {
+                let color = [Math.round(g.random(50,250)),Math.round(g.random(50,250)),Math.round(g.random(50,250))]
                 powerUps[i].powerUp()
-                powerUps.splice(i, 1)              
+                let dustVel = p5.Vector.add(ship.vel.mult(0.5), powerUps[i].vel);
+                addDust(ship.pos, dustVel, 7, .015, color, 5, g);
+                powerUps.splice(i, 1)
               }
             }
           }
@@ -418,6 +427,13 @@ export class AsteroidsComponent implements OnInit {
             }
           }
 
+          for (var i = pointNumbers.length -1; i >= 0; i--) {
+            pointNumbers[i].update();
+            if (pointNumbers[i].destroyFrames <= 0) {
+              pointNumbers.splice(i, 1)
+            }
+          }
+
           // // UPDATE AND DESTROY POWERUPS
           // for (var i = powerUps.length - 1; i >= 0; i--) {
           //   powerUps[i].update();    
@@ -457,6 +473,10 @@ export class AsteroidsComponent implements OnInit {
           }
           for (var i = powerUps.length - 1; i >= 0; i--) {
             powerUps[i].render();
+          }
+
+          for (var i = pointNumbers.length -1; i >= 0; i--) {
+            pointNumbers[i].render();
           }
 
           // RENDER MOBILE BUTTONS IF THE SCREEN IS AS SMALL AS AN IPAD 
