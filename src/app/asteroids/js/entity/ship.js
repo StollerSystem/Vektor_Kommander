@@ -9,7 +9,8 @@ import Thruster from '../effects/thruster.js';
 
 export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons) {
   this.w = windowWidth / 1800;  
-  Entity.call(this, 200, g.height / 2, 20 * this.w, g, null);
+  let windowMod = windowWidth < 1024 ? .99 : null;
+  Entity.call(this, 200, g.height / 2, 20 * this.w, g, windowMod);
   this.isDestroyed = false;
   this.destroyFrames = 1000;
   this.shields = shieldTime;

@@ -9,7 +9,9 @@ export default function Asteroid(pos, r, size, g, color, windowWidth) {
     pos = g.createVector(g.width + r, g.random(g.height));
   }
 
-  Entity.call(this, pos.x, pos.y, r, g, null);
+  let windowMod = windowWidth < 1024 ? .999 : null;
+
+  Entity.call(this, pos.x, pos.y, r, g, windowMod);
 
   this.vel = g.createVector(g.random(-2, -4), g.random(2, -2))
   this.total = g.floor(g.random(7, 15));
@@ -18,7 +20,8 @@ export default function Asteroid(pos, r, size, g, color, windowWidth) {
   this.size = size;
   switch (size) {
     case 2:
-      this.vel.mult(1); break;
+      let n = this.w.toFixed(2)
+      this.vel.mult(1.1); break;      
     case 1:
       this.vel.mult(1.25); break;
     case 0:
@@ -78,7 +81,6 @@ export default function Asteroid(pos, r, size, g, color, windowWidth) {
       var vec = g.createVector(r * g.cos(angle), r * g.sin(angle));
       vertices.push(p5.Vector.add(vec, this.pos));
     }
-
     return vertices;
   }
 

@@ -30,16 +30,16 @@ export default function Splash() {
     const w = windowWidth / 1800;
     const h = g.height / 900
     const windowSize = g.width / g.height
-    const logoColor = `rgba(${this.colorPicker(g, logo.logoColor[0])},${this.colorPicker(g, logo.logoColor[1])},${this.colorPicker(g, logo.logoColor[2])},${.8})`
+    const logoColor = `rgba(${this.colorPicker(g, logo.logoColor[0])},${this.colorPicker(g, logo.logoColor[1])},${this.colorPicker(g, logo.logoColor[2])},${.5})`
 
     //LOGO SHADOW
     g.push()
     g.translate((logo.logoX * w) - (10 * w), (logo.logoY * h) + (10*w))
     g.fill(logoColor)
     g.scale(logo.logoSize * w, logo.logoSize * w)
-    g.stroke(logoColor)
-    // ctx.fill(logoPath);
-    g.strokeWeight(g.random(0, 2));
+    // g.stroke(logoColor)
+    ctx.fill(logoPath);
+    g.strokeWeight(g.random(0, 1));
     ctx.stroke(logoPath);
     g.pop();
 
@@ -56,7 +56,7 @@ export default function Splash() {
 
     //LOWER TEXT SHADOW
     g.push()
-    g.strokeWeight(g.random(.5, 3 * w))
+    g.strokeWeight(g.random(.1, 2 * w))
     g.stroke(`rgba(${this.colorPicker(g, logo.lowerTextColor[0])},${this.colorPicker(g, logo.lowerTextColor[1])},${this.colorPicker(g, logo.lowerTextColor[2])},${.5})`)
     g.textSize(35 * logo.lowerTextSize * w)
     g.textFont('Montserrat')

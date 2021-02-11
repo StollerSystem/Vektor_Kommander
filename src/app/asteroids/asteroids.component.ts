@@ -15,7 +15,7 @@ import hyperDrive from './js/effects/hyper-drive.js'
 import laserCollision from './js/utility/laser-collision.js';
 import randomColors from './js/utility/random-colors.js';
 import MobileButton from './js/utility/buttons.js'
-import logo1 from './img/apple-logo.js'
+import logo1 from './img/planet-logo.js'
 import LaserEnergy from './js/powerups/laser-energy.js'
 
 @Component({
@@ -125,6 +125,7 @@ export class AsteroidsComponent implements OnInit {
       }
 
       const laserPowerUp = function () {
+        score += 250;
         laserOverHeat = false;
         laserCharge = 2000;
       }
