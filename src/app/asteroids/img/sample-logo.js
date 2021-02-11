@@ -6,7 +6,7 @@ const logo1 = {
   logoY: 40,
   logoSize: 1,
   lowerText: "HOUSE PLANTS UNITED",
-  lowerTextX: 500,
+  lowerTextX: 1200,
   lowerTextY: 300,
   lowerTextSize: 1,
   logoColor: [235, 52, 140],

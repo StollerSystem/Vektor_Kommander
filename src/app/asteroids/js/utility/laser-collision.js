@@ -68,7 +68,7 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
           //THIS LASER HIT DUST IS LEGIT
           let dustVel = p5.Vector.add(lasers[i].vel.mult(0.05), barriers[k][j].vel);
           addDust(barriers[k][j].pos, dustVel, 5, .02, rgbColor2, 3, g);
-          
+
           if (!lasers[i].enemy) {
             // score += points[asteroids[j].size];
             addToScore(10)
