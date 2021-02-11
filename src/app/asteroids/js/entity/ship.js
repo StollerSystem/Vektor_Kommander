@@ -242,7 +242,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       g.rotate(this.heading);
       g.fill(0);
       // shield up effect 
-      var shieldTrans = g.random(1, .3)
+      var shieldTrans = g.random(.5, .05)
       var shieldCol = `rgba(${color2[0]},${color2[1]},${color2[2]},${shieldTrans})`
       var weight = this.shields > 0 ? g.random(1.5, 4) : g.random(1, 1.5);
       var shipColor = this.shields > 0 ? shieldCol : `rgba(${color2[0]},${color2[1]},${color2[2]},1)`;

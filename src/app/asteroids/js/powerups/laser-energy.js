@@ -16,9 +16,9 @@ export default function LaserEnergy(g, pos, windowWidth, laserPowerUp) {
   // HITBOX
   this.vertices = function () {
     var barrierVertices = [
-      p5.Vector.add(g.createVector(0, -this.r * 1.25), this.pos),
-      p5.Vector.add(g.createVector(-this.b * 1.25, this.r / 2 * 1.25), this.pos),
-      p5.Vector.add(g.createVector(this.b * 1.25, this.r / 2 * 1.25), this.pos),
+      p5.Vector.add(g.createVector(0, -this.r * 1.50), this.pos),
+      p5.Vector.add(g.createVector(-this.b * 1.50, this.r / 2 * 1.50), this.pos),
+      p5.Vector.add(g.createVector(this.b * 1.50, this.r / 2 * 1.50), this.pos),
     ]
     return barrierVertices;
   }
