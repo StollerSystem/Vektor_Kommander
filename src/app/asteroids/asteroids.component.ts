@@ -195,7 +195,7 @@ export class AsteroidsComponent implements OnInit {
         powerUps = [];
         barriers = [];
         canPlay = true;
-        windowWidth = g.windowWidth;
+        windowWidth = g.windowWidth <= 1200 ? g.windowWidth : 1200;
         canvas = g.createCanvas(windowWidth * .98, g.windowHeight * .95);
         ctx = canvas.elt.getContext("2d");
         console.log("w:" + g.width + " h:" + g.height)

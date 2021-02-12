@@ -3,7 +3,7 @@ import Star from '../effects/star.js'
 export default function Splash() {
 
   this.colorPicker = function(g, color) {
-    const colorOutput = g.round(g.random(color - 50, color + 50))
+    const colorOutput = g.round(g.random(color - 20, color + 20))
     return colorOutput
   }
 
