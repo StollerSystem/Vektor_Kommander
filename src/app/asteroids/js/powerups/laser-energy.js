@@ -32,6 +32,15 @@ export default function LaserEnergy(g, pos, windowWidth, laserPowerUp) {
     g.push()
     g.translate(this.pos.x, this.pos.y);
     g.rotate(this.heading);
+    g.fill(`rgba(${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},.5)`)
+    g.stroke(`rgba(${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},.5)`)
+    g.strokeWeight(g.random(1, 10))
+    g.triangle(0, -this.r, -this.b, this.r / 2, this.b, this.r / 2)
+    g.pop()
+
+    g.push()
+    g.translate(this.pos.x, this.pos.y);
+    g.rotate(this.heading);
     g.fill(`rgba(${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},1)`)
     g.stroke(`rgba(${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},1)`)
     g.strokeWeight(g.random(1, 3))

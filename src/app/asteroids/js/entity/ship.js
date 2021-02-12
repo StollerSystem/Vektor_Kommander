@@ -19,11 +19,30 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
   this.buttons = buttons;
   this.beginGame = false;
   this.lives = lives;
+  this.laserCharge;
+  var scope = this;
 
-  var trailColor = color2;
+  
+  this.chargeLaser = (holdTimer) => {
+    // console.log('laser charge' + scope.laserCharge)
+    if (scope.laserCharge > 1270) {
+      return false;
+      // if (holdTimer - g.frameCount < 100 && holdTimer -g.frameCount > 10) {
+      //   console.log('holding')
+      //   return false;
+      // } else if (holdTimer - g.frameCount < 10){
+      //   console.log('not holding')
+      // } 
+      
+    } else {
+      return true;
+    }
+  }
+
+  var trailColor = color2;  
   var trailLength = Math.round(20 * this.w)
   this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r, trailLength, this.w)
-  
+
   g.keyReleased = () => {
     input.handleEvent(g.key, g.keyCode, false);
   }
@@ -57,15 +76,23 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     input.handleEvent(" ".charCodeAt(0), 32, false);
   }
 
-  var scope = this;
+  
+
+  
+
   input.registerAsListener(" ".charCodeAt(0), function (char, code, press) {
+    // console.log('space pressed ' + press)
+    let holdTimer = g.frameCount
     if (!press) {
       return;
     }
+    scope.chargeLaser(holdTimer);
+
     let offSet = 29 * scope.w;
     if (reduceLaserCharge()) {
+      let scatter = g.random(.01,-.01)
       let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
-      var laser = new Laser(shootPos, scope.vel, scope.heading, g, color1, false, scope.heading, scope.w);
+      var laser = new Laser(shootPos, scope.vel, scope.heading-scatter, g, color1, false, scope.heading-scatter, scope.w);
       var dustVel = laser.vel.copy();
       addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
       lasers.push(laser);
@@ -115,7 +142,9 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     // }
   });
 
-  this.update = function () {
+  this.update = function (laserCharge) {
+    this.laserCharge = laserCharge;  
+    // console.log(this.laserCharge)  
     this.edges();
     Entity.prototype.update.call(this);
     if (this.isDestroyed) {
@@ -125,7 +154,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       }
     } else {
       this.vel.mult(1);
-    }
+    }             
     if (this.shields > 0 && !title) {
       this.shields -= 1;
     }

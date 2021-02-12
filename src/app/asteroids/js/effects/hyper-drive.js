@@ -4,7 +4,6 @@ export default function hyperDrive(g, stars, easeInStars, beginGameSequence) {
   for (let i = 0; i < stars.length; i++) {
     if (g.frameCount-beginGameSequence < 100) {
     easeInStars = easeInStars/Math.pow(1.000008, g.frameCount-beginGameSequence)
-    // easeInStars = easeInStars/((g.frameCount-beginGameSequence))
     } 
     else {
     easeInStars += (g.frameCount-beginGameSequence)/1000000

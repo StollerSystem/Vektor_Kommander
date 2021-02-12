@@ -63,12 +63,12 @@ export class AsteroidsComponent implements OnInit {
     var stars: any = [];
     var barriers: any = [];
     var splash: any;
-    var laserCharge = 1270;
+    var laserCharge = 2000;
     var laserOverHeat = false;
     var splashScreen: boolean = true;
     var beginGameSequence: number = 0;
     var logoPath = new Path2D(config.logo.path);
-    var easeInStars = 1.25;
+    var easeInStars = .75;
 
     //Sound Effect
     // var laserSoundEffects: any = []; 
@@ -184,6 +184,29 @@ export class AsteroidsComponent implements OnInit {
         }
       }
 
+      const hyperDriveIntro = function () {
+        for (let i = 0; i < stars.length; i++) {
+          if (g.frameCount - beginGameSequence < 100) {
+            easeInStars = easeInStars / Math.pow(1.000008, g.frameCount - beginGameSequence)
+          }
+          else {
+            easeInStars += (g.frameCount - beginGameSequence) / 1000000
+            if (easeInStars >= .6) {
+              easeInStars = .6
+            }
+          }
+          stars[i].move(easeInStars)
+          if (stars[i].x <= 0) {
+            let windowX = g.width
+            let randomY = g.random(0, g.height)
+            let randomSize = g.random(.1, 25)
+            const newStar = new Star(windowX, randomY, randomSize, g);
+            stars.push(newStar)
+            stars.splice(i, 1)
+          }
+        }
+      }
+
       const resetCanvas = function () {
         score = 0;        
         buttons = [];
@@ -259,28 +282,10 @@ export class AsteroidsComponent implements OnInit {
 
           // STARS
           if (g.frameCount - beginGameSequence < 175) {
-            for (let i = 0; i < stars.length; i++) {
-              if (g.frameCount - beginGameSequence < 100) {
-                easeInStars = easeInStars / Math.pow(1.000008, g.frameCount - beginGameSequence)
-              }
-              else {
-                easeInStars += (g.frameCount - beginGameSequence) / 1000000
-                if (easeInStars >= .6) {
-                  easeInStars = .6
-                }
-              }
-              stars[i].move(easeInStars)
-              if (stars[i].x <= 0) {
-                let windowX = g.width
-                let randomY = g.random(0, g.height)
-                let randomSize = g.random(.1, 25)
-                const newStar = new Star(windowX, randomY, randomSize, g);
-                stars.push(newStar)
-                stars.splice(i, 1)
-              }
-            }
+            hyperDriveIntro()
 
           } else {
+
             for (let i = 0; i < stars.length; i++) {
               stars[i].move(.6)
               if (stars[i].x <= 0) {
@@ -432,7 +437,7 @@ export class AsteroidsComponent implements OnInit {
             }
           }
 
-          ship.update();
+          ship.update(laserCharge);
 
           // ALL RENDERS...
           g.background(0);
