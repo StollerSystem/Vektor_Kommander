@@ -7,7 +7,7 @@ import VaporTrail from '../effects/vapor-trail.js';
 import Thruster from '../effects/thruster.js';
 
 
-export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons) {
+export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons, lives, gameReset) {
   this.w = windowWidth / 1800;  
   let windowMod = windowWidth < 1024 ? .99 : null;
   Entity.call(this, 200, g.height / 2, 20 * this.w, g, windowMod);
@@ -18,6 +18,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
   this.rmax2 = this.rmax * this.rmax;
   this.buttons = buttons;
   this.beginGame = false;
+  this.lives = lives;
 
   var trailColor = color2;
   var trailLength = Math.round(20 * this.w)
@@ -33,7 +34,12 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
 
   g.mousePressed = () => {
     // console.log('press')
-    this.beginGame = true;  
+    if (this.lives < 0) {
+      gameReset();
+    }
+    
+    this.beginGame = true;
+
     for (var i = 0; i < this.buttons.length; i++) {
       let key = this.buttons[i].clicked()      
       if (key) {
@@ -128,6 +134,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
 
   this.brokenParts = [];
   this.destroy = function () {
+    this.lives -= 1; 
     this.isDestroyed = true;
     for (var i = 0; i < 6; i++)
       this.brokenParts[i] = {

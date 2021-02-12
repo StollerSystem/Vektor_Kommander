@@ -13,18 +13,18 @@ export default function Asteroid(pos, r, size, g, color, windowWidth) {
 
   Entity.call(this, pos.x, pos.y, r, g, windowMod);
 
-  this.vel = g.createVector(g.random(-2, -4), g.random(2, -2))
+  this.vel = g.createVector(g.random(-1.5, -4), g.random(2, -2))
   this.total = g.floor(g.random(7, 15));
 
   //smaller asteroids go a bit faster
   this.size = size;
   switch (size) {
     case 2:      
-      this.vel.mult(1.1); break;      
+      this.vel.mult(1.05); break;      
     case 1:
-      this.vel.mult(1.2); break;
+      this.vel.mult(1.1); break;
     case 0:
-      this.vel.mult(1.4); break;
+      this.vel.mult(1.15); break;
   }
 
 

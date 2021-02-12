@@ -33,8 +33,8 @@ export class AsteroidsComponent implements OnInit {
   ngOnInit(): void {
 
     console.log(config.logo.color)
-    // let cnvs: any;
-    let ctx: any;
+    // let cnvs;
+    var ctx: any;
     var windowWidth: any;
     var ship: any;
     var hud: any;
@@ -60,21 +60,21 @@ export class AsteroidsComponent implements OnInit {
     var score: any = 0;
     var lives: any = 3;
     var level: any = 0;
-    let stars: any = [];
-    let barriers: any = [];
-    let barrierSensor: any = [];
-    let splash: any;
+    var stars: any = [];
+    var barriers: any = [];
+    var splash: any;
     var laserCharge = 1270;
     var laserOverHeat = false;
-    let splashScreen: boolean = true;
-    let beginGameSequence: number = 0;
-    let logoPath = new Path2D(config.logo.path);
-    let easeInStars = 1.25;
+    var splashScreen: boolean = true;
+    var beginGameSequence: number = 0;
+    var logoPath = new Path2D(config.logo.path);
+    var easeInStars = 1.25;
+
+    //Sound Effect
     // var laserSoundEffects: any = []; 
     // var explosionSoundEffects: any = [];
     // var rocketSoundEffects: any = [];
     // var stageSoundEffect: any;
-    // var mainFont: any;
 
     const addPointNumbers = function (pos: any, vel: any, color: any, g: any, text: string) {
       pointNumbers.push(new PointNumber(pos, vel, color, g, text))
@@ -95,24 +95,36 @@ export class AsteroidsComponent implements OnInit {
         laserCharge -= 100;
         return true
       }
-    }
-
-    const roundLoss = function (g: any) {
-      let game = g;
-      setTimeout(function () {
-        lives--;
-        if (lives >= 0) {
-          ship = new Ship(game, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons);
-          canPlay = true;
-          laserCharge = 1270;
-        }
-      }, 3000);
-    }
+    }    
 
     const game = (g: any) => {
 
+      const roundLoss = function () {        
+        setTimeout(function () {
+          lives--;
+          if (lives >= 0) {
+            ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons, lives, gameReset);
+            canPlay = true;
+            laserCharge = 1270;
+          }
+        }, 3000);
+        input.registerAsListener(g.ENTER, function (char, code, press) {          
+          if (press) {
+            if (lives < 0) {
+              gameReset();              
+            }
+          }
+        });
+      }
+
+      const gameReset = function () {
+        lives = 3;
+        splashScreen = true;
+        resetCanvas();
+      }
+
       const spawnAsteroids = function () {
-        for (var i = 0; i < level + 1; i++) {
+        for (let i = 0; i < level + 1; i++) {
           asteroids.push(new Asteroid(null, null, 3, g, rgbColor1, windowWidth));
         }
       }
@@ -121,16 +133,14 @@ export class AsteroidsComponent implements OnInit {
         for (let i = 0; i < level + 1; i++) {
           const vx = -.4
           const size = g.round(g.random(10, 50))
-          const y = g.random(0 + size * 4, g.height - size * 4)
-          const x = g.width + size * 6;
-
-          barrierSensor.push()
+          const y = g.random(0 + size * 4, g.height - size * 2)
+          const x = g.width + size * 6;          
           barriers.push(loadBarriers(g, x, y, vx, size, rgbColor4, windowWidth))
         }
       }
 
       const spawnEnemy = function () {
-        var radius = g.random(20, 30)
+        let radius = g.random(20, 30)
         enemies.push(new Enemy(radius, g, addDust, level, rgbColor5, rgbColor2, lasers, windowWidth))
       }
 
@@ -174,18 +184,18 @@ export class AsteroidsComponent implements OnInit {
         }
       }
 
-      g.preload = () => {
-        let random_Colors = randomColors(g);
-        rgbColor1 = config.gameColors.rocks ? config.gameColors.rocks : random_Colors[0]; // ROCKS/SCORE
-        rgbColor2 = random_Colors[1] // LASERS / THRUSTERS
-        rgbColor3 = config.gameColors.ship ? config.gameColors.ship : random_Colors[2]; // SHIP
-        rgbColor4 = config.gameColors.squares ? config.gameColors.squares : random_Colors[3]; // SQUARES
-        rgbColor5 = config.gameColors.enemy ? config.gameColors.enemy : random_Colors[4]; // ENEMY        
-      }
-
-      g.setup = () => {
+      const resetCanvas = function () {
+        score = 0;        
+        buttons = [];
+        asteroids = [];
+        lasers = [];
+        enemies = [];
+        debris = [];
+        pointNumbers = [];
+        powerUps = [];
+        barriers = [];
+        canPlay = true;
         windowWidth = g.windowWidth;
-        g.frameRate(60)
         canvas = g.createCanvas(windowWidth * .98, g.windowHeight * .95);
         ctx = canvas.elt.getContext("2d");
         console.log("w:" + g.width + " h:" + g.height)
@@ -196,35 +206,56 @@ export class AsteroidsComponent implements OnInit {
         buttons[3] = new MobileButton(g, g.PI / 2, g.RIGHT_ARROW, 39, 190, g.height - 50)
         buttons[4] = new MobileButton(g, 0, " ".charCodeAt(0), 32, g.width - 100 * (windowWidth / 600), g.height - 50)
         // LOAD INITIAL ASSETS
-        ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons);
+        ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons, lives, gameReset);
         hud = new Hud(g, rgbColor1, rgbColor3, pts, windowWidth);
         stars = loadStars(g);
         splash = new Splash();
-      }      
 
-      g.draw = () => {
+        setTimeout(function () {
+          input.registerAsListener(g.ENTER, function (char, code, press) {            
+            if (press) {
+              if (splashScreen) {                
+                splashScreen = false;
+                beginGameSequence = g.frameCount;
+              }
+            }
+          }, 100)          
+        });
+      }
 
+      g.preload = () => {
+        let random_Colors = randomColors(g);
+        rgbColor1 = config.gameColors.rocks ? config.gameColors.rocks : random_Colors[0]; // ROCKS/SCORE
+        rgbColor2 = random_Colors[1] // LASERS / THRUSTERS
+        rgbColor3 = config.gameColors.ship ? config.gameColors.ship : random_Colors[2]; // SHIP
+        rgbColor4 = config.gameColors.squares ? config.gameColors.squares : random_Colors[3]; // SQUARES
+        rgbColor5 = config.gameColors.enemy ? config.gameColors.enemy : random_Colors[4]; // ENEMY        
+      }
+
+      g.setup = () => {
+        g.frameRate(60)
+        resetCanvas()
+        g.keyReleased = () => {
+          input.handleEvent(g.key, g.keyCode, false);
+        }
+        g.keyPressed = () => {
+          input.handleEvent(g.key, g.keyCode, true);
+        }        
+      }
+
+      g.draw = () => {        
         if (splashScreen) {
-          g.keyReleased = () => {
-            input.handleEvent(g.key, g.keyCode, false);
-          }
-          g.keyPressed = () => {
-            input.handleEvent(g.key, g.keyCode, true);
-          }
-          input.registerAsListener(g.ENTER, function (char, code, press) {
-            splashScreen = false;
-            beginGameSequence = g.frameCount;
-          });
           g.background(0);
           splash.render(g, stars, windowWidth, ctx, logoPath, config);
           if (ship.beginGame) {
             splashScreen = false
           }
         } else {
+
           // CHECK FOR FX CREATING LAAAAG
           checkDust();
           checkDebris();
-          checkLaserCharge();          
+          checkLaserCharge();
 
           // STARS
           if (g.frameCount - beginGameSequence < 175) {
@@ -288,7 +319,7 @@ export class AsteroidsComponent implements OnInit {
           }
 
           // UPDATE ASTEROIDS AND CHECK FOR COLLISIONS 
-          for (var i = 0; i < asteroids.length; i++) {
+          for (let i = 0; i < asteroids.length; i++) {
             if (asteroids[i].offscreen()) {
               asteroids.splice(i, 1);
               continue;
@@ -303,7 +334,7 @@ export class AsteroidsComponent implements OnInit {
               // ship.playSoundEffect(explosionSoundEffects);
               // rocketSoundEffects[0].stop();
               // rocketSoundEffects[1].stop();            
-              roundLoss(g);
+              roundLoss();
             }
             asteroids[i].update();
           }
@@ -330,7 +361,7 @@ export class AsteroidsComponent implements OnInit {
               // ship.playSoundEffect(explosionSoundEffects);
               // rocketSoundEffects[0].stop();
               // rocketSoundEffects[1].stop();
-              roundLoss(g)
+              roundLoss()
             }
             enemies[i].update();
           }
@@ -367,7 +398,7 @@ export class AsteroidsComponent implements OnInit {
                 // ship.playSoundEffect(explosionSoundEffects);
                 // rocketSoundEffects[0].stop();
                 // rocketSoundEffects[1].stop();
-                roundLoss(g)
+                roundLoss()
               }
               if (barriers[i][j].offscreen()) {
                 barriers[i].splice(j, 1);
@@ -399,7 +430,7 @@ export class AsteroidsComponent implements OnInit {
             if (pointNumbers[i].transparency <= 0) {
               pointNumbers.splice(i, 1)
             }
-          }          
+          }
 
           ship.update();
 
@@ -453,7 +484,7 @@ export class AsteroidsComponent implements OnInit {
           ship.render();
           hud.render(stageClear, level, lives, score, laserCharge, laserOverHeat);
         }
-      }
+      }      
     };
     let canvas = new p5(game);
   };
