@@ -1,13 +1,13 @@
 {
   "data": "testing",
   "gameColors": {
-    "rocks": null,
+    "rocks": [255,255,0],
     "ship": null,
-    "squares": null,
+    "squares": [0,64,225],
     "enemy": null
   },
   "title" : {
-    "text": "VEKTOR KOMMANDER",
+    "text": "DUNKEL KOMMANDER",
     "size": "200"
   },
   "logo": {

@@ -104,6 +104,7 @@ export class AsteroidsComponent implements OnInit {
         if (lives >= 0) {
           ship = new Ship(game, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons);
           canPlay = true;
+          laserCharge = 1270;
         }
       }, 3000);
     }
@@ -148,13 +149,13 @@ export class AsteroidsComponent implements OnInit {
       }
 
       const checkDust = function () {
-        while (dust.length > 40) {
+        while (dust.length > 30) {
           dust.shift();
         }
       }
 
       const checkDebris = function () {
-        if (debris.length > 8) {
+        if (debris.length > 7) {
           debris.shift();
         }
       }
@@ -165,7 +166,7 @@ export class AsteroidsComponent implements OnInit {
           laserOverHeat = true;
           setTimeout(function () {
             laserOverHeat = false;
-            laserCharge = 1;
+            // laserCharge = 1;
           }, 2500);
         }
         if (laserCharge < 1270 && !laserOverHeat) {
@@ -272,7 +273,7 @@ export class AsteroidsComponent implements OnInit {
 
           // RANDOM ASTEROID SPAWN
           if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
-            let ranNum = g.random(750);
+            let ranNum = g.random(650);
             if (ranNum <= 1) {
               spawnAsteroids();
             }
@@ -280,8 +281,8 @@ export class AsteroidsComponent implements OnInit {
 
           // RANDOM BARRIER SPAWN
           if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
-            let ranNum = g.random(300);
-            if (ranNum <= 1 && barriers.length < 8) {
+            let ranNum = g.random(200);
+            if (ranNum <= 1 && barriers.length < 6) {
               spawnBarriers();
             }
           }
@@ -425,12 +426,12 @@ export class AsteroidsComponent implements OnInit {
           for (var i = lasers.length - 1; i >= 0; i--) {
             lasers[i].render();
           }
-          // for (var i = dust.length - 1; i >= 0; i--) {
-          //   dust[i].render();
-          // }
-          // for (var i = debris.length - 1; i >= 0; i--) {
-          //   debris[i].render();
-          // }
+          for (var i = dust.length - 1; i >= 0; i--) {
+            dust[i].render();
+          }
+          for (var i = debris.length - 1; i >= 0; i--) {
+            debris[i].render();
+          }
           for (var i = enemies.length - 1; i >= 0; i--) {
             enemies[i].render();
           }

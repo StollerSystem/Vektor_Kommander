@@ -20,7 +20,7 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
       if (!lasers[i].enemy) {
         // score += points[asteroids[j].size];
         addToScore(points[asteroids[j].size])
-        addPointNumbers(asteroids[j].pos, dustVel.mult(.5), 255, g, points[asteroids[j].size])
+        addPointNumbers(asteroids[j].pos, dustVel.mult(.25), 255, g, points[asteroids[j].size])
       }
       asteroids.splice(j, 1);
       lasers.splice(i, 1);
@@ -49,7 +49,7 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
         if (!lasers[i].enemy) {
           // score += points[asteroids[j].size];
           addToScore(100)
-          addPointNumbers(enemies[k].pos, dustVel.mult(.5), 255, g, 100)
+          addPointNumbers(enemies[k].pos, dustVel.mult(.25), 255, g, 100)
         }
         enemies.splice(j, 1);
         lasers.splice(i, 1);

@@ -45,18 +45,28 @@ export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
 
       g.push();
       g.textFont('Montserrat')
-      g.textAlign(g.CENTER)
       g.textSize(50 * (windowWidth / 1800));
       g.fill(255)
-      g.textAlign(g.RIGHT)
+      g.textAlign(g.CENTER)
       // g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
       g.stroke(255)
       g.strokeWeight(g.random(0, 2))
-      g.text("FINAL SCORE:", (g.width / 2), g.height / 1.75);
+      g.text("FINAL SCORE", (windowWidth/2), g.height / 1.75);
       g.pop();
 
-      var x = windowWidth / 2;
-      var y = g.height / 1.75 - (size * 1.5);
+      g.push();
+      g.textFont('Montserrat')
+      g.textSize(30 * (windowWidth / 1800));
+      g.fill(255)
+      g.textAlign(g.CENTER)
+      // g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
+      g.stroke(255)
+      g.strokeWeight(g.random(0, 2))
+      g.text("PRESS <ENTER>", (windowWidth/2), g.height / 1.1);
+      g.pop();
+
+      var x = windowWidth / 2 - ((padding)*scoreString.length);
+      var y = g.height / 1.55 - (size * 1.55);
       var digitPos = g.createVector(x, y);
       for (var i = 0; i < scoreString.length; i++) {
         var dmap = digitMaps[scoreString.charAt(i)];

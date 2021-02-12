@@ -22,7 +22,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
     if (enemy) {
       g.push();
       var trans = g.random(1, .8)
-      g.stroke(`rgba(${color[2]},${color[1]},${color[0]},${trans})`);
+      g.stroke(`rgba(${color[2]},${color[0]},${color[1]},${trans})`);
       g.strokeWeight(this.r * 1.5 * this.w);
       g.point(this.pos.x, this.pos.y);
       g.pop();
@@ -30,7 +30,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
       g.push();
       var size = this.r * (g.random(2 * this.w, 10 * this.w))
       var trans2 = g.random(.4, .05)
-      g.stroke(`rgba(${color[2]},${color[0]},${color[1]},${trans2}) `);
+      g.stroke(`rgba(${color[1]},${color[0]},${color[2]},${trans2}) `);
       g.strokeWeight(size);
       g.point(this.pos.x, this.pos.y);
       g.pop();
