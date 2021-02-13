@@ -8,7 +8,7 @@ import Thruster from '../effects/thruster.js';
 
 
 export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons, lives, gameReset) {
-  this.w = windowWidth / 1800;  
+  this.w = windowWidth / 1800;
   let windowMod = windowWidth < 1024 ? .99 : null;
   Entity.call(this, 200, g.height / 2, 20 * this.w, g, windowMod);
   this.isDestroyed = false;
@@ -22,24 +22,18 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
   this.laserCharge;
   var scope = this;
 
-  
-  this.chargeLaser = (holdTimer) => {
-    // console.log('laser charge' + scope.laserCharge)
-    if (scope.laserCharge > 1270) {
-      return false;
-      // if (holdTimer - g.frameCount < 100 && holdTimer -g.frameCount > 10) {
-      //   console.log('holding')
-      //   return false;
-      // } else if (holdTimer - g.frameCount < 10){
-      //   console.log('not holding')
-      // } 
-      
-    } else {
-      return true;
-    }
-  }
 
-  var trailColor = color2;  
+  // this.chargeLaser = () => {
+
+  //   if (scope.laserCharge > 1270) {
+  //     return true;
+
+  //   } else {
+  //     return false;
+  //   }
+  // }
+
+  var trailColor = color2;
   var trailLength = Math.round(20 * this.w)
   this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r, trailLength, this.w)
 
@@ -56,11 +50,11 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     if (this.lives < 0) {
       gameReset();
     }
-    
+
     this.beginGame = true;
 
     for (var i = 0; i < this.buttons.length; i++) {
-      let key = this.buttons[i].clicked()      
+      let key = this.buttons[i].clicked()
       if (key) {
         input.handleEvent(key[0], key[1], true);
       }
@@ -68,7 +62,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     return false;
   }
 
-  g.mouseReleased = () => { 
+  g.mouseReleased = () => {
     input.handleEvent(g.UP_ARROW, 38, false);
     input.handleEvent(g.DOWN_ARROW, 40, false);
     input.handleEvent(g.LEFT_ARROW, 37, false);
@@ -76,27 +70,99 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     input.handleEvent(" ".charCodeAt(0), 32, false);
   }
 
-  
+  var charge = 0
+  var keyReleased = false;
+  let offSet = 29 * scope.w;
+  this.shoot = function () {
+    charge = 0;
+    keyReleased = false;
+    setTimeout(function () {
+      if (keyReleased) {
+        console.log("fire!")
+        if (reduceLaserCharge()) {
+          let scatter = g.random(.015, -.015)
+          let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
+          var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, color1, false, scope.heading - scatter, scope.w);
+          var dustVel = laser.vel.copy();
+          addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
+          lasers.push(laser);
+        }
+      } else {
+        // CHARGE SHOT
+        scope.chargeShot()
+        // let charge = 0
+        // while (!keyReleased) {
+        //   charge += 1;
+        //   if (keyReleased) {
+        //     console.log("CHARGE SHOT! "+charge)
+        //     break;
+        //   }
+        // }
+      }
+    }, 120)
+  }
 
-  
 
-  input.registerAsListener(" ".charCodeAt(0), function (char, code, press) {
-    // console.log('space pressed ' + press)
-    let holdTimer = g.frameCount
-    if (!press) {
-      return;
-    }
-    scope.chargeLaser(holdTimer);
-
-    let offSet = 29 * scope.w;
-    if (reduceLaserCharge()) {
-      let scatter = g.random(.01,-.01)
+  this.chargeShot = function () {
+    if (!keyReleased && reduceLaserCharge()) {
+      charge += 1
+      // console.log(charge)
+      setTimeout(function () {
+        scope.chargeShot();
+      }, 50)
+    } else {
+      console.log("CHARGE SHOT! " + charge)
+      let scatter = g.random(.015, -.015)
       let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
-      var laser = new Laser(shootPos, scope.vel, scope.heading-scatter, g, color1, false, scope.heading-scatter, scope.w);
+      var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, color1, false, scope.heading - scatter, scope.w, charge*3);
       var dustVel = laser.vel.copy();
       addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
       lasers.push(laser);
     }
+
+
+    // let charge = 0
+    // while (true) {
+    //   setTimeout(function () {
+    //     if (reduceLaserCharge()) {
+    //       charge += 1
+    //       console.log(charge)
+    //     } else {
+    //       break;
+    //     }
+    //   }, 100)
+
+    // }
+
+  }
+
+
+  input.registerAsListener(" ".charCodeAt(0), function (char, code, press) {
+
+
+    if (press) {
+      scope.shoot();
+      return;
+    }
+
+    if (!press) {
+      keyReleased = true;
+      return;
+    }
+    // let time = end - start;
+    // console.log("pressed time: "+time)
+    // if (time < 120) {
+    //   let offSet = 29 * scope.w;
+    //   if (reduceLaserCharge()) {
+    //     let scatter = g.random(.015, -.015)
+    //     let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
+    //     var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, color1, false, scope.heading - scatter, scope.w);
+    //     var dustVel = laser.vel.copy();
+    //     addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
+    //     lasers.push(laser);
+    //   }
+    // }
+
     // var effect = laserSoundEffects[floor(random() * laserSoundEffects.length)];
     // laser.playSoundEffect(effect);
   });
@@ -143,7 +209,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
   });
 
   this.update = function (laserCharge) {
-    this.laserCharge = laserCharge;  
+    this.laserCharge = laserCharge;
     // console.log(this.laserCharge)  
     this.edges();
     Entity.prototype.update.call(this);
@@ -154,7 +220,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       }
     } else {
       this.vel.mult(1);
-    }             
+    }
     if (this.shields > 0 && !title) {
       this.shields -= 1;
     }
@@ -163,7 +229,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
 
   this.brokenParts = [];
   this.destroy = function () {
-    this.lives -= 1; 
+    this.lives -= 1;
     this.isDestroyed = true;
     for (var i = 0; i < 6; i++)
       this.brokenParts[i] = {
@@ -192,7 +258,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       g.createVector(-this.r - backSet, this.r / 2).rotate(this.heading),
       g.createVector(this.r * 2 - backSet, this.r / 2).rotate(this.heading),
       g.createVector(this.r * 2.2 - backSet, 0).rotate(this.heading),
-      g.createVector(0-backSet, -this.r / 3).rotate(this.heading),
+      g.createVector(0 - backSet, -this.r / 3).rotate(this.heading),
       g.createVector(-this.r - backSet, -this.r).rotate(this.heading)
     ];
     for (var i = 0; i < shipVertices.length; i++) {
@@ -214,7 +280,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
 
   this.playSoundEffect = function (soundArray) {
     // soundArray[g.floor(g.random(0,soundArray.length))].play();
-  }  
+  }
 
   //HITBOX 
   this.vertices = function () {
@@ -223,11 +289,11 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       p5.Vector.add(g.createVector(-this.r - backSet, this.r / 2), this.pos),
       p5.Vector.add(g.createVector(this.r * 2 - backSet, this.r / 2), this.pos),
       p5.Vector.add(g.createVector(this.r * 2.2 - backSet, 0), this.pos),
-      p5.Vector.add(g.createVector(0-backSet, -this.r / 3), this.pos),
+      p5.Vector.add(g.createVector(0 - backSet, -this.r / 3), this.pos),
       p5.Vector.add(g.createVector(-this.r - backSet, -this.r), this.pos),
     ]
     return shipVertices;
-  }  
+  }
 
   this.edges = function () {
     if (this.pos.x >= this.g.width - this.rmax) {
@@ -312,7 +378,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       g.vertex(-this.r - backSet, this.r / 2)
       g.vertex(this.r * 2 - backSet, this.r / 2)
       g.vertex(this.r * 2.5 - backSet, 0)
-      g.vertex(0-backSet, -this.r / 3)
+      g.vertex(0 - backSet, -this.r / 3)
       g.vertex(-this.r - backSet, -this.r)
       g.endShape(g.CLOSE)
       g.triangle(-this.r - backSet, this.r,

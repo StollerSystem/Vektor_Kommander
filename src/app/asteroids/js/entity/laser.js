@@ -2,7 +2,7 @@ import * as p5 from 'p5';
 import Entity from './entity.js';
 import { lineIntersect } from '../utility/utility.js';
 
-export default function Laser(spos, svel, angle, g, color, enemy, heading, windowWidthMod) {
+export default function Laser(spos, svel, angle, g, color, enemy, heading, windowWidthMod, charge) {
 
   Entity.call(this, spos.x, spos.y, 4, g, null);
   this.pos = g.createVector(spos.x, spos.y);
@@ -40,7 +40,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
       g.push();
       var trans = g.random(1, .8)
       g.stroke(`rgba(${color[0]},${color[1]},${color[2]},${trans})`);
-      g.strokeWeight(3 * (this.w*1.2));
+      g.strokeWeight(3+charge * (this.w*1.2));
       g.translate(this.pos.x, this.pos.y)
       g.rotate(this.heading)
       g.line(0, 0, 25 * this.w, 0)
