@@ -23,16 +23,6 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
   var scope = this;
 
 
-  // this.chargeLaser = () => {
-
-  //   if (scope.laserCharge > 1270) {
-  //     return true;
-
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
   var trailColor = color2;
   var trailLength = Math.round(20 * this.w)
   this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r, trailLength, this.w)
@@ -77,8 +67,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     charge = 0;
     keyReleased = false;
     setTimeout(function () {
-      if (keyReleased) {
-        console.log("fire!")
+      if (keyReleased) {        
         if (reduceLaserCharge()) {
           let scatter = g.random(.015, -.015)
           let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
@@ -87,17 +76,8 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
           addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
           lasers.push(laser);
         }
-      } else {
-        // CHARGE SHOT
-        scope.chargeShot()
-        // let charge = 0
-        // while (!keyReleased) {
-        //   charge += 1;
-        //   if (keyReleased) {
-        //     console.log("CHARGE SHOT! "+charge)
-        //     break;
-        //   }
-        // }
+      } else {        
+        scope.chargeShot()        
       }
     }, 120)
   }
@@ -105,13 +85,12 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
 
   this.chargeShot = function () {
     if (!keyReleased && reduceLaserCharge()) {
-      charge += 1
-      // console.log(charge)
+      charge += 1      
       setTimeout(function () {
         scope.chargeShot();
       }, 50)
     } else {
-      console.log("CHARGE SHOT! " + charge)
+      console.log("CHARGED SHOT! " + charge)
       let scatter = g.random(.015, -.015)
       let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
       var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, color1, false, scope.heading - scatter, scope.w, charge*3);
@@ -119,26 +98,10 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
       lasers.push(laser);
     }
-
-
-    // let charge = 0
-    // while (true) {
-    //   setTimeout(function () {
-    //     if (reduceLaserCharge()) {
-    //       charge += 1
-    //       console.log(charge)
-    //     } else {
-    //       break;
-    //     }
-    //   }, 100)
-
-    // }
-
   }
 
 
   input.registerAsListener(" ".charCodeAt(0), function (char, code, press) {
-
 
     if (press) {
       scope.shoot();

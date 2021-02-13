@@ -64,11 +64,12 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
         if (exists && lasers[i].hits(barriers[k][j])) {
           exists = false;
           // IF POWER SQUARE SPAWN POWERUP
-          if (barriers[k][j].powerSquare) {            
+          if (barriers[k][j].powerSquare) {
             spawnPowerUp(barriers[k][j].pos)
           }
           //THIS LASER HIT DUST IS LEGIT
-          let dustVel = p5.Vector.add(lasers[i].vel.mult(0.05), barriers[k][j].vel);
+          let laserVel = lasers[i].vel.copy();
+          let dustVel = p5.Vector.add(laserVel.mult(0.05), barriers[k][j].vel);
           addDust(barriers[k][j].pos, dustVel, 5, .02, rgbColor2, 3, g);
 
           if (!lasers[i].enemy) {
@@ -87,7 +88,11 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
             }
           }
           barriers[k].splice(j, 1);
-          lasers.splice(i, 1);
+          if (lasers[i].charge > 0) {
+            lasers[i].charge -= 3
+          } else {
+            lasers.splice(i, 1);
+          }
           break;
         }
       }

@@ -8,6 +8,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
   this.pos = g.createVector(spos.x, spos.y);
   this.vel = p5.Vector.fromAngle(angle);
   this.enemy = enemy ? enemy : false;
+  this.charge = charge ? charge : 0;
   this.heading = heading;
   this.w = windowWidthMod;  
   if (this.enemy) {
