@@ -10,7 +10,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
   this.enemy = enemy ? enemy : false;
   this.charge = charge ? charge : 0;
   this.heading = heading;
-  this.w = windowWidthMod;  
+  this.w = windowWidthMod;
   if (this.enemy) {
     this.vel.mult(10);
   } else {
@@ -41,7 +41,9 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
       g.push();
       var trans = g.random(1, .8)
       g.stroke(`rgba(${color[0]},${color[1]},${color[2]},${trans})`);
-      g.strokeWeight(3+charge * (this.w*1.2));
+      // g.strokeWeight(4 + charge * (this.w * 1.4));
+      let weight = charge > 0 ? 4 + charge : 4;
+      g.strokeWeight(weight);
       g.translate(this.pos.x, this.pos.y)
       g.rotate(this.heading)
       g.line(0, 0, 25 * this.w, 0)
@@ -63,29 +65,29 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
     sound.play();
   }
 
-  this.hits = function (asteroid) {
-    let dist2 = (this.pos.x - asteroid.pos.x) * (this.pos.x - asteroid.pos.x)
-      + (this.pos.y - asteroid.pos.y) * (this.pos.y - asteroid.pos.y);
-    if (dist2 <= asteroid.rmin2) {
+  this.hits = function (target) {
+    let dist2 = (this.pos.x - target.pos.x) * (this.pos.x - target.pos.x)
+      + (this.pos.y - target.pos.y) * (this.pos.y - target.pos.y) - charge * charge;
+    if (dist2 <= target.rmin2) {
       return true;
     }
-    if (dist2 >= asteroid.rmax2) {
+    if (dist2 >= target.rmax2) {
       return false;
     }
     var last_pos = p5.Vector.sub(this.pos, this.vel);
-    var asteroid_vertices = asteroid.vertices();
-    for (var i = 0; i < asteroid_vertices.length - 1; i++) {
+    var target_vertices = target.vertices();
+    for (var i = 0; i < target_vertices.length - 1; i++) {
       if (lineIntersect(last_pos,
         this.pos,
-        asteroid_vertices[i],
-        asteroid_vertices[i + 1])) {
+        target_vertices[i],
+        target_vertices[i + 1])) {
         return true;
       }
     }
     if (lineIntersect(last_pos,
       this.pos,
-      asteroid_vertices[0],
-      asteroid_vertices[asteroid_vertices.length - 1])) {
+      target_vertices[0],
+      target_vertices[target_vertices.length - 1])) {
       return true;
     }
     return false;

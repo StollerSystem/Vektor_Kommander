@@ -11,6 +11,7 @@ export default function Barrier(g, x, y, vx, vy, color, w) {
   Entity.call(this, pos.x, pos.y, r, g, null)
 
   this.vel = g.createVector(vx, vy)
+  this.rmin2 = r * r;
 
   let ranNum = Math.round(g.random(1,10))
   this.powerSquare = ranNum === 1 ? true : false;

@@ -60,15 +60,21 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     input.handleEvent(" ".charCodeAt(0), 32, false);
   }
 
+
+  var chargeEffect = false;
+  var chargeEffectCount = 0;
   var charge = 0
   var keyReleased = false;
   let offSet = 29 * scope.w;
   this.shoot = function () {
+    chargeEffect = true;
+    chargeEffectCount = 0;
     charge = 0;
     keyReleased = false;
     setTimeout(function () {
-      if (keyReleased) {        
+      if (keyReleased) {
         if (reduceLaserCharge()) {
+          chargeEffect = false;
           let scatter = g.random(.015, -.015)
           let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
           var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, color1, false, scope.heading - scatter, scope.w);
@@ -76,27 +82,30 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
           addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
           lasers.push(laser);
         }
-      } else {        
-        scope.chargeShot()        
+      } else {
+        scope.chargeShot()
       }
-    }, 120)
+    }, 110)
   }
 
 
   this.chargeShot = function () {
     if (!keyReleased && reduceLaserCharge()) {
-      charge += 1      
+      charge += 1
       setTimeout(function () {
         scope.chargeShot();
       }, 50)
     } else {
-      console.log("CHARGED SHOT! " + charge)
-      let scatter = g.random(.015, -.015)
-      let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
-      var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, color1, false, scope.heading - scatter, scope.w, charge*3);
-      var dustVel = laser.vel.copy();
-      addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
-      lasers.push(laser);
+      chargeEffect = false;
+      // console.log("CHARGED SHOT! " + charge)
+      if (!this.isDestroyed) {
+        let scatter = g.random(.015, -.015)
+        let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
+        var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, color1, false, scope.heading - scatter, scope.w, charge * 3);
+        var dustVel = laser.vel.copy();
+        addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
+        lasers.push(laser);
+      }
     }
   }
 
@@ -110,6 +119,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
 
     if (!press) {
       keyReleased = true;
+      chargeEffect = false;
       return;
     }
     // let time = end - start;
@@ -329,8 +339,19 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
         Thruster(g, color1, 25 * this.w, this.r / 2 * this.w, 30 * this.w, this.r / 2 * this.w, 27.5 * this.w, thrustEnd)
       }
 
-      // THE SHIP
       let backSet = 10 * this.w;
+      // laser charge effect
+      if (chargeEffect) {
+        chargeEffectCount += .9;
+        g.push()
+        g.stroke(`rgba(${color1[0]},${color1[1]},${color1[2]},${g.random(.6,.9)})`)
+        g.strokeWeight(g.random(.5,chargeEffectCount));
+        g.point(this.r * 2.5 - backSet, 0)
+        // g.ellipse(this.r * 2.5 - backSet, 0,20,20)
+        g.pop()
+      }
+
+      // THE SHIP
       g.curve(
         -1, 20,
         0 - backSet, -this.r / 3,
@@ -348,6 +369,8 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
         -this.r - backSet, this.r / 4,
         this.r / 2 - backSet, this.r / 4);
       g.pop();
+
+
     }
   }
 }
