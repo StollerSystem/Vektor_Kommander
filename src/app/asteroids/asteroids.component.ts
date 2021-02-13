@@ -63,7 +63,7 @@ export class AsteroidsComponent implements OnInit {
     var stars: any = [];
     var barriers: any = [];
     var splash: any;
-    var laserCharge = 2000;
+    var laserCharge = 1270;
     var laserOverHeat = false;
     var splashScreen: boolean = true;
     var beginGameSequence: number = 0;

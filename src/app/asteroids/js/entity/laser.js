@@ -67,7 +67,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
 
   this.hits = function (target) {
     let dist2 = (this.pos.x - target.pos.x) * (this.pos.x - target.pos.x)
-      + (this.pos.y - target.pos.y) * (this.pos.y - target.pos.y) - charge * charge;
+      + (this.pos.y - target.pos.y) * (this.pos.y - target.pos.y) - (charge * charge * 2);
     if (dist2 <= target.rmin2) {
       return true;
     }

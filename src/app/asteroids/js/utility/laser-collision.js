@@ -10,7 +10,8 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
     if (lasers[i].hits(asteroids[j])) {
       exists = false;
       // asteroids[j].playSoundEffect(explosionSoundEffects);
-      var dustVel = p5.Vector.add(lasers[i].vel.mult(0.2), asteroids[j].vel);
+      let laserVel = lasers[i].vel.copy();
+      var dustVel = p5.Vector.add(laserVel.mult(0.2), asteroids[j].vel);
       var dustNum = (asteroids[j].size * 2 + 1) * 3;
       addDust(asteroids[j].pos, dustVel, dustNum, .005, rgbColor1, 2.5, g);
       var newAsteroids = asteroids[j].breakup();
@@ -23,7 +24,11 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
         addPointNumbers(asteroids[j].pos, dustVel.mult(.25), 255, g, points[asteroids[j].size])
       }
       asteroids.splice(j, 1);
-      lasers.splice(i, 1);
+      if (lasers[i].charge > 0) {
+        lasers[i].charge -= 3
+      } else {
+        lasers.splice(i, 1);
+      }
       // CHECK FOR NEXT LEVEL 
       // if (asteroids.length == 0) {
       //   stageClear = true;
@@ -43,7 +48,8 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
     for (var k = enemies.length - 1; k >= 0; k--) {
       if (lasers[i].hits(enemies[k]) && !lasers[i].enemy) {
         exists = false;
-        let dustVel = p5.Vector.add(lasers[i].vel.mult(0.5), enemies[k].vel);
+        let laserVel = lasers[i].vel.copy();
+        let dustVel = p5.Vector.add(laserVel.mult(0.5), enemies[k].vel);
         addDust(enemies[k].pos, dustVel, 10, .01, rgbColor5, 1, g);
         addDebris(enemies[k].pos, enemies[k].vel, 10, 30 * w, g, rgbColor5)
         if (!lasers[i].enemy) {
@@ -52,7 +58,11 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
           addPointNumbers(enemies[k].pos, dustVel.mult(.25), 255, g, 100)
         }
         enemies.splice(j, 1);
-        lasers.splice(i, 1);
+        if (lasers[i].charge > 0) {
+          lasers[i].charge -= 3
+        } else {
+          lasers.splice(i, 1);
+        }
         break;
       }
     }
