@@ -1,6 +1,6 @@
 import * as p5 from 'p5';
 
-export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth, spawnPowerUp, addPointNumbers) {
+export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth, spawnPowerUp, addPointNumbers, bosses) {
   const points = [200, 100, 50, 25];
   var g = g;
   var exists = true;
@@ -121,6 +121,33 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
       // rocketSoundEffects[0].stop();
       // rocketSoundEffects[1].stop();              
       roundLoss(g);
+    }
+  }
+
+  // VS BOSS ARMOR
+  if (exists) {
+    for (var k = bosses.length - 1; k >= 0; k--) {
+      if (lasers[i].hits(bosses[k]) && !lasers[i].enemy) {
+        exists = false;
+        let laserVel = lasers[i].vel.copy();
+        let dustVel = p5.Vector.add(laserVel.mult(0.01), bosses[k].vel);
+        addDust(lasers[i].pos, dustVel, 10, .01, rgbColor2, 2, g);
+        lasers.splice(i, 1);
+      }
+    }
+  }
+
+  // VS BOSS CORE
+  if (exists) {
+    for (var k = bosses.length - 1; k >= 0; k--) {
+      if (lasers[i].hits(bosses[k].core) && !lasers[i].enemy) {
+        exists = false;
+        let laserVel = lasers[i].vel.copy();
+        let dustVel = p5.Vector.add(laserVel.mult(0.01), bosses[k].vel);
+        addDust(lasers[i].pos, dustVel, 10, .01, rgbColor2, 2, g);
+        lasers.splice(i, 1);
+        console.log("CORE HIT!")
+      }
     }
   }
 }

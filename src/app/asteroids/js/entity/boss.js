@@ -9,10 +9,10 @@ export default function Boss(g, color, windowMod) {
 
   Entity.call(this, pos.x, pos.y, r, g, windowMod);
 
-  Entity.prototype.setRotation.call(this, -.0075);
+  Entity.prototype.setRotation.call(this, 0);
 
   // this.vel = g.createVector(g.random(-1.5, -4), g.random(2, -2))
-  this.vel = g.createVector(-1, g.random(1, -1))
+  this.vel = g.createVector(-.05, g.random(0, 0))
   this.rmax = r - 30;
   this.onScreen = false;
 
@@ -107,8 +107,8 @@ export default function Boss(g, color, windowMod) {
       p5.Vector.add(g.createVector(
         (this.r / 3 * e * g.cos(this.heading)) - (-this.r / 3 * e * g.sin(this.heading)),
         (this.r / 3 * e * g.sin(this.heading)) + (-this.r / 3 * e * g.cos(this.heading))
-      ), this.pos),      
-    ]    
+      ), this.pos),
+    ]
     return hitBox;
   }
 
@@ -137,15 +137,27 @@ export default function Boss(g, color, windowMod) {
     }
   }
 
+  this.core = {
+    pos: this.pos,
+    rmin2: 200,
+    vertices: function () {
+      var hitBox = [
+        this.pos
+      ]
+      // console.log(hitBox)
+      return hitBox;
+      
+    }
+  }
 
-  
+
   this.render = function () {
     // console.log("b ren")
     var vert = this.vertices();
     g.push();
     g.stroke(255);
     g.strokeWeight(g.random(1, 2));
-    g.fill(0); 
+    g.fill(0);
     g.beginShape();
     g.vertex(vert[0].x, vert[0].y);
     g.vertex(vert[1].x, vert[1].y);
@@ -159,7 +171,7 @@ export default function Boss(g, color, windowMod) {
     g.vertex(vert[7].x, vert[7].y);
     g.vertex(vert[8].x, vert[8].y);
     g.vertex(vert[9].x, vert[9].y);
-    g.endShape(g.CLOSE); 
+    g.endShape(g.CLOSE);
     g.beginShape();
     g.vertex(vert[10].x, vert[10].y);
     g.vertex(vert[11].x, vert[11].y);
@@ -174,8 +186,8 @@ export default function Boss(g, color, windowMod) {
     g.vertex(vert[18].x, vert[18].y);
     g.vertex(vert[19].x, vert[19].y);
     g.endShape(g.CLOSE);
-    g.pop();  
-    
+    g.pop();
+
     // CORE
     g.push();
     g.translate(this.pos.x, this.pos.y);
@@ -221,7 +233,7 @@ export default function Boss(g, color, windowMod) {
     // g.endShape(g.CLOSE);
     // g.pop();
 
-    
+
   }
 }
 

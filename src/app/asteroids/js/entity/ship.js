@@ -223,7 +223,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       return false;
     }
     if (dist2 <= asteroid.rmin2) {
-      console.log("SHIP COLLISION INSIDE")
+      // console.log("SHIP COLLISION INSIDE")
       return true;
     }
     // HITBOX

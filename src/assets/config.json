@@ -1,5 +1,4 @@
 {
-  "data": "testing",
   "gameColors": {
     "rocks": [255,255,0],
     "ship": null,

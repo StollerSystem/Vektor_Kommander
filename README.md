@@ -77,8 +77,6 @@
 
 **All the game code is held in the ASTEROIDS folder**
 
-## Initialization and State file
-
 ### `asteroids.component.ts` What is held in the most important file? 
 - Contains the **declared variables** that will persist through the game (ie. ship, barriers, stars, enemies, etc.)
 - Initializes the game with **pre-load, setup, and draw** functions 
@@ -91,8 +89,88 @@
 - `powerups` for shapes that have no interaction except the ship
 - `utility` for text, colors, and collision detection
 
+---
+# Specifics 
+
+*app/asteroids/asteroids.component.ts*
+
+The `config` import takes a JSON package and uses it to define variables in the game. These include *colors, title, logo, and details* provided by the user.
+
+The `p5` import injects the p5 library for use by the Angular component:
+```
+import * as config from "../../assets/config.json"
+import { Component, OnInit } from '@angular/core';
+import * as p5 from 'p5';
+```
+Begins the build of the game in the angular app:
+```
+ngOnInit(): void {
+
+// This function contains all the game information. 
+
+}
+``` 
+These are the **game state variables**. They will hold the information, objects, and classes that will persist through the game without being reinitialized by the draw (which runs functions 60 times per second):
+```
+var ctx: any;
+var windowWidth: any;
+var ship: any;
+var hud: any;
+var buttons: any = [];
+var asteroids: any = [];
+var lasers: any = [];
+var enemies: any = [];
+var bosses: any = [];
+var debris: any = [];
+...
+```
 
 
+These are the **global functions** that are used by the game when a *game state variable* needs to change:
+```
+const addPointNumbers = function () {
+}
+
+const addDust = function () {
+}
+
+const addDebris = function () {
+}
+
+const reduceLaserCharge = function () {
+}  
+
+...
+```
+Resets all the variables to a starting value and instantiates all classes. This is called at the start of the game and after a GAME OVER: 
+```
+const resetCanvas = function () {
+
+      }
+```
+Loads the colors from the given JSON. If the colors are not available, it will assign random colors: 
+
+```
+g.preload = () => {
+  ...       
+      }
+```
+`NOTE: "g." is a call to the p5 library. "g." is an object that contains various HTML5 Canvas functions and variables`
+
+Called once before the *draw function*, allowing for initial values and classes to be instantiated at load:
+```
+g.setup = () => {
+  ...
+      }
+```
+
+Every function or class that is called in this function is done so 60 times per second. This is where positions, renders, array pushes and splices, and randomization is held:
+
+```
+g.draw = () => {
+
+}
+```
 
 ---
 

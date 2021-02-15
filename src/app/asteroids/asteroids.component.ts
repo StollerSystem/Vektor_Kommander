@@ -17,7 +17,6 @@ import loadBarriers from './js/utility/load-barriers.js';
 import laserCollision from './js/utility/laser-collision.js';
 import randomColors from './js/utility/random-colors.js';
 import MobileButton from './js/utility/buttons.js';
-import logo1 from './img/planet-logo.js';
 import LaserEnergy from './js/powerups/laser-energy.js';
 import PointNumber from './js/effects/point-numbers.js'
 
@@ -34,7 +33,9 @@ export class AsteroidsComponent implements OnInit {
   ngOnInit(): void {
 
     console.log(config.logo.color)
-    // let cnvs;
+
+    // Game State Variables
+
     var ctx: any;
     var windowWidth: any;
     var ship: any;
@@ -77,6 +78,8 @@ export class AsteroidsComponent implements OnInit {
     // var explosionSoundEffects: any = [];
     // var rocketSoundEffects: any = [];
     // var stageSoundEffect: any;
+
+    // Global Functions
 
     const addPointNumbers = function (pos: any, vel: any, color: any, g: any, text: string) {
       pointNumbers.push(new PointNumber(pos, vel, color, g, text))
@@ -360,7 +363,7 @@ export class AsteroidsComponent implements OnInit {
               lasers.splice(i, 1);
               continue;
             }
-            laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth, spawnPowerUp, addPointNumbers)
+            laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth, spawnPowerUp, addPointNumbers, bosses)
           }
 
           // CHECK FOR COLLISION BEWTWEEN SHIP + ENEMY 
@@ -480,17 +483,14 @@ export class AsteroidsComponent implements OnInit {
           for (let i = 0; i < stars.length; i++) {
             stars[i].show()
           }
+          for (var i = powerUps.length - 1; i >= 0; i--) {
+            powerUps[i].render();
+          }
           for (var i = 0; i < asteroids.length; i++) {
             asteroids[i].render();
           }
           for (var i = lasers.length - 1; i >= 0; i--) {
             lasers[i].render();
-          }
-          for (var i = dust.length - 1; i >= 0; i--) {
-            dust[i].render();
-          }
-          for (var i = debris.length - 1; i >= 0; i--) {
-            debris[i].render();
           }
           for (var i = enemies.length - 1; i >= 0; i--) {
             enemies[i].render();
@@ -498,8 +498,11 @@ export class AsteroidsComponent implements OnInit {
           for (var i = bosses.length - 1; i >= 0; i--) {
             bosses[i].render();
           }
-          for (var i = powerUps.length - 1; i >= 0; i--) {
-            powerUps[i].render();
+          for (var i = dust.length - 1; i >= 0; i--) {
+            dust[i].render();
+          }
+          for (var i = debris.length - 1; i >= 0; i--) {
+            debris[i].render();
           }
 
           for (var i = pointNumbers.length - 1; i >= 0; i--) {
