@@ -2,7 +2,7 @@ import * as config from "../../assets/config.json"
 import { Component, OnInit } from '@angular/core';
 import * as p5 from 'p5';
 import Ship from './js/entity/ship.js';
-import Boss from './js/entity/boss.js'
+import Boss from './js/entity/boss.js';
 import Asteroid from './js/entity/asteroid.js';
 import Enemy from './js/entity/enemy.js'
 import { input } from './js/utility/input.js';
@@ -424,7 +424,18 @@ export class AsteroidsComponent implements OnInit {
 
           //UPDATE BOSS
           for (var i = bosses.length - 1; i >= 0; i--) {
-            bosses[i].update();            
+            bosses[i].update();  
+            if (ship.hits(bosses[i]) && canPlay) {
+              canPlay = false;
+              var dustVel = p5.Vector.add(ship.vel.mult(0.2), bosses[i].vel);
+              addDust(ship.pos, dustVel, 15, .005, rgbColor3, 2.5, g);
+              ship.destroy();
+              input.reset();
+              // ship.playSoundEffect(explosionSoundEffects);
+              // rocketSoundEffects[0].stop();
+              // rocketSoundEffects[1].stop();
+              roundLoss()
+            }         
           }
 
           // UPDATE AND DESTROY DUST

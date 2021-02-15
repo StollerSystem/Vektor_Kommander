@@ -23,28 +23,92 @@ export default function Boss(g, color, windowMod) {
   // var i = -(a - 1) + 1;  
   var i = a
 
-  this.verticies = function () {
-
+  this.vertices = function () {
     var hitBox = [
+      p5.Vector.add(g.createVector(
+        (-this.r / 12 * a * i * g.cos(this.heading)) - (this.r * a * g.sin(this.heading)),
+        (-this.r / 12 * a * i * g.sin(this.heading)) + (this.r * a * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (-this.r / 12 * i * g.cos(this.heading)) - (this.r / 3 * g.sin(this.heading)),
+        (-this.r / 12 * i * g.sin(this.heading)) + (this.r / 3 * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (-this.r / 3 * g.cos(this.heading)) - (this.r / 12 * i * g.sin(this.heading)),
+        (-this.r / 3 * g.sin(this.heading)) + (this.r / 12 * i * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (-this.r * a * g.cos(this.heading)) - (this.r / 12 * a * i * g.sin(this.heading)),
+        (-this.r * a * g.sin(this.heading)) + (this.r / 12 * a * i * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (-this.r / 3 * e * g.cos(this.heading)) - (this.r / 3 * e * g.sin(this.heading)),
+        (-this.r / 3 * e * g.sin(this.heading)) + (this.r / 3 * e * g.cos(this.heading))
+      ), this.pos),
 
-      p5.Vector.add(g.createVector(), this.pos),
-      p5.Vector.add(g.createVector(), this.pos),
-      p5.Vector.add(g.createVector(), this.pos),
+      p5.Vector.add(g.createVector(
+        (this.r / 12 * a * i * g.cos(this.heading)) - (this.r * a * g.sin(this.heading)),
+        (this.r / 12 * a * i * g.sin(this.heading)) + (this.r * a * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (this.r / 12 * i * g.cos(this.heading)) - (this.r / 3 * g.sin(this.heading)),
+        (this.r / 12 * i * g.sin(this.heading)) + (this.r / 3 * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (this.r / 3 * g.cos(this.heading)) - (this.r / 12 * i * g.sin(this.heading)),
+        (this.r / 3 * g.sin(this.heading)) + (this.r / 12 * i * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (this.r * a * g.cos(this.heading)) - (this.r / 12 * a * i * g.sin(this.heading)),
+        (this.r * a * g.sin(this.heading)) + (this.r / 12 * a * i * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (this.r / 3 * e * g.cos(this.heading)) - (this.r / 3 * e * g.sin(this.heading)),
+        (this.r / 3 * e * g.sin(this.heading)) + (this.r / 3 * e * g.cos(this.heading))
+      ), this.pos),
 
-      p5.Vector.add(g.createVector(), this.pos),
-      p5.Vector.add(g.createVector(), this.pos),
-      p5.Vector.add(g.createVector(), this.pos),
+      p5.Vector.add(g.createVector(
+        (-this.r / 12 * a * i * g.cos(this.heading)) - (-this.r * a * g.sin(this.heading)),
+        (-this.r / 12 * a * i * g.sin(this.heading)) + (-this.r * a * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (-this.r / 12 * i * g.cos(this.heading)) - (-this.r / 3 * g.sin(this.heading)),
+        (-this.r / 12 * i * g.sin(this.heading)) + (-this.r / 3 * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (-this.r / 3 * g.cos(this.heading)) - (-this.r / 12 * i * g.sin(this.heading)),
+        (-this.r / 3 * g.sin(this.heading)) + (-this.r / 12 * i * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (-this.r * a * g.cos(this.heading)) - (-this.r / 12 * a * i * g.sin(this.heading)),
+        (-this.r * a * g.sin(this.heading)) + (-this.r / 12 * a * i * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (-this.r / 3 * e * g.cos(this.heading)) - (-this.r / 3 * e * g.sin(this.heading)),
+        (-this.r / 3 * e * g.sin(this.heading)) + (-this.r / 3 * e * g.cos(this.heading))
+      ), this.pos),
 
-      p5.Vector.add(g.createVector(), this.pos),
-      p5.Vector.add(g.createVector(), this.pos),
-      p5.Vector.add(g.createVector(), this.pos),
-
-      p5.Vector.add(g.createVector(), this.pos),
-      p5.Vector.add(g.createVector(), this.pos),
-      p5.Vector.add(g.createVector(), this.pos)
-    ]
-
-
+      p5.Vector.add(g.createVector(
+        (this.r / 12 * a * i * g.cos(this.heading)) - (-this.r * a * g.sin(this.heading)),
+        (this.r / 12 * a * i * g.sin(this.heading)) + (-this.r * a * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (this.r / 12 * i * g.cos(this.heading)) - (-this.r / 3 * g.sin(this.heading)),
+        (this.r / 12 * i * g.sin(this.heading)) + (-this.r / 3 * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (this.r / 3 * g.cos(this.heading)) - (-this.r / 12 * i * g.sin(this.heading)),
+        (this.r / 3 * g.sin(this.heading)) + (-this.r / 12 * i * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (this.r * a * g.cos(this.heading)) - (-this.r / 12 * a * i * g.sin(this.heading)),
+        (this.r * a * g.sin(this.heading)) + (-this.r / 12 * a * i * g.cos(this.heading))
+      ), this.pos),
+      p5.Vector.add(g.createVector(
+        (this.r / 3 * e * g.cos(this.heading)) - (-this.r / 3 * e * g.sin(this.heading)),
+        (this.r / 3 * e * g.sin(this.heading)) + (-this.r / 3 * e * g.cos(this.heading))
+      ), this.pos),      
+    ]    
     return hitBox;
   }
 
@@ -74,58 +138,90 @@ export default function Boss(g, color, windowMod) {
   }
 
 
-
+  
   this.render = function () {
     // console.log("b ren")
-    g.push()
+    var vert = this.vertices();
+    g.push();
+    g.stroke(255);
+    g.strokeWeight(g.random(1, 2));
+    g.fill(0); 
+    g.beginShape();
+    g.vertex(vert[0].x, vert[0].y);
+    g.vertex(vert[1].x, vert[1].y);
+    g.vertex(vert[2].x, vert[2].y);
+    g.vertex(vert[3].x, vert[3].y);
+    g.vertex(vert[4].x, vert[4].y);
+    g.endShape(g.CLOSE);
+    g.beginShape();
+    g.vertex(vert[5].x, vert[5].y);
+    g.vertex(vert[6].x, vert[6].y);
+    g.vertex(vert[7].x, vert[7].y);
+    g.vertex(vert[8].x, vert[8].y);
+    g.vertex(vert[9].x, vert[9].y);
+    g.endShape(g.CLOSE); 
+    g.beginShape();
+    g.vertex(vert[10].x, vert[10].y);
+    g.vertex(vert[11].x, vert[11].y);
+    g.vertex(vert[12].x, vert[12].y);
+    g.vertex(vert[13].x, vert[13].y);
+    g.vertex(vert[14].x, vert[14].y);
+    g.endShape(g.CLOSE);
+    g.beginShape();
+    g.vertex(vert[15].x, vert[15].y);
+    g.vertex(vert[16].x, vert[16].y);
+    g.vertex(vert[17].x, vert[17].y);
+    g.vertex(vert[18].x, vert[18].y);
+    g.vertex(vert[19].x, vert[19].y);
+    g.endShape(g.CLOSE);
+    g.pop();  
+    
+    // CORE
+    g.push();
     g.translate(this.pos.x, this.pos.y);
-    g.rotate(this.heading);
-    g.stroke(255)
-    g.strokeWeight(g.random(1, 2))
-    g.fill(0)
-    // g.ellipse(0,0,40,40)
-
-    g.beginShape();
-    g.vertex(-this.r / 12 * a * i, this.r * a)
-    g.vertex(-this.r / 12 * i, this.r / 3)
-    g.vertex(-this.r / 3, this.r / 12 * i)
-    g.vertex(-this.r * a, this.r / 12 * a * i)
-    g.vertex(-this.r / 3 * e, this.r / 3 * e)
-    g.endShape(g.CLOSE);
-
-    g.beginShape();
-    g.vertex(this.r / 12 * a * i, this.r * a)
-    g.vertex(this.r / 12 * i, this.r / 3)
-    g.vertex(this.r / 3, this.r / 12 * i)
-    g.vertex(this.r * a, this.r / 12 * a * i)
-    g.vertex(this.r / 3 * e, this.r / 3 * e)
-    g.endShape(g.CLOSE);
-
-    g.beginShape();
-    g.vertex(-this.r / 12 * a * i, -this.r * a)
-    g.vertex(-this.r / 12 * i, -this.r / 3)
-    g.vertex(-this.r / 3, -this.r / 12 * i)
-    g.vertex(-this.r * a, -this.r / 12 * a * i)
-    g.vertex(-this.r / 3 * e, -this.r / 3 * e)
-    g.endShape(g.CLOSE);
-
-    g.beginShape();
-    g.vertex(this.r / 12 * a * i, -this.r * a)
-    g.vertex(this.r / 12 * i, -this.r / 3)
-    g.vertex(this.r / 3, -this.r / 12 * i)
-    g.vertex(this.r * a, -this.r / 12 * a * i)
-    g.vertex(this.r / 3 * e, -this.r / 3 * e)
-    g.endShape(g.CLOSE);
-
+    g.stroke(255);
+    g.strokeWeight(g.random(this.r / 3, this.r / 2));
+    g.point(0, 0);
     g.pop();
 
-    // CORE
-    g.push()
-    g.translate(this.pos.x, this.pos.y)
-    g.stroke(255)
-    g.strokeWeight(g.random(this.r / 3, this.r / 2))
-    g.point(0, 0)
-    g.pop()
+
+    // g.push()
+    // g.translate(this.pos.x, this.pos.y);
+    // g.rotate(this.heading);
+    // g.stroke(255)
+    // g.strokeWeight(g.random(1, 2))
+    // g.fill(0)    
+    // g.beginShape();
+    // g.vertex(-this.r / 12 * a * i, this.r * a)
+    // g.vertex(-this.r / 12 * i, this.r / 3)
+    // g.vertex(-this.r / 3, this.r / 12 * i)
+    // g.vertex(-this.r * a, this.r / 12 * a * i)
+    // g.vertex(-this.r / 3 * e, this.r / 3 * e)
+    // g.endShape(g.CLOSE);
+    // g.beginShape();
+    // g.vertex(this.r / 12 * a * i, this.r * a)
+    // g.vertex(this.r / 12 * i, this.r / 3)
+    // g.vertex(this.r / 3, this.r / 12 * i)
+    // g.vertex(this.r * a, this.r / 12 * a * i)
+    // g.vertex(this.r / 3 * e, this.r / 3 * e)
+    // g.endShape(g.CLOSE);
+    // g.beginShape();
+    // g.vertex(-this.r / 12 * a * i, -this.r * a)
+    // g.vertex(-this.r / 12 * i, -this.r / 3)
+    // g.vertex(-this.r / 3, -this.r / 12 * i)
+    // g.vertex(-this.r * a, -this.r / 12 * a * i)
+    // g.vertex(-this.r / 3 * e, -this.r / 3 * e)
+    // g.endShape(g.CLOSE);
+    // g.beginShape();
+    // g.vertex(this.r / 12 * a * i, -this.r * a)
+    // g.vertex(this.r / 12 * i, -this.r / 3)
+    // g.vertex(this.r / 3, -this.r / 12 * i)
+    // g.vertex(this.r * a, -this.r / 12 * a * i)
+    // g.vertex(this.r / 3 * e, -this.r / 3 * e)
+    // g.endShape(g.CLOSE);
+    // g.pop();
+
+    
   }
 }
 

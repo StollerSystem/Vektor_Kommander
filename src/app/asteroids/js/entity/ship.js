@@ -85,7 +85,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       } else {
         scope.chargeShot()
       }
-    }, 110)
+    }, 100)
   }
 
 
@@ -223,6 +223,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       return false;
     }
     if (dist2 <= asteroid.rmin2) {
+      console.log("SHIP COLLISION INSIDE")
       return true;
     }
     // HITBOX
@@ -238,12 +239,13 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       shipVertices[i] = p5.Vector.add(shipVertices[i], this.pos);
     }
     var asteroid_vertices = asteroid.vertices();
+    
     for (var i = 0; i < asteroid_vertices.length; i++) {
       for (var j = 0; j < shipVertices.length; j++) {
         var next_i = (i + 1) % asteroid_vertices.length;
         if (lineIntersect(shipVertices[j], shipVertices[(j + 1) % shipVertices.length],
-          asteroid_vertices[i], asteroid_vertices[next_i])) {
-
+          asteroid_vertices[i], asteroid_vertices[next_i],g)) {
+            console.log("SHIP COLLISION LINE INTERSECT")
           return true;
         }
       }
