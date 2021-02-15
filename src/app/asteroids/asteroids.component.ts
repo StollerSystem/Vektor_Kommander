@@ -2,6 +2,7 @@ import * as config from "../../assets/config.json"
 import { Component, OnInit } from '@angular/core';
 import * as p5 from 'p5';
 import Ship from './js/entity/ship.js';
+import Boss from './js/entity/boss.js'
 import Asteroid from './js/entity/asteroid.js';
 import Enemy from './js/entity/enemy.js'
 import { input } from './js/utility/input.js';
@@ -42,6 +43,7 @@ export class AsteroidsComponent implements OnInit {
     var asteroids: any = [];
     var lasers: any = [];
     var enemies: any = [];
+    var bosses: any = [];
     var debris: any = [];
     var pointNumbers: any = [];
     var powerUps: any = [];
@@ -121,6 +123,10 @@ export class AsteroidsComponent implements OnInit {
         lives = 3;
         splashScreen = true;
         resetCanvas();
+      }
+
+      const spawnBoss = function () {
+        bosses.push(new Boss(g))
       }
 
       const spawnAsteroids = function () {
@@ -263,7 +269,9 @@ export class AsteroidsComponent implements OnInit {
         }
         g.keyPressed = () => {
           input.handleEvent(g.key, g.keyCode, true);
-        }        
+        }    
+        spawnBoss()   
+        console.log(bosses) 
       }
 
       g.draw = () => {        
@@ -299,29 +307,29 @@ export class AsteroidsComponent implements OnInit {
             }
           }
 
-          // RANDOM ENEMY SPAWN
-          if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
-            let ranNum = g.random(1000);
-            if (ranNum <= 1) {
-              spawnEnemy();
-            }
-          }
+          // // RANDOM ENEMY SPAWN
+          // if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
+          //   let ranNum = g.random(1000);
+          //   if (ranNum <= 1) {
+          //     spawnEnemy();
+          //   }
+          // }
 
-          // RANDOM ASTEROID SPAWN
-          if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
-            let ranNum = g.random(650);
-            if (ranNum <= 1) {
-              spawnAsteroids();
-            }
-          }
+          // // RANDOM ASTEROID SPAWN
+          // if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
+          //   let ranNum = g.random(650);
+          //   if (ranNum <= 1) {
+          //     spawnAsteroids();
+          //   }
+          // }
 
-          // RANDOM BARRIER SPAWN
-          if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
-            let ranNum = g.random(200);
-            if (ranNum <= 1 && barriers.length < 6) {
-              spawnBarriers();
-            }
-          }
+          // // RANDOM BARRIER SPAWN
+          // if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
+          //   let ranNum = g.random(200);
+          //   if (ranNum <= 1 && barriers.length < 6) {
+          //     spawnBarriers();
+          //   }
+          // }
 
           // UPDATE ASTEROIDS AND CHECK FOR COLLISIONS 
           for (let i = 0; i < asteroids.length; i++) {
@@ -414,6 +422,11 @@ export class AsteroidsComponent implements OnInit {
             }
           }
 
+          //UPDATE BOSS
+          for (var i = bosses.length - 1; i >= 0; i--) {
+            bosses[i].update();            
+          }
+
           // UPDATE AND DESTROY DUST
           for (var i = dust.length - 1; i >= 0; i--) {
             dust[i].update();
@@ -470,6 +483,9 @@ export class AsteroidsComponent implements OnInit {
           }
           for (var i = enemies.length - 1; i >= 0; i--) {
             enemies[i].render();
+          }
+          for (var i = bosses.length - 1; i >= 0; i--) {
+            bosses[i].render();
           }
           for (var i = powerUps.length - 1; i >= 0; i--) {
             powerUps[i].render();
