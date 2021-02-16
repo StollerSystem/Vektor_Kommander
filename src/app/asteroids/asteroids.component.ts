@@ -49,6 +49,8 @@ export class AsteroidsComponent implements OnInit {
     var pointNumbers: any = [];
     var powerUps: any = [];
     var possibleEnemies: any = 1;
+    var possibleBarriers: any = 10;
+    var possibleBosses: any = 1;
     var dust: any = [];
     var canPlay: any = true;
     var shieldTime: any = 180;
@@ -272,9 +274,7 @@ export class AsteroidsComponent implements OnInit {
         }
         g.keyPressed = () => {
           input.handleEvent(g.key, g.keyCode, true);
-        }
-        spawnBoss()
-        console.log(bosses)
+        }        
       }
 
       g.draw = () => {
@@ -310,29 +310,35 @@ export class AsteroidsComponent implements OnInit {
             }
           }
 
-          // // RANDOM ENEMY SPAWN
-          // if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
-          //   let ranNum = g.random(1000);
-          //   if (ranNum <= 1) {
-          //     spawnEnemy();
-          //   }
-          // }
+          // RANDOM ENEMY SPAWN
+          if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
+            let ranNum = g.random(1000);
+            if (ranNum <= 1) {
+              spawnEnemy();
+            }
+          }
 
-          // // RANDOM ASTEROID SPAWN
-          // if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
-          //   let ranNum = g.random(650);
-          //   if (ranNum <= 1) {
-          //     spawnAsteroids();
-          //   }
-          // }
+          // RANDOM ASTEROID SPAWN
+          if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
+            let ranNum = g.random(650);
+            if (ranNum <= 1) {
+              spawnAsteroids();
+            }
+          }
 
-          // // RANDOM BARRIER SPAWN
-          // if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
-          //   let ranNum = g.random(200);
-          //   if (ranNum <= 1 && barriers.length < 6) {
-          //     spawnBarriers();
-          //   }
-          // }
+          // RANDOM BARRIER SPAWN
+          if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
+            let ranNum = g.random(200);
+            if (ranNum <= 1 && barriers.length < 6 && possibleBarriers > 0) {
+              possibleBarriers -= 1;              
+              spawnBarriers();
+            }
+          }
+
+          //SPAWN BOSS
+          if (possibleBarriers <= 0 && bosses.length < 1) {
+            spawnBoss()
+          }
 
           // UPDATE ASTEROIDS AND CHECK FOR COLLISIONS 
           for (let i = 0; i < asteroids.length; i++) {

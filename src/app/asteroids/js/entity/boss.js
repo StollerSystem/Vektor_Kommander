@@ -4,7 +4,7 @@ import Entity from './entity.js';
 export default function Boss(g, color, windowWidth, addDust) {
 
   var r = 250;
-  var pos = g.createVector(g.width * .75 + r, g.random(r, g.height - r));
+  var pos = g.createVector(g.width + r*2, g.random(r, g.height - r));
 
   Entity.call(this, pos.x, pos.y, r, g);
 
@@ -121,22 +121,25 @@ export default function Boss(g, color, windowWidth, addDust) {
     pos: this.pos,
     rmin2: 6500,
     vertices: function () {
+      let c = g.cos(scope.heading);
+      let s = g.sin(scope.heading)
+      let r = scope.r
       var hitBox = [
         p5.Vector.add(g.createVector(
-          (0 * g.cos(scope.heading)) - (scope.r / 3 * g.sin(scope.heading)),
-          (0 * g.sin(scope.heading)) + (scope.r / 3 * g.cos(scope.heading))
+          (0 * c) - (r / 3 * s),
+          (0 * s) + (r / 3 * c)
         ), scope.pos),
         p5.Vector.add(g.createVector(
-          (scope.r / 3 * g.cos(scope.heading)) - (0 * g.sin(scope.heading)),
-          (scope.r / 3 * g.sin(scope.heading)) + (0 * g.cos(scope.heading))
+          (r / 3 * c) - (0 * s),
+          (r / 3 * s) + (0 * c)
         ), scope.pos),
         p5.Vector.add(g.createVector(
-          (0 * g.cos(scope.heading)) - (-scope.r / 3 * g.sin(scope.heading)),
-          (0 * g.sin(scope.heading)) + (-scope.r / 3 * g.cos(scope.heading))
+          (0 * c) - (-r / 3 * s),
+          (0 * s) + (-r / 3 * c)
         ), scope.pos),
         p5.Vector.add(g.createVector(
-          (-scope.r / 3 * g.cos(scope.heading)) - (0 * g.sin(scope.heading)),
-          (-scope.r / 3 * g.sin(scope.heading)) + (0 * g.cos(scope.heading))
+          (-r / 3 * c) - (0 * s),
+          (-r / 3 * s) + (0 * c)
         ), scope.pos),
       ]
       return hitBox;
