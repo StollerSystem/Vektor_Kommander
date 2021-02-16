@@ -49,7 +49,7 @@ export class AsteroidsComponent implements OnInit {
     var pointNumbers: any = [];
     var powerUps: any = [];
     var possibleEnemies: any = 1;
-    var possibleBarriers: any = 10;
+    var possibleBarriers: any = 5;
     var possibleBosses: any = 1;
     var dust: any = [];
     var canPlay: any = true;
@@ -193,6 +193,10 @@ export class AsteroidsComponent implements OnInit {
         if (laserCharge < 1270 && !laserOverHeat) {
           laserCharge += 5;
         }
+      }
+
+      const defeatBoss = function () {
+        
       }
 
       const hyperDriveIntro = function () {
@@ -405,8 +409,6 @@ export class AsteroidsComponent implements OnInit {
             }
           }
 
-
-
           // UPDATE AND DESTROY BARRIERS AND CHECK COLLISION
           for (let i = 0; i < barriers.length; i++) {
             for (let j = 0; j < barriers[i].length; j++) {
@@ -429,13 +431,19 @@ export class AsteroidsComponent implements OnInit {
             if (barriers[i].length === 0) {
               barriers.splice(i, 1)
             }
-          }
-
-          // if (ship.hits(bosses[i].quad1) || ship.hits(bosses[i].quad2) || ship.hits(bosses[i].quad3)|| ship.hits(bosses[i].quad4) && canPlay)
+          }          
 
           //UPDATE BOSS
           for (var i = bosses.length - 1; i >= 0; i--) {
             bosses[i].update();
+            if( bosses[i].hp <= 0 && possibleBosses > 0) {
+              console.log("trig boss del")
+              possibleBosses -= 1;
+              setTimeout(function(){
+                defeatBoss()
+                bosses.splice(i, 1);
+              },8000)
+            }
             if (ship.hits(bosses[i].quad1) && canPlay || ship.hits(bosses[i].quad2) && canPlay || ship.hits(bosses[i].quad3) && canPlay || ship.hits(bosses[i].quad4) && canPlay) {
               canPlay = false;
               var dustVel = p5.Vector.add(ship.vel.mult(0.2), bosses[i].vel);
@@ -447,9 +455,7 @@ export class AsteroidsComponent implements OnInit {
               // rocketSoundEffects[1].stop();
               roundLoss()
             }
-            // if( bosses[i].hp <= 0) {
-            //   bosses.splice(i, 1);
-            // }
+            
           }
 
           // UPDATE AND DESTROY DUST
