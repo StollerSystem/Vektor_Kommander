@@ -138,18 +138,18 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
     }
   }
 
-  // // VS BOSS CORE
-  // if (exists) {
-  //   for (var k = bosses.length - 1; k >= 0; k--) {
-  //     // console.log(bosses[k].core.rmin2)
-  //     if (lasers[i].hits(bosses[k].core) && !lasers[i].enemy) {
-  //       exists = false;
-  //       let laserVel = lasers[i].vel.copy();
-  //       let dustVel = p5.Vector.add(laserVel.mult(0.01), bosses[k].vel);
-  //       addDust(lasers[i].pos, dustVel, 10, .01, rgbColor2, 2, g);
-  //       lasers.splice(i, 1);
-  //       console.log("CORE HIT!")
-  //     }
-  //   }
-  // }
+  // VS BOSS CORE
+  if (exists) {
+    for (var k = bosses.length - 1; k >= 0; k--) {
+      // console.log(bosses[k].core.rmin2)
+      if (lasers[i].hits(bosses[k].core) && !lasers[i].enemy) {
+        exists = false;
+        let laserVel = lasers[i].vel.copy();
+        let dustVel = p5.Vector.add(laserVel.mult(0.01), bosses[k].vel);
+        addDust(lasers[i].pos, dustVel, 10, .01, rgbColor2, 2, g);
+        lasers.splice(i, 1);
+        console.log("CORE HIT!")
+      }
+    }
+  }
 }

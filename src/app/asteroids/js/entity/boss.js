@@ -9,10 +9,10 @@ export default function Boss(g, color, windowMod) {
 
   Entity.call(this, pos.x, pos.y, r, g, windowMod);
 
-  Entity.prototype.setRotation.call(this, 0);
+  Entity.prototype.setRotation.call(this, -.01);
 
   // this.vel = g.createVector(g.random(-1.5, -4), g.random(2, -2))
-  this.vel = g.createVector(-.05, g.random(0, 0))
+  this.vel = g.createVector(-.5, g.random(-.5, .5))
   this.rmax = r - 30;
   this.onScreen = false;
 
@@ -260,9 +260,23 @@ export default function Boss(g, color, windowMod) {
     rmin2: 6500,
     vertices: function () {
       var hitBox = [
-        this.pos
-      ]
-      // console.log(hitBox)
+        p5.Vector.add(g.createVector(
+          (0 * g.cos(scope.heading)) - (scope.r/3 * g.sin(scope.heading)),
+          (0 * g.sin(scope.heading)) + (scope.r/3 * g.cos(scope.heading))
+        ), scope.pos),
+        p5.Vector.add(g.createVector(
+          (scope.r/3 * g.cos(scope.heading)) - (0 * g.sin(scope.heading)),
+          (scope.r/3 * g.sin(scope.heading)) + (0 * g.cos(scope.heading))
+        ), scope.pos),
+        p5.Vector.add(g.createVector(
+          (0 * g.cos(scope.heading)) - (-scope.r/3 * g.sin(scope.heading)),
+          (0 * g.sin(scope.heading)) + (-scope.r/3 * g.cos(scope.heading))
+        ), scope.pos),
+        p5.Vector.add(g.createVector(
+          (-scope.r/3 * g.cos(scope.heading)) - (0 * g.sin(scope.heading)),
+          (-scope.r/3 * g.sin(scope.heading)) + (0 * g.cos(scope.heading))
+        ), scope.pos),
+      ]      
       return hitBox;
 
     }
