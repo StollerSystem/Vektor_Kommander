@@ -146,9 +146,9 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
         exists = false;
         let laserVel = lasers[i].vel.copy();
         let dustVel = p5.Vector.add(laserVel.mult(0.01), bosses[k].vel);
-        addDust(lasers[i].pos, dustVel, 10, .01, rgbColor2, 2, g);
-        lasers.splice(i, 1);
-        console.log("CORE HIT!")
+        addDust(lasers[i].pos, dustVel, 10, .01, rgbColor2, 4, g);
+        bosses[k].coreHit(lasers[i].charge);
+        lasers.splice(i, 1);        
       }
     }
   }

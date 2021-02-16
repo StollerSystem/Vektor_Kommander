@@ -15,6 +15,7 @@ export default function Boss(g, color, windowMod) {
   this.vel = g.createVector(-.5, g.random(-.5, .5))
   this.rmax = r - 30;
   this.onScreen = false;
+  this.destroyed = false;
 
 
 
@@ -24,10 +25,16 @@ export default function Boss(g, color, windowMod) {
   // var i = -(a - 1) + 1;  
   var i = a
   var scope = this;
+
+  let randomHead1 = g.random(0, 360);
+
   this.quad1 = {
+
+    
+
     pos: scope.pos,
     vertices: function () {
-      var hitBox = [
+      var hitBox = !scope.destroyed ? [
         p5.Vector.add(g.createVector(
           (-scope.r / 12 * a * i * g.cos(scope.heading)) - (scope.r * a * g.sin(scope.heading)),
           (-scope.r / 12 * a * i * g.sin(scope.heading)) + (scope.r * a * g.cos(scope.heading))
@@ -48,7 +55,32 @@ export default function Boss(g, color, windowMod) {
           (-scope.r / 3 * e * g.cos(scope.heading)) - (scope.r / 3 * e * g.sin(scope.heading)),
           (-scope.r / 3 * e * g.sin(scope.heading)) + (scope.r / 3 * e * g.cos(scope.heading))
         ), scope.pos),
-      ]
+      ] :
+        [
+
+          p5.Vector.add(g.createVector(
+            (-scope.r / 12 * a * i * g.cos(scope.heading)) - (scope.r * a * g.sin(scope.heading)),
+            (-scope.r / 12 * a * i * g.sin(scope.heading)) + (scope.r * a * g.cos(scope.heading))
+          ), scope.pos),
+
+
+          p5.Vector.add(g.createVector(
+            (-scope.r / 12 * i * g.cos(scope.heading)) - (scope.r / 3 * g.sin(scope.heading)),
+            (-scope.r / 12 * i * g.sin(scope.heading)) + (scope.r / 3 * g.cos(scope.heading))
+          ), scope.pos),
+          p5.Vector.add(g.createVector(
+            (-scope.r / 3 * g.cos(scope.heading)) - (scope.r / 12 * i * g.sin(scope.heading)),
+            (-scope.r / 3 * g.sin(scope.heading)) + (scope.r / 12 * i * g.cos(scope.heading))
+          ), scope.pos),
+          p5.Vector.add(g.createVector(
+            (-scope.r * a * g.cos(scope.heading)) - (scope.r / 12 * a * i * g.sin(scope.heading)),
+            (-scope.r * a * g.sin(scope.heading)) + (scope.r / 12 * a * i * g.cos(scope.heading))
+          ), scope.pos),
+          p5.Vector.add(g.createVector(
+            (-scope.r / 3 * e * g.cos(scope.heading)) - (scope.r / 3 * e * g.sin(scope.heading)),
+            (-scope.r / 3 * e * g.sin(scope.heading)) + (scope.r / 3 * e * g.cos(scope.heading))
+          ), scope.pos)
+        ]
       return hitBox;
     }
   }
@@ -237,6 +269,10 @@ export default function Boss(g, color, windowMod) {
       this.onScreen = true;
       // console.log(this.onScreen)
     }
+
+    if (this.destroyed) {
+      this.destroy();
+    }
   }
 
   this.edges = function () {
@@ -261,25 +297,47 @@ export default function Boss(g, color, windowMod) {
     vertices: function () {
       var hitBox = [
         p5.Vector.add(g.createVector(
-          (0 * g.cos(scope.heading)) - (scope.r/3 * g.sin(scope.heading)),
-          (0 * g.sin(scope.heading)) + (scope.r/3 * g.cos(scope.heading))
+          (0 * g.cos(scope.heading)) - (scope.r / 3 * g.sin(scope.heading)),
+          (0 * g.sin(scope.heading)) + (scope.r / 3 * g.cos(scope.heading))
         ), scope.pos),
         p5.Vector.add(g.createVector(
-          (scope.r/3 * g.cos(scope.heading)) - (0 * g.sin(scope.heading)),
-          (scope.r/3 * g.sin(scope.heading)) + (0 * g.cos(scope.heading))
+          (scope.r / 3 * g.cos(scope.heading)) - (0 * g.sin(scope.heading)),
+          (scope.r / 3 * g.sin(scope.heading)) + (0 * g.cos(scope.heading))
         ), scope.pos),
         p5.Vector.add(g.createVector(
-          (0 * g.cos(scope.heading)) - (-scope.r/3 * g.sin(scope.heading)),
-          (0 * g.sin(scope.heading)) + (-scope.r/3 * g.cos(scope.heading))
+          (0 * g.cos(scope.heading)) - (-scope.r / 3 * g.sin(scope.heading)),
+          (0 * g.sin(scope.heading)) + (-scope.r / 3 * g.cos(scope.heading))
         ), scope.pos),
         p5.Vector.add(g.createVector(
-          (-scope.r/3 * g.cos(scope.heading)) - (0 * g.sin(scope.heading)),
-          (-scope.r/3 * g.sin(scope.heading)) + (0 * g.cos(scope.heading))
+          (-scope.r / 3 * g.cos(scope.heading)) - (0 * g.sin(scope.heading)),
+          (-scope.r / 3 * g.sin(scope.heading)) + (0 * g.cos(scope.heading))
         ), scope.pos),
-      ]      
+      ]
       return hitBox;
 
     }
+  }
+
+  this.hp = 5;
+  this.coreHitFlash = false;
+  this.coreHit = function (laserCharge) {
+    let damage = laserCharge > 0 ? laserCharge / 3 : 1
+    console.log("CORE HIT! " + damage)
+    scope.hp -= damage;
+    scope.coreHitFlash = true;
+    if (scope.hp <= 0) {
+      scope.destroyed = true;
+    }
+    setTimeout(function () {
+      scope.coreHitFlash = false;
+    }, 200)
+  }
+
+  this.destroy = function () {
+    console.log("BOOOM")
+
+    // debris1 = this.quad1.vertices();
+
   }
 
 
@@ -324,12 +382,14 @@ export default function Boss(g, color, windowMod) {
     g.pop();
 
     // CORE
-    // g.push();
-    // g.translate(this.pos.x, this.pos.y);
-    // g.stroke(255);
-    // g.strokeWeight(g.random(this.r / 3, this.r / 2));
-    // g.point(0, 0);
-    // g.pop();
+    g.push();
+    g.translate(this.pos.x, this.pos.y);
+    let color = this.coreHitFlash ? 'rgb(255,0,0)' : 255
+    g.stroke(color);
+    let hpMult = this.hp / 5
+    g.strokeWeight(g.random(this.r / 3 * hpMult, this.r / 2 * hpMult));
+    g.point(0, 0);
+    g.pop();
 
 
     // g.push()
