@@ -129,7 +129,7 @@ export class AsteroidsComponent implements OnInit {
       }
 
       const spawnBoss = function () {
-        bosses.push(new Boss(g))
+        bosses.push(new Boss(g, rgbColor5, windowWidth, addDust))
       }
 
       const spawnAsteroids = function () {
@@ -441,6 +441,9 @@ export class AsteroidsComponent implements OnInit {
               // rocketSoundEffects[1].stop();
               roundLoss()
             }
+            // if( bosses[i].hp <= 0) {
+            //   bosses.splice(i, 1);
+            // }
           }
 
           // UPDATE AND DESTROY DUST

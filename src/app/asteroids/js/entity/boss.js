@@ -1,12 +1,12 @@
 import * as p5 from 'p5';
 import Entity from './entity.js';
 
-export default function Boss(g, color, windowMod) {
+export default function Boss(g, color, windowWidth, addDust) {
 
   var r = 250;
   var pos = g.createVector(g.width * .75 + r, g.random(r, g.height - r));
 
-  Entity.call(this, pos.x, pos.y, r, g, windowMod);
+  Entity.call(this, pos.x, pos.y, r, g);
 
   Entity.prototype.setRotation.call(this, -.01);
   
@@ -144,8 +144,7 @@ export default function Boss(g, color, windowMod) {
   }  
 
   this.coreHit = function (laserCharge) {
-    let damage = laserCharge > 0 ? laserCharge / 3 : 1
-    console.log("CORE HIT! " + damage)
+    let damage = laserCharge > 0 ? laserCharge / 3 : 1;    
     scope.hp -= damage;
     scope.coreHitFlash = true;
     if (scope.hp <= 0 && !scope.destroyed) {
@@ -157,7 +156,8 @@ export default function Boss(g, color, windowMod) {
     }, 200)
   }  
 
-  this.destroy = function () {
+  this.destroy = function () {    
+    addDust(this.pos, this.vel, 30, .001, color, 10, g);
     for (let i = 0;i < 4; i++){
       scope.brokenParts[i] = {
         pos: this.pos.copy(),
@@ -177,7 +177,7 @@ export default function Boss(g, color, windowMod) {
       this.quad4.vertices(),
     ]
     g.push();
-    g.stroke(255);
+    g.stroke(`rgba(${color[2]},${color[0]},${color[1]},${1})`);
     g.strokeWeight(g.random(1, 2));
     g.fill(0);
     for (let i = 0; i < quads.length; i++) {
@@ -195,8 +195,8 @@ export default function Boss(g, color, windowMod) {
     if (!this.destroyed) {
       g.push();
       g.translate(this.pos.x, this.pos.y);
-      let color = this.coreHitFlash ? 'rgb(255,0,0)' : 255
-      g.stroke(color);
+      let coreColor = this.coreHitFlash ? `rgba(${color[1]},${color[2]},${color[0]},${g.random(.5,.9)})` : `rgba(${color[0]},${color[1]},${color[2]},${g.random(.5,.9)})`;
+      g.stroke(coreColor);
       let hpMult = this.hp / 10
       g.strokeWeight(g.random(this.r / 3 * hpMult, this.r / 2 * hpMult));
       g.point(0, 0);

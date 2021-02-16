@@ -70,7 +70,7 @@ export default function Enemy(r, g, addDust, level, color1, color2, lasers, wind
     g.vertex(0, -this.r * this.point)
     g.vertex(-this.r / 2, -this.r / 2)
     g.vertex(-this.r * this.point, 0)
-    g.vertex(-this.r / 2, this.r / 2)
+    g.vertex(-this.r / 2, this.r / 2) 
     g.vertex(0, this.r * this.point)
     g.endShape(g.CLOSE);
     g.ellipse(0, 0, this.r, this.r)
