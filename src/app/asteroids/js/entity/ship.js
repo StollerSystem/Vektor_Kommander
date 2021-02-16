@@ -245,7 +245,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
         var next_i = (i + 1) % asteroid_vertices.length;
         if (lineIntersect(shipVertices[j], shipVertices[(j + 1) % shipVertices.length],
           asteroid_vertices[i], asteroid_vertices[next_i],g)) {
-            console.log("SHIP COLLISION LINE INTERSECT")
+            // console.log("SHIP COLLISION LINE INTERSECT")
           return true;
         }
       }

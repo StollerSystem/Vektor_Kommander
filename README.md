@@ -75,7 +75,7 @@
 ---
 # File Structure
 
-**All the game code is held in the ASTEROIDS folder**
+**All the game code is held in the ASTEROIDS directory**
 
 ### `asteroids.component.ts` What is held in the most important file? 
 - Contains the **declared variables** that will persist through the game (ie. ship, barriers, stars, enemies, etc.)
@@ -85,14 +85,15 @@
 
 ### `js folder` What's up with all the file names in this thing?
 - `entity` for structures that have the ability to interact with one another. Also contains the most important class - **entity.js**
-- `effects` for features that do no interact with the materials
+- `effects` for features that do not interact with the materials
 - `powerups` for shapes that have no interaction except the ship
-- `utility` for text, colors, and collision detection
+- `utility` for text, colors, inputs, and detections
 
 ---
 # Specifics 
 
-*app/asteroids/asteroids.component.ts*
+*asteroids.component.ts*
+---
 
 The `config` import takes a JSON package and uses it to define variables in the game. These include *colors, title, logo, and details* provided by the user.
 
@@ -110,7 +111,7 @@ ngOnInit(): void {
 
 }
 ``` 
-These are the **game state variables**. They will hold the information, objects, and classes that will persist through the game without being reinitialized by the draw (which runs functions 60 times per second):
+These are the **game state variables**. They will hold the information, objects, and classes that will persist through the game without being reinitialized by the draw (which calls functions 60 times per second):
 ```
 var ctx: any;
 var windowWidth: any;
@@ -145,7 +146,7 @@ const reduceLaserCharge = function () {
 Resets all the variables to a starting value and instantiates all classes. This is called at the start of the game and after a GAME OVER: 
 ```
 const resetCanvas = function () {
-
+  ...
       }
 ```
 Loads the colors from the given JSON. If the colors are not available, it will assign random colors: 
@@ -164,13 +165,91 @@ g.setup = () => {
       }
 ```
 
-Every function or class that is called in this function is done so 60 times per second. This is where positions, renders, array pushes and splices, and randomization is held:
+Every function or class that is called in this function is done so 60 times per second. Position, render, array push and splice, and randomization is held here:
 
 ```
 g.draw = () => {
-
+  ...
 }
 ```
+---
+*js/entity*
+---
+The file names are pretty self explanatory, so we'll go over two key files: `entity.js` and `ship.js`.
+
+### `entity.js` holds the physics for every object in the game.
+
+These attributes are applied to *all* entities (ie. ship, barrier, etc.) in order to consistently alter velocity and rotation:
+```
+...
+this.pos = g.createVector(x, y);
+this.r = radius;
+this.rmax = radius;
+this.heading = 0;
+this.rotation = 0;
+this.vel = g.createVector(0, 0);
+...
+```
+Applied to entites 60 times per second, allowing for increases and decreases in velocity, position, and force:
+```
+Entity.prototype.update = function() {
+  ...
+}
+```
+### `ship.js` holds the functions that allow for keyboard control. 
+
+Handles the last key that was lifted:
+```
+g.keyReleased = () => {
+    input.handleEvent(g.key, g.keyCode, false);
+  }
+
+```
+Handles the last key that was pressed: 
+```
+g.keyPressed = () => {
+    input.handleEvent(g.key, g.keyCode, true);
+  }
+```
+Handles the last mouse pressed and it's position: 
+```
+g.mousePressed = () => {
+    
+  }
+```
+Handles the last mouse lift:
+```
+g.mouseReleased = () => {
+    
+  }
+
+```
+These functions handle the velocity changes and laser shots when certain keys are pressed and subsequently released: 
+```
+input.registerAsListener({argument}, function (char, code, press) {
+  ...
+  });
+```
+
+Detects the verticies passing through/in the verticies of another entity: 
+```
+this.hits = function ({entity being hit}) {
+  ...
+}
+```
+
+Creates the lines that are drawn to create the ship on canvas:
+
+`Note: this function is called 60 times per second in asteroid.component.ts`
+
+```
+this.render = function () {
+  g.push()
+    ...
+  g.pop()
+}
+```
+
 
 ---
 

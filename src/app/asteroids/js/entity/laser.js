@@ -66,9 +66,12 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
   }
 
   this.hits = function (target) {
+  // console.log(target)
     let dist2 = (this.pos.x - target.pos.x) * (this.pos.x - target.pos.x)
       + (this.pos.y - target.pos.y) * (this.pos.y - target.pos.y) - (charge * charge * 2);
+    // console.log(dist2, target.rmin2)
     if (dist2 <= target.rmin2) {
+      // console.log(target.pos)
       return true;
     }
     if (dist2 >= target.rmax2) {
@@ -76,6 +79,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
     }
     var last_pos = p5.Vector.sub(this.pos, this.vel);
     var target_vertices = target.vertices();
+    // console.log(target_vertices)
     for (var i = 0; i < target_vertices.length - 1; i++) {
       if (lineIntersect(last_pos,
         this.pos,

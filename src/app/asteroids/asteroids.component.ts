@@ -100,11 +100,11 @@ export class AsteroidsComponent implements OnInit {
         laserCharge -= 100;
         return true
       }
-    }    
+    }
 
     const game = (g: any) => {
 
-      const roundLoss = function () {        
+      const roundLoss = function () {
         setTimeout(function () {
           lives--;
           if (lives >= 0) {
@@ -113,10 +113,10 @@ export class AsteroidsComponent implements OnInit {
             laserCharge = 1270;
           }
         }, 3000);
-        input.registerAsListener(g.ENTER, function (char, code, press) {          
+        input.registerAsListener(g.ENTER, function (char, code, press) {
           if (press) {
             if (lives < 0) {
-              gameReset();              
+              gameReset();
             }
           }
         });
@@ -143,7 +143,7 @@ export class AsteroidsComponent implements OnInit {
           const vx = -.4
           const size = g.round(g.random(10, 50))
           const y = g.random(0 + size * 4, g.height - size * 2)
-          const x = g.width + size * 6;          
+          const x = g.width + size * 6;
           barriers.push(loadBarriers(g, x, y, vx, size, rgbColor4, windowWidth))
         }
       }
@@ -217,7 +217,7 @@ export class AsteroidsComponent implements OnInit {
       }
 
       const resetCanvas = function () {
-        score = 0;        
+        score = 0;
         buttons = [];
         asteroids = [];
         lasers = [];
@@ -244,14 +244,14 @@ export class AsteroidsComponent implements OnInit {
         splash = new Splash();
 
         setTimeout(function () {
-          input.registerAsListener(g.ENTER, function (char, code, press) {            
+          input.registerAsListener(g.ENTER, function (char, code, press) {
             if (press) {
-              if (splashScreen) {                
+              if (splashScreen) {
                 splashScreen = false;
                 beginGameSequence = g.frameCount;
               }
             }
-          }, 100)          
+          }, 100)
         });
       }
 
@@ -272,12 +272,12 @@ export class AsteroidsComponent implements OnInit {
         }
         g.keyPressed = () => {
           input.handleEvent(g.key, g.keyCode, true);
-        }    
-        spawnBoss()   
-        console.log(bosses) 
+        }
+        spawnBoss()
+        console.log(bosses)
       }
 
-      g.draw = () => {        
+      g.draw = () => {
         if (splashScreen) {
           g.background(0);
           splash.render(g, stars, windowWidth, ctx, logoPath, config);
@@ -425,10 +425,12 @@ export class AsteroidsComponent implements OnInit {
             }
           }
 
+          // if (ship.hits(bosses[i].quad1) || ship.hits(bosses[i].quad2) || ship.hits(bosses[i].quad3)|| ship.hits(bosses[i].quad4) && canPlay)
+
           //UPDATE BOSS
           for (var i = bosses.length - 1; i >= 0; i--) {
-            bosses[i].update();  
-            if (ship.hits(bosses[i]) && canPlay) {
+            bosses[i].update();
+            if (ship.hits(bosses[i].quad1) && canPlay || ship.hits(bosses[i].quad2) && canPlay || ship.hits(bosses[i].quad3) && canPlay || ship.hits(bosses[i].quad4) && canPlay) {
               canPlay = false;
               var dustVel = p5.Vector.add(ship.vel.mult(0.2), bosses[i].vel);
               addDust(ship.pos, dustVel, 15, .005, rgbColor3, 2.5, g);
@@ -438,7 +440,7 @@ export class AsteroidsComponent implements OnInit {
               // rocketSoundEffects[0].stop();
               // rocketSoundEffects[1].stop();
               roundLoss()
-            }         
+            }
           }
 
           // UPDATE AND DESTROY DUST
@@ -519,7 +521,7 @@ export class AsteroidsComponent implements OnInit {
           ship.render();
           hud.render(stageClear, level, lives, score, laserCharge, laserOverHeat);
         }
-      }      
+      }
     };
     let canvas = new p5(game);
   };
