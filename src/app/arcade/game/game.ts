@@ -1,5 +1,3 @@
-import * as config from "../../assets/config.json"
-import { Component, OnInit } from '@angular/core';
 import * as p5 from 'p5';
 import Ship from './js/entity/ship.js';
 import Boss from './js/entity/boss.js';
@@ -13,29 +11,16 @@ import Debris from './js/effects/debris.js';
 import Star from './js/effects/star.js';
 import loadStars from './js/utility/load-stars.js';
 import loadBarriers from './js/utility/load-barriers.js';
-// import hyperDrive from './js/effects/hyper-drive.js'
 import laserCollision from './js/utility/laser-collision.js';
 import randomColors from './js/utility/random-colors.js';
 import MobileButton from './js/utility/buttons.js';
 import LaserEnergy from './js/powerups/laser-energy.js';
 import PointNumber from './js/effects/point-numbers.js'
 
-@Component({
-  selector: 'app-asteroids',
-  templateUrl: './asteroids.component.html',
-  styleUrls: ['./asteroids.component.css']
-})
 
-export class AsteroidsComponent implements OnInit {
+export const callGame = (eventInput) => {
 
-  constructor() { }
-
-  ngOnInit(): void {
-
-    console.log(config.logo.color)
-
-    // Game State Variables
-
+    var config: any = eventInput.default
     var ctx: any;
     var windowWidth: any;
     var ship: any;
@@ -75,14 +60,7 @@ export class AsteroidsComponent implements OnInit {
     var logoPath = new Path2D(config.logo.path);
     var easeInStars = .75;
     var powerUpCounter = 300;
-    var spawnBoost = 0;
-
-
-    //Sound Effect
-    // var laserSoundEffects: any = []; 
-    // var explosionSoundEffects: any = [];
-    // var rocketSoundEffects: any = [];
-    // var stageSoundEffect: any;
+    var spawnBoost = 0;    
 
     // Global Functions
 
@@ -189,8 +167,7 @@ export class AsteroidsComponent implements OnInit {
           laserCharge = 0;
           laserOverHeat = true;
           setTimeout(function () {
-            laserOverHeat = false;
-            // laserCharge = 1;
+            laserOverHeat = false;            
           }, 2500);
         }
         if (laserCharge < 1270 && !laserOverHeat) {
@@ -199,13 +176,11 @@ export class AsteroidsComponent implements OnInit {
       }
 
       const defeatBoss = function (i) {
-        setTimeout(function () {
-          // console.log("defeat boss! " + level + 1)
+        setTimeout(function () {          
           level += 1;
           possibleBarriers += (8 + (3 * level));
           possibleBosses += 2;
-          bosses.splice(i, 1);
-          // console.log(bosses.length)
+          bosses.splice(i, 1);          
         }, 8000)
       }
 
@@ -361,7 +336,7 @@ export class AsteroidsComponent implements OnInit {
             spawnBoss()
           }
 
-          // UPDATES
+          // _________UPDATES ___________
 
           // UPDATE ASTEROIDS AND CHECK FOR COLLISIONS 
           for (let i = 0; i < asteroids.length; i++) {
@@ -374,11 +349,7 @@ export class AsteroidsComponent implements OnInit {
               var dustVel = p5.Vector.add(ship.vel.mult(0.2), asteroids[i].vel);
               addDust(ship.pos, dustVel, 15, .005, rgbColor3, 3, g);
               ship.destroy();
-              input.reset();
-              // sounds - need to stop rocket sounds here
-              // ship.playSoundEffect(explosionSoundEffects);
-              // rocketSoundEffects[0].stop();
-              // rocketSoundEffects[1].stop();            
+              input.reset();                      
               roundLoss();
             }
             asteroids[i].update();
@@ -402,10 +373,7 @@ export class AsteroidsComponent implements OnInit {
               var dustVel = p5.Vector.add(ship.vel.mult(0.2), enemies[i].vel);
               addDust(ship.pos, dustVel, 15, .005, rgbColor3, 2.5, g);
               ship.destroy();
-              input.reset();
-              // ship.playSoundEffect(explosionSoundEffects);
-              // rocketSoundEffects[0].stop();
-              // rocketSoundEffects[1].stop();
+              input.reset();              
               roundLoss()
             }
             enemies[i].update();
@@ -448,10 +416,7 @@ export class AsteroidsComponent implements OnInit {
                 var dustVel = p5.Vector.add(ship.vel.mult(0.2), barriers[i][j].vel);
                 addDust(ship.pos, dustVel, 15, .005, rgbColor3, 2.5, g);
                 ship.destroy();
-                input.reset();
-                // ship.playSoundEffect(explosionSoundEffects);
-                // rocketSoundEffects[0].stop();
-                // rocketSoundEffects[1].stop();
+                input.reset();                
                 roundLoss()
               }
               if (barriers[i][j].offscreen()) {
@@ -461,36 +426,24 @@ export class AsteroidsComponent implements OnInit {
             if (barriers[i].length === 0) {
               barriers.splice(i, 1)
             }
-          }
-
-          // console.log(possibleBarriers)
-          // console.log(possibleBosses)
+          }          
 
           //UPDATE BOSS
           for (var i = bosses.length - 1; i >= 0; i--) {
-            bosses[i].update();
-            // console.log(bosses[i].hp)
-            if (bosses[i].hp <= 0 && possibleBosses === 0) {
-              // console.log("trig boss del")
+            bosses[i].update();            
+            if (bosses[i].hp <= 0 && possibleBosses === 0) {              
               possibleBosses -= 1;
               let score = (1000 + (500 * level))
               addToScore(score)
               addPointNumbers(bosses[i].pos, bosses[i].vel.mult(.25), 255, g, score.toString(), 30)
-              defeatBoss(i)
-              // setTimeout(function () {
-              //   bosses.splice(i, 1);
-              //   // console.log(bosses.length)
-              // }, 8000)
+              defeatBoss(i)        
             }
             if (ship.hits(bosses[i].quad1) && canPlay || ship.hits(bosses[i].quad2) && canPlay || ship.hits(bosses[i].quad3) && canPlay || ship.hits(bosses[i].quad4) && canPlay) {
               canPlay = false;
               var dustVel = p5.Vector.add(ship.vel.mult(0.2), bosses[i].vel);
               addDust(ship.pos, dustVel, 15, .005, rgbColor3, 2.5, g);
               ship.destroy();
-              input.reset();
-              // ship.playSoundEffect(explosionSoundEffects);
-              // rocketSoundEffects[0].stop();
-              // rocketSoundEffects[1].stop();
+              input.reset();              
               roundLoss()
             }
 
@@ -521,11 +474,11 @@ export class AsteroidsComponent implements OnInit {
 
           ship.update(laserCharge);
 
-          // ALL RENDERS...
+          // _________ALL RENDERS_________
+
           g.background(0);
 
-          let fps = g.frameRate();
-          // console.log(fps.toFixed(2))
+          let fps = g.frameRate();          
           g.fill(255);
           g.stroke(0);
           g.text("FPS: " + fps.toFixed(2), 10, g.height - 10);
@@ -577,5 +530,4 @@ export class AsteroidsComponent implements OnInit {
       }
     };
     let canvas = new p5(game);
-  };
-};
+  }

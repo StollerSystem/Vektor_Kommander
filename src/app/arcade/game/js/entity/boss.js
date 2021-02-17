@@ -201,7 +201,7 @@ export default function Boss(g, color, windowWidth, addDust, level) {
       let coreColor = this.coreHitFlash ? `rgba(${color[1]},${color[2]},${color[0]},${g.random(.5, .9)})` : `rgba(${color[0]},${color[1]},${color[2]},${g.random(.5, .9)})`;
       g.stroke(coreColor);
       let hpMult = this.hp / 10
-      g.strokeWeight(g.random(this.r / 3 * hpMult, this.r / 2 * hpMult));
+      g.strokeWeight(g.random(this.r / 4 * hpMult, this.r / 3 * hpMult));
       g.point(0, 0);
       g.pop();
     }

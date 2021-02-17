@@ -25,7 +25,7 @@ export default function Splash() {
       stars[i].render()
     }
 
-    const configInput = config.default
+    const configInput = config
     const centerX = g.width / 2;
     const centerY = g.height / 2;
     const w = windowWidth / 1800;
