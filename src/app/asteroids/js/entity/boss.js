@@ -1,20 +1,20 @@
 import * as p5 from 'p5';
 import Entity from './entity.js';
 
-export default function Boss(g, color, windowWidth, addDust) {
+export default function Boss(g, color, windowWidth, addDust, level) {
 
-  var r = 250;
-  var pos = g.createVector(g.width + r*2, g.random(r, g.height - r));
+  var r = 200 + (50 * level);
+  var pos = g.createVector(g.width + r * 2, g.random(r, g.height - r));
 
   Entity.call(this, pos.x, pos.y, r, g);
 
   Entity.prototype.setRotation.call(this, -.01);
-  
+
   this.vel = g.createVector(-.5, g.random(-.5, .5))
   this.rmax = r - 30;
   this.onScreen = false;
   this.destroyed = false;
-  this.hp = 10;
+  this.hp = 10 + (2 * level);
   this.coreHitFlash = false;
   this.brokenParts = [];
 
@@ -25,7 +25,7 @@ export default function Boss(g, color, windowWidth, addDust) {
   var i = a
   var scope = this;
 
-  this.vertices = function (x,y,n) {
+  this.vertices = function (x, y, n) {
     let heading = scope.destroyed ? scope.brokenParts[n].heading : scope.heading;
     let pos = scope.destroyed ? scope.brokenParts[n].pos : scope.pos;
     let c = g.cos(heading);
@@ -57,8 +57,8 @@ export default function Boss(g, color, windowWidth, addDust) {
 
   this.quad1 = {
     pos: scope.pos,
-    vertices: function () {       
-      let hitBox = scope.vertices(-scope.r,scope.r,0) 
+    vertices: function () {
+      let hitBox = scope.vertices(-scope.r, scope.r, 0)
       return hitBox;
     }
   }
@@ -66,7 +66,7 @@ export default function Boss(g, color, windowWidth, addDust) {
   this.quad2 = {
     pos: scope.pos,
     vertices: function () {
-      let hitBox = scope.vertices(scope.r,scope.r,1)       
+      let hitBox = scope.vertices(scope.r, scope.r, 1)
       return hitBox;
     }
   }
@@ -74,7 +74,7 @@ export default function Boss(g, color, windowWidth, addDust) {
   this.quad3 = {
     pos: scope.pos,
     vertices: function () {
-      let hitBox = scope.vertices(-scope.r,-scope.r,2)       
+      let hitBox = scope.vertices(-scope.r, -scope.r, 2)
       return hitBox;
     }
   }
@@ -82,20 +82,20 @@ export default function Boss(g, color, windowWidth, addDust) {
   this.quad4 = {
     pos: scope.pos,
     vertices: function () {
-      let hitBox = scope.vertices(scope.r,-scope.r,3)       
+      let hitBox = scope.vertices(scope.r, -scope.r, 3)
       return hitBox;
     }
-  }  
+  }
 
   this.update = function () {
     Entity.prototype.update.call(this);
     this.core.pos = this.pos;
     this.edges();
     if (this.pos.x < this.g.width - this.rmax) {
-      this.onScreen = true;      
-    }    
+      this.onScreen = true;
+    }
     if (this.destroyed) {
-      for (let i = 0; i < this.brokenParts.length; i++) {         
+      for (let i = 0; i < this.brokenParts.length; i++) {
         this.brokenParts[i].pos.add(this.brokenParts[i].vel);;
         this.brokenParts[i].heading += this.brokenParts[i].rot;
       }
@@ -103,7 +103,7 @@ export default function Boss(g, color, windowWidth, addDust) {
   }
 
   this.edges = function () {
-    if (this.onScreen && this.pos.x >= this.g.width - this.rmax) {      
+    if (this.onScreen && this.pos.x >= this.g.width - this.rmax) {
       this.vel.x = -this.vel.x
 
     } else if (this.pos.x <= + this.rmax) {
@@ -144,10 +144,10 @@ export default function Boss(g, color, windowWidth, addDust) {
       ]
       return hitBox;
     }
-  }  
+  }
 
   this.coreHit = function (laserCharge) {
-    let damage = laserCharge > 0 ? laserCharge / 3 : 1;    
+    let damage = laserCharge > 0 ? laserCharge / 3 : 1;
     scope.hp -= damage;
     scope.coreHitFlash = true;
     if (scope.hp <= 0 && !scope.destroyed) {
@@ -157,18 +157,18 @@ export default function Boss(g, color, windowWidth, addDust) {
     setTimeout(function () {
       scope.coreHitFlash = false;
     }, 200)
-  }  
+  }
 
-  this.destroy = function () {    
+  this.destroy = function () {
     addDust(this.pos, this.vel, 30, .001, color, 10, g);
-    for (let i = 0;i < 4; i++){
+    for (let i = 0; i < 4; i++) {
       scope.brokenParts[i] = {
         pos: this.pos.copy(),
         vel: this.vel.copy().add(p5.Vector.random2D().mult(g.random(2, 3))),
         heading: this.heading,
         rot: g.random(-0.005, -0.015)
       }
-    }    
+    }
   }
 
   this.render = function () {
@@ -198,7 +198,7 @@ export default function Boss(g, color, windowWidth, addDust) {
     if (!this.destroyed) {
       g.push();
       g.translate(this.pos.x, this.pos.y);
-      let coreColor = this.coreHitFlash ? `rgba(${color[1]},${color[2]},${color[0]},${g.random(.5,.9)})` : `rgba(${color[0]},${color[1]},${color[2]},${g.random(.5,.9)})`;
+      let coreColor = this.coreHitFlash ? `rgba(${color[1]},${color[2]},${color[0]},${g.random(.5, .9)})` : `rgba(${color[0]},${color[1]},${color[2]},${g.random(.5, .9)})`;
       g.stroke(coreColor);
       let hpMult = this.hp / 10
       g.strokeWeight(g.random(this.r / 3 * hpMult, this.r / 2 * hpMult));

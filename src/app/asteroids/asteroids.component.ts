@@ -49,7 +49,7 @@ export class AsteroidsComponent implements OnInit {
     var pointNumbers: any = [];
     var powerUps: any = [];
     var possibleEnemies: any = 1;
-    var possibleBarriers: any = 5;
+    var possibleBarriers: any = 12;
     var possibleBosses: any = 1;
     var dust: any = [];
     var canPlay: any = true;
@@ -74,6 +74,8 @@ export class AsteroidsComponent implements OnInit {
     var beginGameSequence: number = 0;
     var logoPath = new Path2D(config.logo.path);
     var easeInStars = .75;
+    var powerUpCounter = 300;
+    
 
     //Sound Effect
     // var laserSoundEffects: any = []; 
@@ -130,8 +132,8 @@ export class AsteroidsComponent implements OnInit {
         resetCanvas();
       }
 
-      const spawnBoss = function () {
-        bosses.push(new Boss(g, rgbColor5, windowWidth, addDust))
+      const spawnBoss = function() {
+        bosses.push(new Boss(g, rgbColor5, windowWidth, addDust, level))
       }
 
       const spawnAsteroids = function () {
@@ -155,8 +157,8 @@ export class AsteroidsComponent implements OnInit {
         enemies.push(new Enemy(radius, g, addDust, level, rgbColor5, rgbColor2, lasers, windowWidth))
       }
 
-      const laserPowerUp = function () {
-        score += 250;
+      const laserPowerUp = function(points) {
+        score += points;
         laserOverHeat = false;
         laserCharge = 2000;
       }
@@ -196,7 +198,10 @@ export class AsteroidsComponent implements OnInit {
       }
 
       const defeatBoss = function () {
-        
+        console.log("defeat boss! "+level+1)
+        level += 1;
+        possibleBarriers += (10 + (5 * level));
+        possibleBosses += 2;
       }
 
       const hyperDriveIntro = function () {
@@ -228,6 +233,7 @@ export class AsteroidsComponent implements OnInit {
         asteroids = [];
         lasers = [];
         enemies = [];
+        bosses = [];
         debris = [];
         pointNumbers = [];
         powerUps = [];
@@ -278,7 +284,7 @@ export class AsteroidsComponent implements OnInit {
         }
         g.keyPressed = () => {
           input.handleEvent(g.key, g.keyCode, true);
-        }        
+        }
       }
 
       g.draw = () => {
@@ -323,7 +329,7 @@ export class AsteroidsComponent implements OnInit {
           }
 
           // RANDOM ASTEROID SPAWN
-          if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
+          if (!title && !stageClear && possibleEnemies > 0 && asteroids.length < 4) {
             let ranNum = g.random(650);
             if (ranNum <= 1) {
               spawnAsteroids();
@@ -331,18 +337,21 @@ export class AsteroidsComponent implements OnInit {
           }
 
           // RANDOM BARRIER SPAWN
-          if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
+          if (!title && !stageClear && possibleEnemies > 0 && barriers.length < 6) {
             let ranNum = g.random(200);
             if (ranNum <= 1 && barriers.length < 6 && possibleBarriers > 0) {
-              possibleBarriers -= 1;              
+              possibleBarriers -= 1;
               spawnBarriers();
             }
           }
 
           //SPAWN BOSS
-          if (possibleBarriers <= 0 && bosses.length < 1) {
+          if (possibleBarriers <= 0 && possibleBosses > 0) {
+            possibleBosses -= 1;
             spawnBoss()
           }
+
+          // UPDATES
 
           // UPDATE ASTEROIDS AND CHECK FOR COLLISIONS 
           for (let i = 0; i < asteroids.length; i++) {
@@ -393,6 +402,7 @@ export class AsteroidsComponent implements OnInit {
           }
 
           // UPDATE AND CHECK FOR COLLISION WITH POWERUPS
+
           for (var i = powerUps.length - 1; i >= 0; i--) {
             powerUps[i].update();
             if (powerUps[i].offscreen()) {
@@ -400,11 +410,21 @@ export class AsteroidsComponent implements OnInit {
             } else {
               if (ship.hits(powerUps[i]) && canPlay) {
                 let color = [Math.round(g.random(50, 250)), Math.round(g.random(50, 250)), Math.round(g.random(50, 250))]
-                powerUps[i].powerUp()
                 let dustVel = p5.Vector.add(ship.vel.mult(0.5), powerUps[i].vel);
                 addDust(ship.pos, dustVel, 7, .015, color, 5, g);
-                addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '250')
+                if (g.frameCount - powerUpCounter < 100) {
+                  powerUps[i].powerUp(450)
+                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '650')
+                } else if (g.frameCount - powerUpCounter < 200) {
+                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '450')
+                  powerUps[i].powerUp(650)
+                } else {
+                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '250')
+                  powerUps[i].powerUp(250)
+                }
                 powerUps.splice(i, 1)
+                powerUpCounter = g.frameCount
+                
               }
             }
           }
@@ -431,18 +451,23 @@ export class AsteroidsComponent implements OnInit {
             if (barriers[i].length === 0) {
               barriers.splice(i, 1)
             }
-          }          
+          }
+
+          // console.log(possibleBarriers)
+          // console.log(possibleBosses)
 
           //UPDATE BOSS
           for (var i = bosses.length - 1; i >= 0; i--) {
             bosses[i].update();
-            if( bosses[i].hp <= 0 && possibleBosses > 0) {
+            // console.log(bosses[i].hp)
+            if (bosses[i].hp <= 0 && possibleBosses === 0) {
               console.log("trig boss del")
               possibleBosses -= 1;
-              setTimeout(function(){
+              setTimeout(function () {
                 defeatBoss()
                 bosses.splice(i, 1);
-              },8000)
+                // console.log(bosses.length)
+              }, 8000)
             }
             if (ship.hits(bosses[i].quad1) && canPlay || ship.hits(bosses[i].quad2) && canPlay || ship.hits(bosses[i].quad3) && canPlay || ship.hits(bosses[i].quad4) && canPlay) {
               canPlay = false;
@@ -455,7 +480,7 @@ export class AsteroidsComponent implements OnInit {
               // rocketSoundEffects[1].stop();
               roundLoss()
             }
-            
+
           }
 
           // UPDATE AND DESTROY DUST
@@ -498,31 +523,31 @@ export class AsteroidsComponent implements OnInit {
             }
           }
           for (let i = 0; i < stars.length; i++) {
-            stars[i].show()
+            stars[i].render()
           }
-          for (var i = powerUps.length - 1; i >= 0; i--) {
+          for (let i = powerUps.length - 1; i >= 0; i--) {
             powerUps[i].render();
           }
-          for (var i = 0; i < asteroids.length; i++) {
+          for (let i = 0; i < asteroids.length; i++) {
             asteroids[i].render();
           }
-          for (var i = lasers.length - 1; i >= 0; i--) {
+          for (let i = lasers.length - 1; i >= 0; i--) {
             lasers[i].render();
           }
-          for (var i = enemies.length - 1; i >= 0; i--) {
+          for (let i = enemies.length - 1; i >= 0; i--) {
             enemies[i].render();
           }
-          for (var i = bosses.length - 1; i >= 0; i--) {
+          for (let i = bosses.length - 1; i >= 0; i--) {
             bosses[i].render();
           }
-          for (var i = dust.length - 1; i >= 0; i--) {
+          for (let i = dust.length - 1; i >= 0; i--) {
             dust[i].render();
           }
-          for (var i = debris.length - 1; i >= 0; i--) {
+          for (let i = debris.length - 1; i >= 0; i--) {
             debris[i].render();
           }
 
-          for (var i = pointNumbers.length - 1; i >= 0; i--) {
+          for (let i = pointNumbers.length - 1; i >= 0; i--) {
             pointNumbers[i].render();
           }
 

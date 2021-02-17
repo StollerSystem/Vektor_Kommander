@@ -22,7 +22,7 @@ export default function Splash() {
     }
 
     for (let i = 0; i < stars.length; i++) {
-      stars[i].show()
+      stars[i].render()
     }
 
     const configInput = config.default

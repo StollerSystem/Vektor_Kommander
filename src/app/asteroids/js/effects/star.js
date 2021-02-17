@@ -3,7 +3,7 @@ export default function Star(x, y, size, e) {
   this.y = y;
   this.size = size;
 
-  this.show = function () {
+  this.render = function () {
     e.push();
     e.stroke(e.random(100, 255));
     e.strokeWeight(e.random(this.size/2, this.size));

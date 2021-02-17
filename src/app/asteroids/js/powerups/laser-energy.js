@@ -23,9 +23,8 @@ export default function LaserEnergy(g, pos, windowWidth, laserPowerUp) {
     return barrierVertices;
   }
 
-  this.powerUp = function () {
-    // console.log("POWER UP")
-    laserPowerUp();
+  this.powerUp = function (points) {
+    laserPowerUp(points);
   }
 
   this.render = function () {
