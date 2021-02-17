@@ -97,7 +97,7 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
   // VS PLAYER   
   if (exists) {
     if (lasers[i].hits(ship) && lasers[i].enemy && canPlay) {
-      canPlay = false;
+      canPlay();
       exists = false;
       var dustVel = p5.Vector.add(ship.vel.mult(0.2), lasers[i].vel.mult(.2));
       lasers.splice(i, 1);

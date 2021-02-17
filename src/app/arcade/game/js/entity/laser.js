@@ -17,7 +17,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
   } else {
     this.vel.mult(20);
   }
-  
+
   this.vel.add(svel);
 
   this.render = function () {
@@ -60,10 +60,6 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
       g.line(-10 * this.w, 0, 10 * this.w, 0)
       g.pop();
     }
-  }
-
-  this.playSoundEffect = function (sound) {
-    sound.play();
   }
 
   this.hits = function (target) {    

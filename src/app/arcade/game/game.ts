@@ -180,6 +180,10 @@ export const callGame = (eventInput) => {
         }
       }
 
+      const canPlayToggle = function () {
+        canPlay = false;
+      }
+
       const defeatBoss = function (i) {
         setTimeout(function () {          
           level += 1;
@@ -286,7 +290,8 @@ export const callGame = (eventInput) => {
       }
       
 
-      g.draw = () => {
+      g.draw = () => {        
+
         if (splashScreen) {
           g.background(0);
           splash.render(g, stars, windowWidth, ctx, logoPath, config);
@@ -379,7 +384,7 @@ export const callGame = (eventInput) => {
               lasers.splice(i, 1);
               continue;
             }
-            laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth, spawnPowerUp, addPointNumbers, bosses)
+            laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlayToggle, input, addToScore, windowWidth, spawnPowerUp, addPointNumbers, bosses)
           }
 
           // UPDATE ENEMY AND CHECK FOR COLLISION BEWTWEEN SHIP
@@ -396,7 +401,6 @@ export const callGame = (eventInput) => {
           }
 
           // UPDATE AND CHECK FOR COLLISION WITH POWERUPS
-
           for (var i = powerUps.length - 1; i >= 0; i--) {
             powerUps[i].update();
             if (powerUps[i].offscreen()) {
