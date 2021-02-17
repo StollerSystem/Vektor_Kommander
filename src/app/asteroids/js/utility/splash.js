@@ -123,7 +123,7 @@ export default function Splash() {
     g.text('FORWARD THRUST', centerX, centerY / .70)
     g.text('REVERSE THRUST', centerX, centerY / .675)
     g.text('ROTATIONAL THRUST', centerX, centerY / .65)
-    g.text('FIRE BLASTER', centerX, centerY / .625)
+    g.text('FIRE LASER (HOLD FOR POWER SHOT)', centerX, centerY / .625)
     g.pop()
 
 

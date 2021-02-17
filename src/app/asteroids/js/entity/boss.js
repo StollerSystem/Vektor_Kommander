@@ -14,7 +14,7 @@ export default function Boss(g, color, windowWidth, addDust, level) {
   this.rmax = r - 30;
   this.onScreen = false;
   this.destroyed = false;
-  this.hp = 10 + (2 * level);
+  this.hp = 10 + (5 * level);
   this.coreHitFlash = false;
   this.brokenParts = [];
 

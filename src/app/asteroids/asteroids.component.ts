@@ -244,7 +244,7 @@ export class AsteroidsComponent implements OnInit {
         powerUps = [];
         barriers = [];
         possibleBarriers = 10;
-        possibleBosses= 1;
+        possibleBosses = 1;
         laserCharge = 1270;
         canPlay = true;
         windowWidth = g.windowWidth <= 1200 ? g.windowWidth : 1200;
@@ -473,8 +473,9 @@ export class AsteroidsComponent implements OnInit {
             if (bosses[i].hp <= 0 && possibleBosses === 0) {
               // console.log("trig boss del")
               possibleBosses -= 1;
-              addToScore(1000)
-              addPointNumbers(bosses[i].pos, bosses[i].vel.mult(.25), 255, g, '1000', 25)
+              let score = (1000 + (500 * level))
+              addToScore(score)
+              addPointNumbers(bosses[i].pos, bosses[i].vel.mult(.25), 255, g, score.toString(), 30)
               defeatBoss(i)
               // setTimeout(function () {
               //   bosses.splice(i, 1);
