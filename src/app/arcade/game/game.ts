@@ -47,9 +47,10 @@ export const callGame = (eventInput) => {
     var hud: any;
     var splash: any;
 
-    var canPlay: any = true;    
+    var canPlay: boolean = true;    
     var laserOverHeat: boolean = false;
     var splashScreen: boolean = true;
+    var consoleTrigger: boolean = false;
 
     var easeInStars: number = .75;
     var powerUpCounter: number = 300;
@@ -519,6 +520,12 @@ export const callGame = (eventInput) => {
           render(pointNumbers)
           ship.render();
           hud.render(lives, score, laserCharge, laserOverHeat);
+
+
+          if (lives < 0 && !consoleTrigger) {
+            console.log("Your final score was " + score)
+            consoleTrigger = true
+          }
 
           // RENDER MOBILE BUTTONS IF THE SCREEN IS AS SMALL AS AN IPAD 
           if (windowWidth <= 1024) {

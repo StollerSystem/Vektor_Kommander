@@ -26,6 +26,8 @@ export default function Hud(g, rgbColor1, rgbColor3, windowWidth) {
     drawLives(lives);    
 
     if (lives < 0) {
+      
+
       g.push();
       g.textFont('Montserrat')
       g.textAlign(g.CENTER)
