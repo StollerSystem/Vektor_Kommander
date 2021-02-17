@@ -49,7 +49,7 @@ export class AsteroidsComponent implements OnInit {
     var pointNumbers: any = [];
     var powerUps: any = [];
     var possibleEnemies: any = 1;
-    var possibleBarriers: any = 12;
+    var possibleBarriers: any = 10;
     var possibleBosses: any = 1;
     var dust: any = [];
     var canPlay: any = true;
@@ -75,7 +75,8 @@ export class AsteroidsComponent implements OnInit {
     var logoPath = new Path2D(config.logo.path);
     var easeInStars = .75;
     var powerUpCounter = 300;
-    
+    var spawnBoost = 0;
+
 
     //Sound Effect
     // var laserSoundEffects: any = []; 
@@ -85,8 +86,8 @@ export class AsteroidsComponent implements OnInit {
 
     // Global Functions
 
-    const addPointNumbers = function (pos: any, vel: any, color: any, g: any, text: string) {
-      pointNumbers.push(new PointNumber(pos, vel, color, g, text))
+    const addPointNumbers = function (pos: any, vel: any, color: any, g: any, text: string, size: any) {
+      pointNumbers.push(new PointNumber(pos, vel, color, g, text, size))
     }
 
     const addDust = function (pos: any, vel: any, n: any, trans: any, color: any, weight: any, g: any) {
@@ -132,18 +133,18 @@ export class AsteroidsComponent implements OnInit {
         resetCanvas();
       }
 
-      const spawnBoss = function() {
+      const spawnBoss = function () {
         bosses.push(new Boss(g, rgbColor5, windowWidth, addDust, level))
       }
 
       const spawnAsteroids = function () {
-        for (let i = 0; i < level + 1; i++) {
+        for (let i = 0; i < spawnBoost + 1; i++) {
           asteroids.push(new Asteroid(null, null, 3, g, rgbColor1, windowWidth));
         }
       }
 
       const spawnBarriers = function () {
-        for (let i = 0; i < level + 1; i++) {
+        for (let i = 0; i < spawnBoost + 1; i++) {
           const vx = -.4
           const size = g.round(g.random(10, 50))
           const y = g.random(0 + size * 4, g.height - size * 2)
@@ -157,7 +158,7 @@ export class AsteroidsComponent implements OnInit {
         enemies.push(new Enemy(radius, g, addDust, level, rgbColor5, rgbColor2, lasers, windowWidth))
       }
 
-      const laserPowerUp = function(points) {
+      const laserPowerUp = function (points) {
         score += points;
         laserOverHeat = false;
         laserCharge = 2000;
@@ -197,11 +198,15 @@ export class AsteroidsComponent implements OnInit {
         }
       }
 
-      const defeatBoss = function () {
-        console.log("defeat boss! "+level+1)
-        level += 1;
-        possibleBarriers += (10 + (5 * level));
-        possibleBosses += 2;
+      const defeatBoss = function (i) {
+        setTimeout(function () {
+          // console.log("defeat boss! " + level + 1)
+          level += 1;
+          possibleBarriers += (8 + (3 * level));
+          possibleBosses += 2;          
+          bosses.splice(i, 1);
+          // console.log(bosses.length)
+        }, 8000)
       }
 
       const hyperDriveIntro = function () {
@@ -329,19 +334,21 @@ export class AsteroidsComponent implements OnInit {
           }
 
           // RANDOM ASTEROID SPAWN
-          if (!title && !stageClear && possibleEnemies > 0 && asteroids.length < 4) {
+          if (!title && !stageClear && possibleEnemies > 0 && asteroids.length < 3) {
             let ranNum = g.random(650);
             if (ranNum <= 1) {
               spawnAsteroids();
+              // console.log("spawn rock, total: "+asteroids.length)
             }
           }
 
           // RANDOM BARRIER SPAWN
-          if (!title && !stageClear && possibleEnemies > 0 && barriers.length < 6) {
-            let ranNum = g.random(200);
+          if (!title && !stageClear && possibleEnemies > 0 && barriers.length < 5) {
+            let ranNum = g.random(220);
             if (ranNum <= 1 && barriers.length < 6 && possibleBarriers > 0) {
               possibleBarriers -= 1;
               spawnBarriers();
+              // console.log("squares left: "+possibleBarriers)
             }
           }
 
@@ -414,17 +421,17 @@ export class AsteroidsComponent implements OnInit {
                 addDust(ship.pos, dustVel, 7, .015, color, 5, g);
                 if (g.frameCount - powerUpCounter < 100) {
                   powerUps[i].powerUp(450)
-                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '650')
+                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '650',15)
                 } else if (g.frameCount - powerUpCounter < 200) {
-                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '450')
+                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '450',15)
                   powerUps[i].powerUp(650)
                 } else {
-                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '250')
+                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '250',15)
                   powerUps[i].powerUp(250)
                 }
                 powerUps.splice(i, 1)
                 powerUpCounter = g.frameCount
-                
+
               }
             }
           }
@@ -461,13 +468,15 @@ export class AsteroidsComponent implements OnInit {
             bosses[i].update();
             // console.log(bosses[i].hp)
             if (bosses[i].hp <= 0 && possibleBosses === 0) {
-              console.log("trig boss del")
+              // console.log("trig boss del")
               possibleBosses -= 1;
-              setTimeout(function () {
-                defeatBoss()
-                bosses.splice(i, 1);
-                // console.log(bosses.length)
-              }, 8000)
+              addToScore(1000)
+              addPointNumbers(bosses[i].pos, bosses[i].vel.mult(.25), 255, g, '1000', 25)
+              defeatBoss(i)
+              // setTimeout(function () {
+              //   bosses.splice(i, 1);
+              //   // console.log(bosses.length)
+              // }, 8000)
             }
             if (ship.hits(bosses[i].quad1) && canPlay || ship.hits(bosses[i].quad2) && canPlay || ship.hits(bosses[i].quad3) && canPlay || ship.hits(bosses[i].quad4) && canPlay) {
               canPlay = false;

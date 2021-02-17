@@ -22,7 +22,7 @@ export default function Boss(g, color, windowWidth, addDust, level) {
   var e = g.random(.70, 1.25)
   var a = g.random(.8, 1.20)
   // var i = -(a - 1) + 1;  
-  var i = a
+  var i = a * 1.25;
   var scope = this;
 
   this.vertices = function (x, y, n) {
