@@ -73,7 +73,13 @@ export default function Enemy(r, g, addDust, level, color1, color2, lasers, wind
     g.vertex(-this.r / 2, this.r / 2) 
     g.vertex(0, this.r * this.point)
     g.endShape(g.CLOSE);
+
+    g.push()
+    g.stroke(`rgba(${color1[2]},${color1[0]},${color1[1]},${1})`)
+    g.strokeWeight(g.random(.5,3))
     g.ellipse(0, 0, this.r, this.r)
+    g.pop()
+
     g.pop();
   }
 
