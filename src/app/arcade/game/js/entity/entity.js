@@ -11,8 +11,7 @@ export default function Entity(x, y, radius, g, windowMod)
   this.vel = g.createVector(0, 0);
   this.accelMagnitude = 0;  
   this.windowMod = windowMod != null ? windowMod : 1;  
-  this.velMod = g.createVector(parseFloat(this.windowMod),parseFloat(this.windowMod))
-  // console.log(this.velMod)
+  this.velMod = g.createVector(parseFloat(this.windowMod),parseFloat(this.windowMod))  
 }
 
 Entity.prototype.update = function() {

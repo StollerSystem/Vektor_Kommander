@@ -11,11 +11,13 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
   this.charge = charge ? charge : 0;
   this.heading = heading;
   this.w = windowWidthMod;
+
   if (this.enemy) {
     this.vel.mult(10);
   } else {
     this.vel.mult(20);
   }
+  
   this.vel.add(svel);
 
   this.render = function () {
@@ -40,8 +42,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
       // PLAYER LASER
       g.push();
       var trans = g.random(1, .8)
-      g.stroke(`rgba(${color[0]},${color[1]},${color[2]},${trans})`);
-      // g.strokeWeight(4 + charge * (this.w * 1.4));
+      g.stroke(`rgba(${color[0]},${color[1]},${color[2]},${trans})`);      
       let weight = charge > 0 ? 4 + charge : 4;
       g.strokeWeight(weight);
       g.translate(this.pos.x, this.pos.y)
@@ -65,28 +66,20 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
     sound.play();
   }
 
-  this.hits = function (target) {
-    // console.log(target)
+  this.hits = function (target) {    
     var last_pos = p5.Vector.sub(this.pos, this.vel);
-
     let dist2 = (this.pos.x - target.pos.x) * (this.pos.x - target.pos.x)
-      + (this.pos.y - target.pos.y) * (this.pos.y - target.pos.y) - (charge * charge * 2);
+      + (this.pos.y - target.pos.y) * (this.pos.y - target.pos.y) - (charge * charge * 2); 
 
-    // let lastDist2 = (last_pos.x - target.pos.x) * (last_pos.x - target.pos.x)
-    //   + (last_pos.y - target.pos.y) * (last_pos.y - target.pos.y) - (charge * charge * 2);
-    // console.log(dist2, target.rmin2)
-    if (dist2 <= target.rmin2) {
-      // console.log(target.pos)
+    if (dist2 <= target.rmin2) {      
       return true;
     }
-
-
 
     if (dist2 >= target.rmax2) {
       return false;
     }
-    var target_vertices = target.vertices();
-    // console.log(target_vertices)
+
+    var target_vertices = target.vertices();    
     for (var i = 0; i < target_vertices.length - 1; i++) {
       if (lineIntersect(last_pos,
         this.pos,
@@ -95,6 +88,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
         return true;
       }
     }
+
     if (lineIntersect(last_pos,
       this.pos,
       target_vertices[0],

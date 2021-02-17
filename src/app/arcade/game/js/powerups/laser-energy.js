@@ -30,6 +30,7 @@ export default function LaserEnergy(g, pos, windowWidth, laserPowerUp) {
   this.render = function () {
     g.push()
     g.translate(this.pos.x, this.pos.y);
+    g.translate(g.random(-1.5, 1.5), g.random(-1.5, 1.5))
     g.rotate(this.heading);
     g.fill(`rgba(${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},.5)`)
     g.stroke(`rgba(${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},.5)`)
@@ -39,6 +40,7 @@ export default function LaserEnergy(g, pos, windowWidth, laserPowerUp) {
 
     g.push()
     g.translate(this.pos.x, this.pos.y);
+    g.translate(g.random(-2, 2), g.random(-2, 2))
     g.rotate(this.heading);
     g.fill(`rgba(${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},1)`)
     g.stroke(`rgba(${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},${Math.round(g.random(0, 254))},1)`)

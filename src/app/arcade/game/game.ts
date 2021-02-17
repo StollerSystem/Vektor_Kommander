@@ -15,16 +15,22 @@ import laserCollision from './js/utility/laser-collision.js';
 import randomColors from './js/utility/random-colors.js';
 import MobileButton from './js/utility/buttons.js';
 import LaserEnergy from './js/powerups/laser-energy.js';
-import PointNumber from './js/effects/point-numbers.js'
+import PointNumber from './js/effects/point-numbers.js';
+import { render } from './js/utility/render.js'
 
 
 export const callGame = (eventInput) => {
 
     var config: any = eventInput.default
+    var logoPath = new Path2D(config.logo.path);
     var ctx: any;
     var windowWidth: any;
-    var ship: any;
-    var hud: any;
+    var rgbColor1: any;
+    var rgbColor2: any;
+    var rgbColor3: any;
+    var rgbColor4: any;
+    var rgbColor5: any;
+
     var buttons: any = [];
     var asteroids: any = [];
     var lasers: any = [];
@@ -33,60 +39,59 @@ export const callGame = (eventInput) => {
     var debris: any = [];
     var pointNumbers: any = [];
     var powerUps: any = [];
-    var possibleEnemies: any = 1;
-    var possibleBarriers: any = 10;
-    var possibleBosses: any = 1;
-    var dust: any = [];
-    var canPlay: any = true;
-    var shieldTime: any = 180;
-    var rgbColor1: any;
-    var rgbColor2: any;
-    var rgbColor3: any;
-    var rgbColor4: any;
-    var rgbColor5: any;
-    var pts: any;
-    var title: any = false;
-    var stageClear: any = false;
-    var score: any = 0;
-    var lives: any = 3;
-    var level: any = 0;
     var stars: any = [];
     var barriers: any = [];
+    var dust: any = [];
+
+    var ship: any;
+    var hud: any;
     var splash: any;
-    var laserCharge = 1270;
-    var laserOverHeat = false;
+
+    var canPlay: any = true;
+    var title: any = false;
+    var stageClear: any = false;
+    var laserOverHeat: boolean = false;
     var splashScreen: boolean = true;
+
+    var easeInStars: number = .75;
+    var powerUpCounter: number = 300;
+    var spawnBoost: number = 0;    
+    var possibleEnemies: number = 1;
+    var possibleBarriers: number = 10;
+    var possibleBosses: number = 1;
+    var shieldTime: number = 180;
+    var score: number = 0;
+    var lives: number = 3;
+    var level: number = 0;
+    var laserCharge: number = 1270;
     var beginGameSequence: number = 0;
-    var logoPath = new Path2D(config.logo.path);
-    var easeInStars = .75;
-    var powerUpCounter = 300;
-    var spawnBoost = 0;    
 
     // Global Functions
 
-    const addPointNumbers = function (pos: any, vel: any, color: any, g: any, text: string, size: any) {
-      pointNumbers.push(new PointNumber(pos, vel, color, g, text, size))
-    }
-
-    const addDust = function (pos: any, vel: any, n: any, trans: any, color: any, weight: any, g: any) {
-      for (var i = 0; i < n; i++) {
-        dust.push(new Dust(pos, vel, trans, color, weight, g, rgbColor1, rgbColor2, rgbColor3));
-      }
-    }
-
-    const addDebris = function (pos: any, vel: any, n: any, r: any, g: any, rgbColor4: any) {
-      debris.push(new Debris(pos, vel, n, r, g, rgbColor4));
-    }
-
-    const reduceLaserCharge = function () {
-      if (laserCharge > 0) {
-        laserCharge -= 100;
-        return true
-      }
-    }
-
+    
     const game = (g: any) => {
-
+      
+      const addPointNumbers = function (pos: any, vel: any, color: any, g: any, text: string, size: any) {
+        pointNumbers.push(new PointNumber(pos, vel, color, g, text, size))
+      }
+  
+      const addDust = function (pos: any, vel: any, n: any, trans: any, color: any, weight: any, g: any) {
+        for (var i = 0; i < n; i++) {
+          dust.push(new Dust(pos, vel, trans, color, weight, g, rgbColor1, rgbColor2, rgbColor3));
+        }
+      }
+  
+      const addDebris = function (pos: any, vel: any, n: any, r: any, g: any, rgbColor4: any) {
+        debris.push(new Debris(pos, vel, n, r, g, rgbColor4));
+      }
+  
+      const reduceLaserCharge = function () {
+        if (laserCharge > 0) {
+          laserCharge -= 100;
+          return true
+        }
+      }
+      
       const roundLoss = function () {
         setTimeout(function () {
           lives--;
@@ -104,6 +109,7 @@ export const callGame = (eventInput) => {
           }
         });
       }
+
 
       const gameReset = function () {
         lives = 3;
@@ -226,15 +232,17 @@ export const callGame = (eventInput) => {
         canvas = g.createCanvas(windowWidth * .98, g.windowHeight * .95);
         ctx = canvas.elt.getContext("2d");
         console.log("w:" + g.width + " h:" + g.height)
+
         // SET UP MOBILE BUTTONS
         buttons[0] = new MobileButton(g, 0, g.UP_ARROW, 38, 120, g.height - 120)
         buttons[1] = new MobileButton(g, g.PI, g.DOWN_ARROW, 40, 120, g.height - 50)
         buttons[2] = new MobileButton(g, 3 * g.PI / 2, g.LEFT_ARROW, 37, 50, g.height - 50)
         buttons[3] = new MobileButton(g, g.PI / 2, g.RIGHT_ARROW, 39, 190, g.height - 50)
         buttons[4] = new MobileButton(g, 0, " ".charCodeAt(0), 32, g.width - 100 * (windowWidth / 600), g.height - 50)
+        
         // LOAD INITIAL ASSETS
         ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons, lives, gameReset);
-        hud = new Hud(g, rgbColor1, rgbColor3, pts, windowWidth);
+        hud = new Hud(g, rgbColor1, rgbColor3, windowWidth);
         stars = loadStars(g);
         splash = new Splash();
 
@@ -366,7 +374,7 @@ export const callGame = (eventInput) => {
             laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth, spawnPowerUp, addPointNumbers, bosses)
           }
 
-          // CHECK FOR COLLISION BEWTWEEN SHIP + ENEMY 
+          // UPDATE ENEMY AND CHECK FOR COLLISION BEWTWEEN SHIP
           for (var i = enemies.length - 1; i >= 0; i--) {
             if (ship.hits(enemies[i]) && canPlay) {
               canPlay = false;
@@ -385,6 +393,7 @@ export const callGame = (eventInput) => {
             powerUps[i].update();
             if (powerUps[i].offscreen()) {
               powerUps.splice(i, 1)
+              continue;
             } else {
               if (ship.hits(powerUps[i]) && canPlay) {
                 let color = [Math.round(g.random(50, 250)), Math.round(g.random(50, 250)), Math.round(g.random(50, 250))]
@@ -421,10 +430,12 @@ export const callGame = (eventInput) => {
               }
               if (barriers[i][j].offscreen()) {
                 barriers[i].splice(j, 1);
+                continue
               }
             }
             if (barriers[i].length === 0) {
               barriers.splice(i, 1)
+              continue;
             }
           }          
 
@@ -454,6 +465,7 @@ export const callGame = (eventInput) => {
             dust[i].update();
             if (dust[i].transparency <= 0) {
               dust.splice(i, 1);
+              continue
             }
           }
 
@@ -462,6 +474,7 @@ export const callGame = (eventInput) => {
             debris[i].update();
             if (debris[i].destroyFrames <= 0) {
               debris.splice(i, 1);
+              continue;
             }
           }
 
@@ -469,6 +482,7 @@ export const callGame = (eventInput) => {
             pointNumbers[i].update();
             if (pointNumbers[i].transparency <= 0) {
               pointNumbers.splice(i, 1)
+              continue
             }
           }
 
@@ -488,40 +502,20 @@ export const callGame = (eventInput) => {
               barriers[i][j].render()
             }
           }
-          for (let i = 0; i < stars.length; i++) {
-            stars[i].render()
-          }
-          for (let i = powerUps.length - 1; i >= 0; i--) {
-            powerUps[i].render();
-          }
-          for (let i = 0; i < asteroids.length; i++) {
-            asteroids[i].render();
-          }
-          for (let i = lasers.length - 1; i >= 0; i--) {
-            lasers[i].render();
-          }
-          for (let i = enemies.length - 1; i >= 0; i--) {
-            enemies[i].render();
-          }
-          for (let i = bosses.length - 1; i >= 0; i--) {
-            bosses[i].render();
-          }
-          for (let i = dust.length - 1; i >= 0; i--) {
-            dust[i].render();
-          }
-          for (let i = debris.length - 1; i >= 0; i--) {
-            debris[i].render();
-          }
 
-          for (let i = pointNumbers.length - 1; i >= 0; i--) {
-            pointNumbers[i].render();
-          }
+          render(stars)
+          render(powerUps)
+          render(asteroids)
+          render(lasers)
+          render(enemies)
+          render(bosses)
+          render(dust)
+          render(debris)
+          render(pointNumbers)
 
           // RENDER MOBILE BUTTONS IF THE SCREEN IS AS SMALL AS AN IPAD 
           if (windowWidth <= 1024) {
-            for (var i = buttons.length - 1; i >= 0; i--) {
-              buttons[i].render();
-            }
+            render(buttons)
           }
 
           ship.render();
@@ -529,5 +523,5 @@ export const callGame = (eventInput) => {
         }
       }
     };
-    let canvas = new p5(game);
+    var canvas = new p5(game);
   }

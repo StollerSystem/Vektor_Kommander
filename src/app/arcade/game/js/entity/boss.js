@@ -3,7 +3,8 @@ import Entity from './entity.js';
 
 export default function Boss(g, color, windowWidth, addDust, level) {
 
-  var r = 200 + (50 * level);
+  var windowMod = windowWidth / 1800;
+  var r = (200 + (50 * level)) * windowMod;
   var pos = g.createVector(g.width + r * 2, g.random(r, g.height - r));
 
   Entity.call(this, pos.x, pos.y, r, g);
@@ -19,9 +20,8 @@ export default function Boss(g, color, windowWidth, addDust, level) {
   this.brokenParts = [];
 
   // randomize some features
-  var e = g.random(.70, 1.25)
-  var a = g.random(.8, 1.20)
-  // var i = -(a - 1) + 1;  
+  var e = g.random(.70, 1.25);
+  var a = g.random(.8, 1.20);
   var i = a * 1.25;
   var scope = this;
 

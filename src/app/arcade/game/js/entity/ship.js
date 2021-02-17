@@ -9,7 +9,7 @@ import Thruster from '../effects/thruster.js';
 
 export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons, lives, gameReset) {
   this.w = windowWidth / 1800;
-  let windowMod = windowWidth < 1024 ? .99 : null;
+  var windowMod = windowWidth < 1024 ? .99 : null;
   Entity.call(this, 200, g.height / 2, 20 * this.w, g, windowMod);
   this.isDestroyed = false;
   this.destroyFrames = 1000;
@@ -21,11 +21,13 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
   this.lives = lives;
   this.laserCharge;
   var scope = this;
+  var backSet = 10 * this.w; // centers ship on 0, 0 
 
-
+  // VAPOR TRAIL
   var trailColor = color2;
   var trailLength = Math.round(20 * this.w)
   this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r, trailLength, this.w)
+
 
   g.keyReleased = () => {
     input.handleEvent(g.key, g.keyCode, false);
@@ -35,14 +37,11 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     input.handleEvent(g.key, g.keyCode, true);
   }
 
-  g.mousePressed = () => {
-    // console.log('press')
+  g.mousePressed = () => {    
     if (this.lives < 0) {
       gameReset();
     }
-
     this.beginGame = true;
-
     for (var i = 0; i < this.buttons.length; i++) {
       let key = this.buttons[i].clicked()
       if (key) {
@@ -59,7 +58,6 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     input.handleEvent(g.RIGHT_ARROW, 39, false);
     input.handleEvent(" ".charCodeAt(0), 32, false);
   }
-
 
   var chargeEffect = false;
   var chargeEffectCount = 0;
@@ -88,7 +86,6 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     }, 100)
   }
 
-
   this.chargeShot = function () {
     if (!keyReleased && reduceLaserCharge()) {
       charge += 1
@@ -96,8 +93,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
         scope.chargeShot();
       }, 50)
     } else {
-      chargeEffect = false;
-      // console.log("CHARGED SHOT! " + charge)
+      chargeEffect = false;      
       if (!this.isDestroyed) {
         let scatter = g.random(.015, -.015)
         let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
@@ -109,81 +105,36 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     }
   }
 
-
   input.registerAsListener(" ".charCodeAt(0), function (char, code, press) {
-
     if (press) {
       scope.shoot();
       return;
     }
-
     if (!press) {
       keyReleased = true;
       chargeEffect = false;
       return;
-    }
-    // let time = end - start;
-    // console.log("pressed time: "+time)
-    // if (time < 120) {
-    //   let offSet = 29 * scope.w;
-    //   if (reduceLaserCharge()) {
-    //     let scatter = g.random(.015, -.015)
-    //     let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
-    //     var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, color1, false, scope.heading - scatter, scope.w);
-    //     var dustVel = laser.vel.copy();
-    //     addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
-    //     lasers.push(laser);
-    //   }
-    // }
-
-    // var effect = laserSoundEffects[floor(random() * laserSoundEffects.length)];
-    // laser.playSoundEffect(effect);
+    }    
   });
 
   input.registerAsListener(g.RIGHT_ARROW, function (char, code, press) {
-    scope.setRotation(press ? 0.06 : 0);
-    // if (press) {
-    //   rocketSoundEffects[1].play();
-    // } else {
-    //   rocketSoundEffects[1].stop();
-    // }
+    scope.setRotation(press ? 0.06 : 0);    
   });
 
   input.registerAsListener(g.LEFT_ARROW, function (char, code, press) {
-    scope.setRotation(press ? -0.06 : 0);
-    // if (press) {
-    //   rocketSoundEffects[1].play();
-    // } else {
-    //   rocketSoundEffects[1].stop();
-    // }
-  });
-
-
-  // if (this.buttons[0].clicked()) {
-  //   console.log("SHIP BUTTON CHECK")
-  // }
+    scope.setRotation(press ? -0.06 : 0);    
+  }); 
 
   input.registerAsListener(g.UP_ARROW, function (char, code, press) {
-    scope.setAccel(press ? 0.1 : 0);
-    // if (press) {
-    //   rocketSoundEffects[0].play();
-    // } else {
-    //   rocketSoundEffects[0].stop();
-    // }
+    scope.setAccel(press ? 0.1 : 0);    
   });
 
   input.registerAsListener(g.DOWN_ARROW, function (char, code, press) {
-    scope.setAccel(press ? -0.1 : 0);
-    // if (press) {
-    //   rocketSoundEffects[0].play();
-    // } else {
-    //   rocketSoundEffects[0].stop();
-    // }
+    scope.setAccel(press ? -0.1 : 0);    
   });
 
   this.update = function (laserCharge) {
-    this.laserCharge = laserCharge;
-    // console.log(this.laserCharge)  
+    this.laserCharge = laserCharge;    
     this.edges();
     Entity.prototype.update.call(this);
     if (this.isDestroyed) {
@@ -222,8 +173,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     if (dist2 >= (asteroid.rmax + this.rmax2) * (asteroid.rmax + this.rmax2)) {
       return false;
     }
-    if (dist2 <= asteroid.rmin2) {
-      // console.log("SHIP COLLISION INSIDE")
+    if (dist2 <= asteroid.rmin2) {      
       return true;
     }
     // HITBOX
@@ -238,24 +188,18 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     for (var i = 0; i < shipVertices.length; i++) {
       shipVertices[i] = p5.Vector.add(shipVertices[i], this.pos);
     }
-    var asteroid_vertices = asteroid.vertices();
-    
+    var asteroid_vertices = asteroid.vertices();    
     for (var i = 0; i < asteroid_vertices.length; i++) {
       for (var j = 0; j < shipVertices.length; j++) {
         var next_i = (i + 1) % asteroid_vertices.length;
         if (lineIntersect(shipVertices[j], shipVertices[(j + 1) % shipVertices.length],
-          asteroid_vertices[i], asteroid_vertices[next_i],g)) {
-            // console.log("SHIP COLLISION LINE INTERSECT")
+          asteroid_vertices[i], asteroid_vertices[next_i],g)) {           
           return true;
         }
       }
     }
     return false;
-  }
-
-  this.playSoundEffect = function (soundArray) {
-    // soundArray[g.floor(g.random(0,soundArray.length))].play();
-  }
+  }  
 
   //HITBOX 
   this.vertices = function () {
@@ -309,12 +253,13 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
         }
         g.pop();
       }
-    } else {
+    } else {      
       this.vaporTrail.render();
       g.push();
       g.translate(this.pos.x, this.pos.y);
       g.rotate(this.heading);
       g.fill(0);
+
       // shield up effect 
       var shieldTrans = g.random(.5, .05)
       var shieldCol = `rgba(${color2[0]},${color2[1]},${color2[2]},${shieldTrans})`
@@ -339,17 +284,15 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
       if (this.rotation < 0) {
         var thrustEnd = g.random(30 * this.w, 10 * this.w)
         Thruster(g, color1, 25 * this.w, this.r / 2 * this.w, 30 * this.w, this.r / 2 * this.w, 27.5 * this.w, thrustEnd)
-      }
-
-      let backSet = 10 * this.w;
+      }      
+      
       // laser charge effect
       if (chargeEffect) {
         chargeEffectCount += .9;
         g.push()
         g.stroke(`rgba(${color1[0]},${color1[1]},${color1[2]},${g.random(.6,.9)})`)
         g.strokeWeight(g.random(.5,chargeEffectCount));
-        g.point(this.r * 2.5 - backSet, 0)
-        // g.ellipse(this.r * 2.5 - backSet, 0,20,20)
+        g.point(this.r * 2.5 - backSet, 0)        
         g.pop()
       }
 
@@ -371,8 +314,6 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
         -this.r - backSet, this.r / 4,
         this.r / 2 - backSet, this.r / 4);
       g.pop();
-
-
     }
   }
 }

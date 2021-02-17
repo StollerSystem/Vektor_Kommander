@@ -1,4 +1,4 @@
-export default function Hud(g, rgbColor1, rgbColor3, pts, windowWidth) {
+export default function Hud(g, rgbColor1, rgbColor3, windowWidth) {
   var windowWidth = windowWidth;
   var size = 30 * (windowWidth / 1800);
   var padding = 10 * (windowWidth / 1800);
