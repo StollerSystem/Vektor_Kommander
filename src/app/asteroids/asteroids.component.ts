@@ -203,7 +203,7 @@ export class AsteroidsComponent implements OnInit {
           // console.log("defeat boss! " + level + 1)
           level += 1;
           possibleBarriers += (8 + (3 * level));
-          possibleBosses += 2;          
+          possibleBosses += 2;
           bosses.splice(i, 1);
           // console.log(bosses.length)
         }, 8000)
@@ -243,6 +243,9 @@ export class AsteroidsComponent implements OnInit {
         pointNumbers = [];
         powerUps = [];
         barriers = [];
+        possibleBarriers = 10;
+        possibleBosses= 1;
+        laserCharge = 1270;
         canPlay = true;
         windowWidth = g.windowWidth <= 1200 ? g.windowWidth : 1200;
         canvas = g.createCanvas(windowWidth * .98, g.windowHeight * .95);
@@ -421,12 +424,12 @@ export class AsteroidsComponent implements OnInit {
                 addDust(ship.pos, dustVel, 7, .015, color, 5, g);
                 if (g.frameCount - powerUpCounter < 100) {
                   powerUps[i].powerUp(450)
-                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '650',15)
+                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '650', 15)
                 } else if (g.frameCount - powerUpCounter < 200) {
-                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '450',15)
+                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '450', 15)
                   powerUps[i].powerUp(650)
                 } else {
-                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '250',15)
+                  addPointNumbers(powerUps[i].pos, dustVel.mult(.25), 255, g, '250', 15)
                   powerUps[i].powerUp(250)
                 }
                 powerUps.splice(i, 1)
