@@ -7,7 +7,7 @@ import VaporTrail from '../effects/vapor-trail.js';
 import Thruster from '../effects/thruster.js';
 
 
-export default function Ship(g, shieldTime, color1, color2, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons, lives, gameReset) {
+export default function Ship(g, shieldTime, color1, color2, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons, lives, gameReset) {
   this.w = windowWidth / 1800;
   var windowMod = windowWidth < 1024 ? .99 : null;
   Entity.call(this, 200, g.height / 2, 20 * this.w, g, windowMod);
@@ -145,7 +145,7 @@ export default function Ship(g, shieldTime, color1, color2, title, score, lasers
     } else {
       this.vel.mult(1);
     }
-    if (this.shields > 0 && !title) {
+    if (this.shields > 0) {
       this.shields -= 1;
     }
     this.vaporTrail.update(this.pos, this.heading);

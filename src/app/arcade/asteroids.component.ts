@@ -14,6 +14,6 @@ export class AsteroidsComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    callGame(config);    
+    callGame(config);         
   };
 };

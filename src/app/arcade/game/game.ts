@@ -47,9 +47,7 @@ export const callGame = (eventInput) => {
     var hud: any;
     var splash: any;
 
-    var canPlay: any = true;
-    var title: any = false;
-    var stageClear: any = false;
+    var canPlay: any = true;    
     var laserOverHeat: boolean = false;
     var splashScreen: boolean = true;
 
@@ -66,10 +64,14 @@ export const callGame = (eventInput) => {
     var laserCharge: number = 1270;
     var beginGameSequence: number = 0;
 
-    // Global Functions
-
     
     const game = (g: any) => {
+
+      // Global Functions
+
+      const addToScore = function (add) {
+        score += add;
+      }
       
       const addPointNumbers = function (pos: any, vel: any, color: any, g: any, text: string, size: any) {
         pointNumbers.push(new PointNumber(pos, vel, color, g, text, size))
@@ -88,15 +90,15 @@ export const callGame = (eventInput) => {
       const reduceLaserCharge = function () {
         if (laserCharge > 0) {
           laserCharge -= 100;
-          return true
+          return true;
         }
       }
-      
+
       const roundLoss = function () {
         setTimeout(function () {
           lives--;
           if (lives >= 0) {
-            ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons, lives, gameReset);
+            ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons, lives, gameReset);
             canPlay = true;
             laserCharge = 1270;
           }
@@ -142,18 +144,14 @@ export const callGame = (eventInput) => {
         enemies.push(new Enemy(radius, g, addDust, level, rgbColor5, rgbColor2, lasers, windowWidth))
       }
 
-      const laserPowerUp = function (points) {
-        score += points;
-        laserOverHeat = false;
-        laserCharge = 2000;
-      }
-
       const spawnPowerUp = function (pos: any) {
         powerUps.push(new LaserEnergy(g, pos, windowWidth, laserPowerUp))
       }
 
-      const addToScore = function (add) {
-        score += add;
+      const laserPowerUp = function (points) {
+        score += points;
+        laserOverHeat = false;
+        laserCharge = 2000;
       }
 
       const checkDust = function () {
@@ -198,23 +196,25 @@ export const callGame = (eventInput) => {
           else {
             easeInStars += (g.frameCount - beginGameSequence) / 1000000
             if (easeInStars >= .6) {
-              easeInStars = .6
+              easeInStars = .6;
             }
           }
           stars[i].move(easeInStars)
           if (stars[i].x <= 0) {
-            let windowX = g.width
-            let randomY = g.random(0, g.height)
-            let randomSize = g.random(.1, 25)
+            let windowX = g.width;
+            let randomY = g.random(0, g.height);
+            let randomSize = g.random(.1, 25);
             const newStar = new Star(windowX, randomY, randomSize, g);
-            stars.push(newStar)
-            stars.splice(i, 1)
+            stars.push(newStar);
+            stars.splice(i, 1);
           }
         }
       }
 
       const resetCanvas = function () {
         score = 0;
+        canPlay = true;
+
         buttons = [];
         asteroids = [];
         lasers = [];
@@ -224,13 +224,16 @@ export const callGame = (eventInput) => {
         pointNumbers = [];
         powerUps = [];
         barriers = [];
+
         possibleBarriers = 10;
         possibleBosses = 1;
         laserCharge = 1270;
-        canPlay = true;
+
+
         windowWidth = g.windowWidth <= 1200 ? g.windowWidth : 1200;
         canvas = g.createCanvas(windowWidth * .98, g.windowHeight * .95);
         ctx = canvas.elt.getContext("2d");
+
         console.log("w:" + g.width + " h:" + g.height)
 
         // SET UP MOBILE BUTTONS
@@ -241,7 +244,7 @@ export const callGame = (eventInput) => {
         buttons[4] = new MobileButton(g, 0, " ".charCodeAt(0), 32, g.width - 100 * (windowWidth / 600), g.height - 50)
         
         // LOAD INITIAL ASSETS
-        ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, title, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons, lives, gameReset);
+        ship = new Ship(g, shieldTime, rgbColor2, rgbColor3, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons, lives, gameReset);
         hud = new Hud(g, rgbColor1, rgbColor3, windowWidth);
         stars = loadStars(g);
         splash = new Splash();
@@ -258,6 +261,8 @@ export const callGame = (eventInput) => {
         });
       }
 
+      
+      // LOAD COLORS
       g.preload = () => {
         let random_Colors = randomColors(g);
         rgbColor1 = config.gameColors.rocks ? config.gameColors.rocks : random_Colors[0]; // ROCKS/SCORE
@@ -267,6 +272,7 @@ export const callGame = (eventInput) => {
         rgbColor5 = config.gameColors.enemy ? config.gameColors.enemy : random_Colors[4]; // ENEMY        
       }
 
+      // LOAD VARIABLES
       g.setup = () => {
         g.frameRate(60)
         resetCanvas()
@@ -277,6 +283,7 @@ export const callGame = (eventInput) => {
           input.handleEvent(g.key, g.keyCode, true);
         }
       }
+      
 
       g.draw = () => {
         if (splashScreen) {
@@ -312,7 +319,7 @@ export const callGame = (eventInput) => {
           }
 
           // RANDOM ENEMY SPAWN
-          if (!title && !stageClear && possibleEnemies > 0 && enemies.length < 1) {
+          if (possibleEnemies > 0 && enemies.length < 1) {
             let ranNum = g.random(1000);
             if (ranNum <= 1) {
               spawnEnemy();
@@ -320,7 +327,7 @@ export const callGame = (eventInput) => {
           }
 
           // RANDOM ASTEROID SPAWN
-          if (!title && !stageClear && possibleEnemies > 0 && asteroids.length < 3) {
+          if (asteroids.length < 3) {
             let ranNum = g.random(650);
             if (ranNum <= 1) {
               spawnAsteroids();
@@ -329,7 +336,7 @@ export const callGame = (eventInput) => {
           }
 
           // RANDOM BARRIER SPAWN
-          if (!title && !stageClear && possibleEnemies > 0 && barriers.length < 5) {
+          if (barriers.length < 5) {
             let ranNum = g.random(220);
             if (ranNum <= 1 && barriers.length < 6 && possibleBarriers > 0) {
               possibleBarriers -= 1;
@@ -497,12 +504,10 @@ export const callGame = (eventInput) => {
           g.stroke(0);
           g.text("FPS: " + fps.toFixed(2), 10, g.height - 10);
 
+          
           for (let i = 0; i < barriers.length; i++) {
-            for (let j = 0; j < barriers[i].length; j++) {
-              barriers[i][j].render()
-            }
+            render(barriers[i])
           }
-
           render(stars)
           render(powerUps)
           render(asteroids)
@@ -512,14 +517,14 @@ export const callGame = (eventInput) => {
           render(dust)
           render(debris)
           render(pointNumbers)
+          ship.render();
+          hud.render(lives, score, laserCharge, laserOverHeat);
 
           // RENDER MOBILE BUTTONS IF THE SCREEN IS AS SMALL AS AN IPAD 
           if (windowWidth <= 1024) {
             render(buttons)
           }
 
-          ship.render();
-          hud.render(stageClear, level, lives, score, laserCharge, laserOverHeat);
         }
       }
     };

@@ -18,26 +18,19 @@ export default function Hud(g, rgbColor1, rgbColor3, windowWidth) {
 
   ];
 
-  this.render = function (stageClear, level, lives, score, laserCharge, laserOverHeat) {
+  this.render = function (lives, score, laserCharge, laserOverHeat) {
     var scoreString = "" + score;
     var x = 75 * (windowWidth / 1800) - (scoreString.length * (size + padding) / 3);
-    var digitPos = g.createVector(x, padding);
-    // for (var i = 0; i < scoreString.length; i++) {
-    //   var dmap = digitMaps[scoreString.charAt(i)];
-    //   drawDigit(dmap, i, digitPos);
-    //   digitPos.x += size + padding;
-    // }
+    var digitPos = g.createVector(x, padding);    
 
-    drawLives(lives);
-    // drawLaserCharge(laserCharge, laserOverHeat);
+    drawLives(lives);    
 
     if (lives < 0) {
       g.push();
       g.textFont('Montserrat')
       g.textAlign(g.CENTER)
       g.textSize(150 * (windowWidth / 1800));
-      g.fill(255)
-      // g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
+      g.fill(255)      
       g.stroke(255)
       g.strokeWeight(g.random(1, 3))
       g.text("GAME OVER", (g.width / 2), g.height / 2);
@@ -47,8 +40,7 @@ export default function Hud(g, rgbColor1, rgbColor3, windowWidth) {
       g.textFont('Montserrat')
       g.textSize(50 * (windowWidth / 1800));
       g.fill(255)
-      g.textAlign(g.CENTER)
-      // g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
+      g.textAlign(g.CENTER)      
       g.stroke(255)
       g.strokeWeight(g.random(0, 2))
       g.text("FINAL SCORE", (windowWidth/2), g.height / 1.75);
@@ -58,8 +50,7 @@ export default function Hud(g, rgbColor1, rgbColor3, windowWidth) {
       g.textFont('Montserrat')
       g.textSize(30 * (windowWidth / 1800));
       g.fill(255)
-      g.textAlign(g.CENTER)
-      // g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
+      g.textAlign(g.CENTER)      
       g.stroke(255)
       g.strokeWeight(g.random(0, 2))
       g.text("PRESS <ENTER>", (windowWidth/2), g.height / 1.1);
@@ -80,21 +71,7 @@ export default function Hud(g, rgbColor1, rgbColor3, windowWidth) {
         drawDigit(dmap, i, digitPos);
         digitPos.x += size + padding;
       }
-    }
-
-    // if (stageClear) {      
-    //   // if (!stageSoundEffect.isPlaying() && !soundPlayed) {        
-    //   //   stageSoundEffect.play();
-    //   // }
-    //   g.push();
-    //   g.textSize(100);
-    //   // g.textFont(mainFont)
-    //   g.stroke(`rgba(${rgbColor1[0]},${rgbColor1[1]},${rgbColor1[2]},1)`);
-    //   g.strokeWeight(g.random(2,3))
-    //   g.fill(0);
-    //   g.text(`STAGE ${level+1} CLEAR!`, (g.width / 2) - 250, g.height / 3);
-    //   g.pop();
-    // }
+    }    
   }
 
   function drawLives(lives) {

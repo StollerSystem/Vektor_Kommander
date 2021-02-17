@@ -6,10 +6,10 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
   var exists = true;
   var w = windowWidth / 1800;
   for (var j = asteroids.length - 1; j >= 0; j--) {
+
     // VS ASTEROIDS
     if (lasers[i].hits(asteroids[j])) {
-      exists = false;
-      // asteroids[j].playSoundEffect(explosionSoundEffects);
+      exists = false;      
       let laserVel = lasers[i].vel.copy();
       var dustVel = p5.Vector.add(laserVel.mult(0.2), asteroids[j].vel);
       var dustNum = (asteroids[j].size * 2 + 1) * 3;
@@ -18,8 +18,7 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
       newAsteroids.forEach(function (asteroid) {
         asteroids.push(asteroid)
       })
-      if (!lasers[i].enemy) {
-        // score += points[asteroids[j].size];
+      if (!lasers[i].enemy) {        
         addToScore(points[asteroids[j].size])
         addPointNumbers(asteroids[j].pos, dustVel.mult(.25), 255, g, points[asteroids[j].size])
       }
@@ -28,21 +27,11 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
         lasers[i].charge -= 3
       } else {
         lasers.splice(i, 1);
-      }
-      // CHECK FOR NEXT LEVEL 
-      // if (asteroids.length == 0) {
-      //   stageClear = true;
-      //   setTimeout(function () {
-      //     level++;
-      //     possibleEnemies += level;
-      //     stageClear = false;
-      //     spawnAsteroids();
-      //     ship.shields = shieldTime;
-      //   }, 4000)
-      // }
+      }      
       break;
     }
   }
+
   // VS ENEMIES
   if (exists) {
     for (var k = enemies.length - 1; k >= 0; k--) {
@@ -52,8 +41,7 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
         let dustVel = p5.Vector.add(laserVel.mult(0.5), enemies[k].vel);
         addDust(enemies[k].pos, dustVel, 10, .01, rgbColor5, 1, g);
         addDebris(enemies[k].pos, enemies[k].vel, 10, 30 * w, g, rgbColor5)
-        if (!lasers[i].enemy) {
-          // score += points[asteroids[j].size];
+        if (!lasers[i].enemy) {          
           addToScore(100)
           addPointNumbers(enemies[k].pos, dustVel.mult(.25), 255, g, 100)
         }
@@ -67,6 +55,7 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
       }
     }
   }
+
   // VS BARRIERS
   if (exists) {
     for (var k = barriers.length - 1; k >= 0; k--) {
@@ -76,22 +65,18 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
           // IF POWER SQUARE SPAWN POWERUP
           if (barriers[k][j].powerSquare) {
             spawnPowerUp(barriers[k][j].pos)
-          }
-          //THIS LASER HIT DUST IS LEGIT
+          }          
           let laserVel = lasers[i].vel.copy();
           let dustVel = p5.Vector.add(laserVel.mult(0.05), barriers[k][j].vel);
           addDust(barriers[k][j].pos, dustVel, 5, .02, rgbColor2, 3, g);
 
-          if (!lasers[i].enemy) {
-            // score += points[asteroids[j].size];
+          if (!lasers[i].enemy) {            
             addToScore(10)
             addPointNumbers(barriers[k][j].pos, dustVel, 255, g, 10)
-          }
-          // DEBRIS
+          }          
           addDebris(barriers[k][j].pos, barriers[k][j].vel.add(g.createVector(g.random(-1, -2), g.random(.1, -.1))), g.random(2, 4), 15 * w, g, rgbColor4);
           // BREAK OFF
-          if (barriers[k][j].rotation === 0) {
-            // console.log("square off")
+          if (barriers[k][j].rotation === 0) {            
             if (j - 1 >= 0) {
               barriers[k][j - 1].vel.add(g.createVector(g.random(-1, -2), g.random(1, -1)))
               barriers[k][j - 1].setRotation(g.random(-.05, .05));
@@ -108,6 +93,7 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
       }
     }
   }
+
   // VS PLAYER   
   if (exists) {
     if (lasers[i].hits(ship) && lasers[i].enemy && canPlay) {
@@ -117,18 +103,14 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
       lasers.splice(i, 1);
       addDust(ship.pos, dustVel, 15, .005, rgbColor3, 2.5, g);
       ship.destroy();
-      input.reset();
-      // ship.playSoundEffect(explosionSoundEffects);
-      // rocketSoundEffects[0].stop();
-      // rocketSoundEffects[1].stop();              
+      input.reset();                
       roundLoss(g);
     }
   }
 
   // VS BOSS ARMOR
   if (exists) {
-    for (var k = bosses.length - 1; k >= 0; k--) {
-      // console.log(bosses[k].quad1.vertices())
+    for (var k = bosses.length - 1; k >= 0; k--) {      
       if (lasers[i].hits(bosses[k].quad1) && !lasers[i].enemy || lasers[i].hits(bosses[k].quad2) && !lasers[i].enemy || lasers[i].hits(bosses[k].quad3) && !lasers[i].enemy || lasers[i].hits(bosses[k].quad4) && !lasers[i].enemy) {
         exists = false;
         let laserVel = lasers[i].vel.copy();
@@ -141,8 +123,7 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
 
   // VS BOSS CORE
   if (exists) {
-    for (var k = bosses.length - 1; k >= 0; k--) {
-      // console.log(bosses[k].core.rmin2)
+    for (var k = bosses.length - 1; k >= 0; k--) {      
       if (lasers[i].hits(bosses[k].core) && !lasers[i].enemy && !bosses[k].destroyed) {
         exists = false;
         let laserVel = lasers[i].vel.copy();
