@@ -1,6 +1,6 @@
 import * as p5 from 'p5';
 
-export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlay, input, addToScore, windowWidth, spawnPowerUp, addPointNumbers, bosses) {
+export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColor1, rgbColor2, rgbColor3, rgbColor4, rgbColor5, enemies, addDebris, barriers, ship, roundLoss, canPlayToggle, input, addToScore, windowWidth, spawnPowerUp, addPointNumbers, bosses, canPlay) {
   const points = [200, 100, 50, 25];
   var g = g;
   var exists = true;
@@ -97,7 +97,7 @@ export default function laserCollision(g, lasers, i, asteroids, addDust, rgbColo
   // VS PLAYER   
   if (exists) {
     if (lasers[i].hits(ship) && lasers[i].enemy && canPlay) {
-      canPlay();
+      canPlayToggle();
       exists = false;
       var dustVel = p5.Vector.add(ship.vel.mult(0.2), lasers[i].vel.mult(.2));
       lasers.splice(i, 1);
