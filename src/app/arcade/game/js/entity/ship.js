@@ -2,31 +2,31 @@ import * as p5 from 'p5';
 import Entity from './entity.js';
 import Laser from './laser.js';
 import { input } from '../utility/input.js';
-import { lineIntersect } from '../utility/utility.js';
+import { lineIntersect } from '../utility/line-intersect.js';
 import VaporTrail from '../effects/vapor-trail.js';
 import Thruster from '../effects/thruster.js';
-import { reduceLaserCharge, gameReset } from '../utility/utility.js';
+import { reduceLaserCharge, gameReset, addDust } from '../utility/utility.js';
 
 
-export default function Ship(state, g, shieldTime, color1, color2, score, lasers, addDust, windowWidth, buttons, lives) {
-  this.w = windowWidth / 1800;
+export default function Ship(state, g) {
+  this.w = state.windowWidth / 1800;
   console.log("SHIP SIZE MOD: "+this.w)
-  var windowMod = windowWidth < 1024 ? .99 : null;
+  var windowMod = state.windowWidth < 1024 ? .99 : null;
   Entity.call(this, 200, g.height / 2, 20 * this.w, g, windowMod);
   this.isDestroyed = false;
   this.destroyFrames = 1000;
-  this.shields = shieldTime;
+  this.shields = state.shieldTime;
   this.rmax = this.r * 1.5;
   this.rmax2 = this.rmax * this.rmax;
-  this.buttons = buttons;
+  this.buttons = state.buttons;
   this.beginGame = false;
-  this.lives = lives;
+  this.lives = state.lives;
   this.laserCharge;
   var scope = this;
   var backSet = 10 * this.w; // centers ship on 0, 0 
 
   // VAPOR TRAIL
-  var trailColor = color2;
+  var trailColor = state.rgbColor3;
   var trailLength = Math.round(20 * this.w)
   this.vaporTrail = new VaporTrail(g, this.pos, trailColor, this.shields, this.r, trailLength, this.w)
 
@@ -77,10 +77,10 @@ export default function Ship(state, g, shieldTime, color1, color2, score, lasers
           chargeEffect = false;
           let scatter = g.random(.015, -.015)
           let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
-          var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, color1, false, scope.heading - scatter, scope.w);
+          var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, state.rgbColor2, false, scope.heading - scatter, scope.w);
           var dustVel = laser.vel.copy();
-          addDust(state, shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
-          lasers.push(laser);
+          addDust(state, shootPos, dustVel.mult(.5), 4, .045, state.rgbColor2, 5 * scope.w, g);
+          state.lasers.push(laser);
         }
       } else {
         scope.chargeShot()
@@ -99,10 +99,10 @@ export default function Ship(state, g, shieldTime, color1, color2, score, lasers
       if (!this.isDestroyed) {
         let scatter = g.random(.015, -.015)
         let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
-        var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, color1, false, scope.heading - scatter, scope.w, charge * 3);
+        var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, state.rgbColor2, false, scope.heading - scatter, scope.w, charge * 3);
         var dustVel = laser.vel.copy();
-        addDust(state, shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
-        lasers.push(laser);
+        addDust(state, shootPos, dustVel.mult(.5), 4, .045, state.rgbColor2, 5 * scope.w, g);
+        state.lasers.push(laser);
       }
     }
   }
@@ -241,7 +241,7 @@ export default function Ship(state, g, shieldTime, color1, color2, score, lasers
         g.push();
         let transNum = (1 * ((this.destroyFrames--) / 1000))
         let trans = transNum > 0 ? transNum : 0;
-        g.stroke(`rgba(${color2[0]},${color2[1]},${color2[2]},${trans})`);
+        g.stroke(`rgba(${state.rgbColor3[0]},${state.rgbColor3[1]},${state.rgbColor3[2]},${trans})`);
         var bp = this.brokenParts[i];
         g.fill(0);
         g.translate(bp.pos.x, bp.pos.y);
@@ -264,35 +264,35 @@ export default function Ship(state, g, shieldTime, color1, color2, score, lasers
 
       // shield up effect 
       var shieldTrans = g.random(.5, .04)
-      var shieldCol = `rgba(${color2[1]},${color2[0]},${color2[2]},${shieldTrans})`
+      var shieldCol = `rgba(${state.rgbColor3[1]},${state.rgbColor3[0]},${state.rgbColor3[2]},${shieldTrans})`
       var weight = this.shields > 0 ? g.random(1.5, 4) : g.random(1, 1.5);
-      var shipColor = this.shields > 0 ? shieldCol : `rgba(${color2[0]},${color2[1]},${color2[2]},1)`;
+      var shipColor = this.shields > 0 ? shieldCol : `rgba(${state.rgbColor3[0]},${state.rgbColor3[1]},${state.rgbColor3[2]},1)`;
       g.stroke(shipColor);
       g.strokeWeight(weight)
 
       // thruster animations
       if (this.accelMagnitude > 0) {
         var thrustEnd = g.random(-75 * this.w, -30 * this.w)
-        Thruster(g, color1, this.r - 52 * this.w, this.r - 10 * this.w, this.r - 52 * this.w, -this.r + 10 * this.w, thrustEnd, 0)
+        Thruster(g, state.rgbColor2, this.r - 52 * this.w, this.r - 10 * this.w, this.r - 52 * this.w, -this.r + 10 * this.w, thrustEnd, 0)
       }
       if (this.accelMagnitude < 0) {
         var thrustEnd = g.random(70 * this.w, 50 * this.w)
-        Thruster(g, color1, this.r * 2 - (9 * this.w), this.r / 2 - this.w - 1, this.r * 2.5 - (9 * this.w), this.w + 1, thrustEnd, this.r / 4)
+        Thruster(g, state.rgbColor2, this.r * 2 - (9 * this.w), this.r / 2 - this.w - 1, this.r * 2.5 - (9 * this.w), this.w + 1, thrustEnd, this.r / 4)
       }
       if (this.rotation > 0) {
         var thrustEnd = g.random(-25 * this.w, -10 * this.w)
-        Thruster(g, color1, 25 * this.w, -4 * this.w, 30 * this.w, -3 * this.w, 27.5 * this.w, thrustEnd)
+        Thruster(g, state.rgbColor2, 25 * this.w, -4 * this.w, 30 * this.w, -3 * this.w, 27.5 * this.w, thrustEnd)
       }
       if (this.rotation < 0) {
         var thrustEnd = g.random(30 * this.w, 10 * this.w)
-        Thruster(g, color1, 25 * this.w, this.r / 2 * this.w, 30 * this.w, this.r / 2 * this.w, 27.5 * this.w, thrustEnd)
+        Thruster(g, state.rgbColor2, 25 * this.w, this.r / 2 * this.w, 30 * this.w, this.r / 2 * this.w, 27.5 * this.w, thrustEnd)
       }      
       
       // laser charge effect
       if (chargeEffect) {
         chargeEffectCount += .9;
         g.push()
-        g.stroke(`rgba(${color1[0]},${color1[1]},${color1[2]},${g.random(.6,.9)})`)
+        g.stroke(`rgba(${state.rgbColor2[0]},${state.rgbColor2[1]},${state.rgbColor2[2]},${g.random(.6,.9)})`)
         g.strokeWeight(g.random(.5,chargeEffectCount));
         g.point(this.r * 2.5 - backSet, 0)        
         g.pop()
@@ -301,7 +301,7 @@ export default function Ship(state, g, shieldTime, color1, color2, score, lasers
       // THE SHIP
 
       g.push()
-      var canopyColor = this.shields > 0 ? shieldCol : `rgba(${color2[2]},${color2[0]},${color2[1]},1)`;
+      var canopyColor = this.shields > 0 ? shieldCol : `rgba(${state.rgbColor3[2]},${state.rgbColor3[0]},${state.rgbColor3[1]},1)`;
       g.stroke(canopyColor)
       g.curve(
         -1, 20,

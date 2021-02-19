@@ -12,25 +12,6 @@ import Enemy from '../entity/enemy.js';
 import LaserEnergy from '../powerups/laser-energy.js';
 import Star from '../effects/star.js'
 
-
-function cross(v1, v2) {
-  return v1.x * v2.y - v2.x * v1.y;
-}
-
-export function lineIntersect(l1v1, l1v2, l2v1, l2v2, g) {
-  var base = p5.Vector.sub(l1v1, l2v1);
-  var l1_vector = p5.Vector.sub(l1v2, l1v1);
-  var l2_vector = p5.Vector.sub(l2v2, l2v1);
-  var direction_cross = cross(l2_vector, l1_vector);
-  var t = cross(base, l1_vector) / direction_cross;
-  var u = cross(base, l2_vector) / direction_cross;
-  if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 export const addToScore = (state, add) => {
   state.score += add;
 }
@@ -60,7 +41,7 @@ export const roundLoss = (state, g) => {
   setTimeout(function () {
     state.lives--;
     if (state.lives >= 0) {
-      state.ship = new Ship(state, g, state.shieldTime, state.rgbColor2, state.rgbColor3, state.score, state.lasers, addDust, state.laserCharge, state.windowWidth, state.buttons, state.lives, gameReset);
+      state.ship = new Ship(state, g);
       state.canPlay = true;
       state.laserCharge = 1270;
     }
@@ -130,7 +111,7 @@ export const checkLaserCharge = (state) => {
   }
 }
 
-export const defeatBoss = (state, i) => {
+export const defeatBoss = (state, i) => {  
   setTimeout(function () {
     state.level += 1;
     state.possibleBarriers += (8 + (3 * state.level));

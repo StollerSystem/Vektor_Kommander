@@ -1,6 +1,6 @@
 import * as p5 from 'p5';
 import Entity from './entity.js';
-import { lineIntersect } from '../utility/utility.js';
+import { lineIntersect } from '../utility/line-intersect.js';
 
 export default function Laser(spos, svel, angle, g, color, enemy, heading, windowWidthMod, charge) {
 

@@ -2,16 +2,15 @@ import Ship from '../entity/ship.js'
 import Hud from './hud.js'
 import Splash from './splash.js'
 import MobileButton from './buttons.js'
-
 import {addDust, gameReset} from './utility.js'
 import loadStars from './load-stars.js'
 import {input} from './input.js'
 
 
 export const resetCanvas = (state, g, canvas) => {
+
       state.score = 0;
       state.canPlay = true;
-
       state.buttons = [];
       state.asteroids = [];
       state.lasers = [];
@@ -21,7 +20,6 @@ export const resetCanvas = (state, g, canvas) => {
       state.pointNumbers = [];
       state.powerUps = [];
       state.barriers = [];
-
       state.possibleBarriers = 10;
       state.possibleBosses = 1;
       state.laserCharge = 1270;
@@ -41,7 +39,7 @@ export const resetCanvas = (state, g, canvas) => {
       state.buttons[4] = new MobileButton(g, 0, " ".charCodeAt(0), 32, g.width - 100 * (state.windowWidth / 600), g.height - 50)
 
       // LOAD INITIAL ASSETS
-      state.ship = new Ship(state, g, state.shieldTime, state.rgbColor2, state.rgbColor3, state.score, state.lasers, addDust, state.laserCharge, state.windowWidth, state.buttons, state.lives);
+      state.ship = new Ship(state, g);
       state.hud = new Hud(g, state.rgbColor1, state.rgbColor3, state.windowWidth);
       state.stars = loadStars(g);
       state.splash = new Splash();

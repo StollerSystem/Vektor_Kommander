@@ -39,7 +39,7 @@ export var state = {
   possibleBosses: 1,
   shieldTime: 180,
   score: 0,
-  lives: 1,
+  lives: 3,
   level: 0,
   laserCharge: 1270,
   beginGameSequence: 0

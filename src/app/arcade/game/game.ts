@@ -136,7 +136,7 @@ export const callGame = (eventInput) => {
             state.lasers.splice(i, 1);
             continue;
           }
-          laserCollision(state, g, state.lasers, i, state.asteroids, addDust, state.enemies, addDebris, state.barriers, state.ship, roundLoss, input, addToScore, state.windowWidth, spawnPowerUp, addPointNumbers, state.bosses)
+          laserCollision(state, g, i, addDust, addDebris, roundLoss, input, addToScore, spawnPowerUp, addPointNumbers)
         }
 
         // UPDATE ENEMY AND CHECK FOR COLLISION BEWTWEEN SHIP
@@ -210,8 +210,8 @@ export const callGame = (eventInput) => {
             state.possibleBosses -= 1;
             let addScore = (1000 + (500 * state.level))
             addToScore(state, addScore)
-            addPointNumbers(state, state.bosses[i].pos, state.bosses[i].vel.mult(.25), 255, g, state.score.toString(), 30)
-            defeatBoss(i)
+            addPointNumbers(state, state.bosses[i].pos, state.bosses[i].vel.mult(.25), 255, g, addScore.toString(), 30)
+            defeatBoss(state, i)
           }
           if (state.ship.hits(state.bosses[i].quad1) && state.canPlay || state.ship.hits(state.bosses[i].quad2) && state.canPlay || state.ship.hits(state.bosses[i].quad3) && state.canPlay || state.ship.hits(state.bosses[i].quad4) && state.canPlay) {
             state.canPlay = false;
