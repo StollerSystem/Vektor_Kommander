@@ -25,7 +25,7 @@ export default function Enemy(r, g, addDust, level, color1, color2, lasers, wind
   this.vel.mult(4);
   this.rotation = g.random(.03, .1);
   this.recentlyEdged = 100;
-  
+  var scope = this;
 
   this.update = function () {
     Entity.prototype.update.call(this);
@@ -47,8 +47,7 @@ export default function Enemy(r, g, addDust, level, color1, color2, lasers, wind
       this.shootLaser();
     }
   }
-
-  var scope = this;
+  
   this.shootLaser = function () {
     var laser = new Laser(scope.pos, scope.vel, scope.heading, g, color2, true, 0, this.w);
     var dustVel = laser.vel.copy();

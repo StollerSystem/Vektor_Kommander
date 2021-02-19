@@ -121,7 +121,7 @@ export const callGame = (eventInput) => {
       }
 
       const spawnBoss = function () {
-        bosses.push(new Boss(g, rgbColor5, windowWidth, addDust, level))
+        bosses.push(new Boss(g, rgbColor5, windowWidth, addDust, level, lasers, rgbColor2))
       }
 
       const spawnAsteroids = function () {
@@ -287,6 +287,8 @@ export const callGame = (eventInput) => {
         g.keyPressed = () => {
           input.handleEvent(g.key, g.keyCode, true);
         }
+
+        // spawnBoss();
       }
       
 

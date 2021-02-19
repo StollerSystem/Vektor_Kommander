@@ -22,11 +22,12 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
 
   this.render = function () {
     // ENEMY BLASTER BALL
+    let enemyCharge = charge ? charge : 0;
     if (enemy) {
       g.push();
       var trans = g.random(1, .8)
       g.stroke(`rgba(${color[2]},${color[0]},${color[1]},${trans})`);
-      g.strokeWeight(this.r * 1.5 * this.w);
+      g.strokeWeight(this.r * 1.5 * this.w + enemyCharge);
       g.point(this.pos.x, this.pos.y);
       g.pop();
       // glow effect
@@ -34,7 +35,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
       var size = this.r * (g.random(2 * this.w, 10 * this.w))
       var trans2 = g.random(.4, .05)
       g.stroke(`rgba(${color[1]},${color[0]},${color[2]},${trans2}) `);
-      g.strokeWeight(size);
+      g.strokeWeight(size + enemyCharge);
       g.point(this.pos.x, this.pos.y);
       g.pop();
 
@@ -42,7 +43,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
       // PLAYER LASER
       g.push();
       var trans = g.random(1, .8)
-      g.stroke(`rgba(${color[0]},${color[1]},${color[2]},${trans})`);      
+      g.stroke(`rgba(${color[0]},${color[1]},${color[2]},${trans})`);
       let weight = charge > 0 ? 4 + charge : 4;
       g.strokeWeight(weight);
       g.translate(this.pos.x, this.pos.y)
@@ -62,12 +63,12 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
     }
   }
 
-  this.hits = function (target) {    
+  this.hits = function (target) {
     var last_pos = p5.Vector.sub(this.pos, this.vel);
     let dist2 = (this.pos.x - target.pos.x) * (this.pos.x - target.pos.x)
-      + (this.pos.y - target.pos.y) * (this.pos.y - target.pos.y) - (charge * charge * 2); 
+      + (this.pos.y - target.pos.y) * (this.pos.y - target.pos.y) - (charge * charge * 2);
 
-    if (dist2 <= target.rmin2) {      
+    if (dist2 <= target.rmin2) {
       return true;
     }
 
@@ -75,7 +76,7 @@ export default function Laser(spos, svel, angle, g, color, enemy, heading, windo
       return false;
     }
 
-    var target_vertices = target.vertices();    
+    var target_vertices = target.vertices();
     for (var i = 0; i < target_vertices.length - 1; i++) {
       if (lineIntersect(last_pos,
         this.pos,

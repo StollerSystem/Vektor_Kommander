@@ -1,10 +1,11 @@
 import * as p5 from 'p5';
 import Entity from './entity.js';
+import Laser from './laser.js';
 
-export default function Boss(g, color, windowWidth, addDust, level) {
+export default function Boss(g, color, windowWidth, addDust, level, lasers, color2) {
 
   var windowMod = windowWidth / 1800;
-  var r = (200 + (75 * level)) * windowMod;
+  var r = (225 + (75 * level)) * windowMod;
   var pos = g.createVector(g.width + r * 2, g.random(r, g.height - r));
 
   Entity.call(this, pos.x, pos.y, r, g);
@@ -18,12 +19,21 @@ export default function Boss(g, color, windowWidth, addDust, level) {
   this.hp = 10 + (5 * level);
   this.coreHitFlash = false;
   this.brokenParts = [];
+  this.shotTimer = 200;
 
   // randomize some features
   var e = g.random(.70, 1.25);
   var a = g.random(.8, 1.20);
   var i = a * 1.25;
   var scope = this;
+
+  this.shootLaser = function () {
+    let heading = scope.heading
+    let laser = new Laser(scope.pos, scope.vel, heading, g, color2, true, 0, windowMod,20);
+    let dustVel = laser.vel.copy();
+    addDust(scope.pos, dustVel.mult(.5), 4, .025, color2, 10, g);
+    lasers.push(laser);
+  }
 
   this.vertices = function (x, y, n) {
     let heading = scope.destroyed ? scope.brokenParts[n].heading : scope.heading;
@@ -91,6 +101,9 @@ export default function Boss(g, color, windowWidth, addDust, level) {
     Entity.prototype.update.call(this);
     this.core.pos = this.pos;
     this.edges();
+    if (g.frameCount % this.shotTimer === this.shotTimer - 1 && !this.destroyed) {  
+      this.shootLaser()
+    }
     if (this.pos.x < this.g.width - this.rmax) {
       this.onScreen = true;
     }
