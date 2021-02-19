@@ -5,11 +5,12 @@ import { input } from '../utility/input.js';
 import { lineIntersect } from '../utility/utility.js';
 import VaporTrail from '../effects/vapor-trail.js';
 import Thruster from '../effects/thruster.js';
-import { reduceLaserCharge } from '../utility/utility.js';
+import { reduceLaserCharge, gameReset } from '../utility/utility.js';
 
 
-export default function Ship(state, g, shieldTime, color1, color2, score, lasers, addDust, windowWidth, buttons, lives, gameReset) {
+export default function Ship(state, g, shieldTime, color1, color2, score, lasers, addDust, windowWidth, buttons, lives) {
   this.w = windowWidth / 1800;
+  console.log("SHIP SIZE MOD: "+this.w)
   var windowMod = windowWidth < 1024 ? .99 : null;
   Entity.call(this, 200, g.height / 2, 20 * this.w, g, windowMod);
   this.isDestroyed = false;
@@ -40,7 +41,7 @@ export default function Ship(state, g, shieldTime, color1, color2, score, lasers
 
   g.mousePressed = () => {    
     if (this.lives < 0) {
-      gameReset();
+      gameReset(state, g);
     }
     this.beginGame = true;
     for (var i = 0; i < this.buttons.length; i++) {

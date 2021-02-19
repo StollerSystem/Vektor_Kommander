@@ -4,11 +4,13 @@ import Dust from '../effects/dust.js';
 import Debris from '../effects/debris.js';
 import { input } from './input.js';
 import { loadBarrier } from './load-barriers.js'
+import { resetCanvas } from './reset.js'
 import Ship from '../entity/ship.js';
 import Boss from '../entity/boss.js';
 import Asteroid from '../entity/asteroid.js';
-import Enemy from '../entity/enemy.js'
-import LaserEnergy from '../powerups/laser-energy.js'
+import Enemy from '../entity/enemy.js';
+import LaserEnergy from '../powerups/laser-energy.js';
+import Star from '../effects/star.js'
 
 
 function cross(v1, v2) {
@@ -66,16 +68,16 @@ export const roundLoss = (state, g) => {
   input.registerAsListener(g.ENTER, function (char, code, press) {
     if (press) {
       if (state.lives < 0) {
-        gameReset();
+        gameReset(state, g);
       }
     }
   });
 }
 
-export const gameReset = (state) => {
+export const gameReset = (state, g) => {
   state.lives = 3;
   state.splashScreen = true;
-  resetCanvas();
+  resetCanvas(state, g);
 }
 
 export const spawnBoss = (state, g) => {
@@ -135,4 +137,27 @@ export const defeatBoss = (state, i) => {
     state.possibleBosses += 2;
     state.bosses.splice(i, 1);
   }, 8000)
+}
+
+export const hyperDriveIntro = (state, g) => {
+  for (let i = 0; i < state.stars.length; i++) {
+    if (g.frameCount - state.beginGameSequence < 100) {
+      state.easeInStars = state.easeInStars / Math.pow(1.000008, g.frameCount - state.beginGameSequence)
+    }
+    else {
+      state.easeInStars += (g.frameCount - state.beginGameSequence) / 1000000
+      if (state.easeInStars >= .6) {
+        state.easeInStars = .6;
+      }
+    }
+    state.stars[i].move(state.easeInStars)
+    if (state.stars[i].x <= 0) {
+      let windowX = g.width;
+      let randomY = g.random(0, g.height);
+      let randomSize = g.random(.1, 25);
+      const newStar = new Star(windowX, randomY, randomSize, g);
+      state.stars.push(newStar);
+      state.stars.splice(i, 1);
+    }
+  }
 }
