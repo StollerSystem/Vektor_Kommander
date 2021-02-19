@@ -49,17 +49,17 @@ export const roundLoss = (state, g) => {
   input.registerAsListener(g.ENTER, function (char, code, press) {
     if (press) {
       if (state.lives < 0) {
-        gameReset(state, g);
+        resetCanvas(state, g);
       }
     }
   });
 }
 
-export const gameReset = (state, g) => {
-  state.lives = 3;
-  state.splashScreen = true;
-  resetCanvas(state, g);
-}
+// export const gameReset = (state, g) => {
+//   state.lives = 3;
+//   state.splashScreen = true;
+//   resetCanvas(state, g);
+// }
 
 export const spawnBoss = (state, g) => {
   state.bosses.push(new Boss(state, g, state.rgbColor5, state.windowWidth, addDust, state.level, state.lasers, state.rgbColor2, state.ship))

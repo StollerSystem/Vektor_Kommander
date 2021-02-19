@@ -1,6 +1,4 @@
-export var state = {
-  // config: eventInput.default,
-  // logoPath: new Path2D(config.logo.path),
+export var state = {  
   canvas: null,
   ctx: null,
   windowWidth: null,
@@ -9,7 +7,9 @@ export var state = {
   rgbColor3: null,
   rgbColor4: null,
   rgbColor5: null,
-
+  ship: null,
+  hud: null,
+  splash: null,
   buttons: [],
   asteroids: [],
   lasers: [],
@@ -21,25 +21,18 @@ export var state = {
   stars: [],
   barriers: [],
   dust: [],
-
-  ship: null,
-  hud: null,
-  splash: null,
-
   canPlay: true,
   laserOverHeat: false,
   splashScreen: true,
   consoleTrigger: false,
-
   easeInStars: .75,
   powerUpCounter: 300,
-
   possibleEnemies: 1,
   possibleBarriers: 10,
   possibleBosses: 1,
   shieldTime: 180,
   score: 0,
-  lives: 3,
+  lives: 1,
   level: 0,
   laserCharge: 1270,
   beginGameSequence: 0

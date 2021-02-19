@@ -5,7 +5,8 @@ import { input } from '../utility/input.js';
 import { lineIntersect } from '../utility/line-intersect.js';
 import VaporTrail from '../effects/vapor-trail.js';
 import Thruster from '../effects/thruster.js';
-import { reduceLaserCharge, gameReset, addDust } from '../utility/utility.js';
+import { reduceLaserCharge, addDust } from '../utility/utility.js';
+import { resetCanvas } from '../utility/reset.js'
 
 
 export default function Ship(state, g) {
@@ -41,7 +42,7 @@ export default function Ship(state, g) {
 
   g.mousePressed = () => {    
     if (this.lives < 0) {
-      gameReset(state, g);
+      resetCanvas(state, g);
     }
     this.beginGame = true;
     for (var i = 0; i < this.buttons.length; i++) {
