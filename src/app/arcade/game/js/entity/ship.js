@@ -133,7 +133,7 @@ export default function Ship(g, shieldTime, color1, color2, score, lasers, addDu
     scope.setAccel(press ? -0.1 : 0);    
   });
 
-  this.update = function (laserCharge) {
+  this.update = function (laserCharge) {    
     this.laserCharge = laserCharge;    
     this.edges();
     Entity.prototype.update.call(this);

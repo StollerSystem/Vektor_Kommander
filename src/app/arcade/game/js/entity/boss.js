@@ -2,7 +2,7 @@ import * as p5 from 'p5';
 import Entity from './entity.js';
 import Laser from './laser.js';
 
-export default function Boss(g, color, windowWidth, addDust, level, lasers, color2) {
+export default function Boss(g, color, windowWidth, addDust, level, lasers, color2, ship) {
 
   var windowMod = windowWidth / 1800;
   var r = (225 + (75 * level)) * windowMod;
@@ -19,7 +19,9 @@ export default function Boss(g, color, windowWidth, addDust, level, lasers, colo
   this.hp = 10 + (5 * level);
   this.coreHitFlash = false;
   this.brokenParts = [];
-  this.shotTimer = 200;
+  this.shotTimer = 300 - (level * 50);
+  this.target = ship;
+  this.aim = .15;
 
   // randomize some features
   var e = g.random(.70, 1.25);
@@ -28,8 +30,25 @@ export default function Boss(g, color, windowWidth, addDust, level, lasers, colo
   var scope = this;
 
   this.shootLaser = function () {
-    let heading = scope.heading
-    let laser = new Laser(scope.pos, scope.vel, heading, g, color2, true, 0, windowMod,20);
+
+    let x = this.target.pos.x - this.pos.x;
+    let y = this.target.pos.y - this.pos.y;
+    let z = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    let heading = Math.asin(y / z);
+    if (x < 0) {
+      heading += g.PI
+      if (heading <= g.PI) {
+        let dif = g.PI - heading;
+        heading = g.PI + dif;
+      } else {
+        let dif = heading - g.PI;
+        heading = g.PI - dif;
+      }
+    }
+    let scatter = g.random(-this.aim, this.aim);
+    heading += scatter;
+
+    let laser = new Laser(scope.pos, scope.vel, heading, g, color2, true, 0, windowMod, 20);
     let dustVel = laser.vel.copy();
     addDust(scope.pos, dustVel.mult(.5), 4, .025, color2, 10, g);
     lasers.push(laser);
@@ -97,11 +116,13 @@ export default function Boss(g, color, windowWidth, addDust, level, lasers, colo
     }
   }
 
-  this.update = function () {
+  this.update = function (target) {
     Entity.prototype.update.call(this);
+    this.target = target;
     this.core.pos = this.pos;
     this.edges();
-    if (g.frameCount % this.shotTimer === this.shotTimer - 1 && !this.destroyed) {  
+    // TIMER TO SHOOT LASERS
+    if (g.frameCount % this.shotTimer === this.shotTimer - 1 && !this.destroyed) {
       this.shootLaser()
     }
     if (this.pos.x < this.g.width - this.rmax) {

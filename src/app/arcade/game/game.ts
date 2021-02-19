@@ -121,7 +121,7 @@ export const callGame = (eventInput) => {
       }
 
       const spawnBoss = function () {
-        bosses.push(new Boss(g, rgbColor5, windowWidth, addDust, level, lasers, rgbColor2))
+        bosses.push(new Boss(g, rgbColor5, windowWidth, addDust, level, lasers, rgbColor2, ship))
       }
 
       const spawnAsteroids = function () {
@@ -286,9 +286,7 @@ export const callGame = (eventInput) => {
         }
         g.keyPressed = () => {
           input.handleEvent(g.key, g.keyCode, true);
-        }
-
-        // spawnBoss();
+        }        
       }
       
 
@@ -455,7 +453,7 @@ export const callGame = (eventInput) => {
 
           //UPDATE BOSS
           for (var i = bosses.length - 1; i >= 0; i--) {
-            bosses[i].update();            
+            bosses[i].update(ship);            
             if (bosses[i].hp <= 0 && possibleBosses === 0) {              
               possibleBosses -= 1;
               let score = (1000 + (500 * level))
