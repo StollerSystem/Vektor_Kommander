@@ -1,6 +1,6 @@
 import Barrier from '../entity/barrier.js'
 
-export default function loadBarrier(e, x, y, vx, size, color, windowWidth) {
+export const loadBarrier = (e, x, y, vx, size, color, windowWidth) => {
   let blocks = [];
   let randomHeight = e.round(e.random(4, size / 4))
   let bColor = color

@@ -1,7 +1,7 @@
 import Entity from '../entity/entity.js';
 import * as p5 from 'p5';
 
-export default function LaserEnergy(g, pos, windowWidth, laserPowerUp) {
+export default function LaserEnergy(state, g, pos, windowWidth, laserPowerUp) {
   this.w = windowWidth / 1800;
   this.r = 15 * this.w
   this.b = Math.sqrt(Math.pow(this.r, 2) - Math.pow(this.r / 2, 2))
@@ -23,8 +23,11 @@ export default function LaserEnergy(g, pos, windowWidth, laserPowerUp) {
     return barrierVertices;
   }
 
-  this.powerUp = function (points) {
-    laserPowerUp(points);
+  this.powerUp = function ( points) {
+    // laserPowerUp(state, points);
+    state.score += points;
+    state.laserOverHeat = false;
+    state.laserCharge = 2000;
   }
 
   this.render = function () {

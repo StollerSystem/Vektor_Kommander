@@ -17,7 +17,7 @@ import MobileButton from './js/utility/buttons.js';
 import LaserEnergy from './js/powerups/laser-energy.js';
 import PointNumber from './js/effects/point-numbers.js';
 import { render } from './js/utility/render.js';
-import { addToScore, addPointNumbers, addDust, addDebris } from './js/utility/utility.js';
+import { addToScore, addPointNumbers, addDust, addDebris, roundLoss, gameReset, spawnBoss, spawnAsteroids, spawnBarriers, spawnEnemy, spawnPowerUp, checkDust, checkDebris, checkLaserCharge, defeatBoss } from './js/utility/utility.js';
 
 
 export const callGame = (eventInput) => {
@@ -25,44 +25,44 @@ export const callGame = (eventInput) => {
   var config: any = eventInput.default
   var logoPath = new Path2D(config.logo.path);
   var ctx: any;
-  var windowWidth: any;
+  // var windowWidth: any;
   // var rgbColor1: any;
   // var rgbColor2: any;
   // var rgbColor3: any;
   // var rgbColor4: any;
   // var rgbColor5: any;
 
-  var buttons: any = [];
-  var asteroids: any = [];
-  var lasers: any = [];
-  var enemies: any = [];
-  var bosses: any = [];
+  // var buttons: any = [];
+  // var asteroids: any = [];
+  // var lasers: any = [];
+  // var enemies: any = [];
+  // var bosses: any = [];
   // var debris: any = [];
   // var pointNumbers: any = [];
-  var powerUps: any = [];
+  // var powerUps: any = [];
   var stars: any = [];
-  var barriers: any = [];
+  // var barriers: any = [];
   // var dust: any = [];
 
-  var ship: any;
+  // var ship: any;
   var hud: any;
   var splash: any;
 
-  var canPlay: boolean = true;
-  var laserOverHeat: boolean = false;
-  var splashScreen: boolean = true;
+  // var canPlay: boolean = true;
+  // var laserOverHeat: boolean = false;
+  // var splashScreen: boolean = true;
   var consoleTrigger: boolean = false;
 
   var easeInStars: number = .75;
   var powerUpCounter: number = 300;
-  var spawnBoost: number = 0;
+
   var possibleEnemies: number = 1;
   var possibleBarriers: number = 10;
   var possibleBosses: number = 1;
-  var shieldTime: number = 180;
+  // var shieldTime: number = 180;
   // var score: number = 0;
-  var lives: number = 3;
-  var level: number = 0;
+  // var lives: number = 3;
+  // var level: number = 0;
   // var laserCharge: number = 1270;
   var beginGameSequence: number = 0;
 
@@ -103,7 +103,7 @@ export const callGame = (eventInput) => {
 
     easeInStars: .75,
     powerUpCounter: 300,
-    spawnBoost: 0,
+
     possibleEnemies: 1,
     possibleBarriers: 10,
     possibleBosses: 1,
@@ -141,103 +141,95 @@ export const callGame = (eventInput) => {
     //   }
     // }
 
-    const roundLoss = () => {
-      setTimeout(function () {
-        lives--;
-        if (lives >= 0) {
-          ship = new Ship(state, g, shieldTime, state.rgbColor2, state.rgbColor3, state.score, lasers, addDust, windowWidth, buttons, lives, gameReset);
-          canPlay = true;
-          state.laserCharge = 1270;
-        }
-      }, 3000);
-      input.registerAsListener(g.ENTER, function (char, code, press) {
-        if (press) {
-          if (lives < 0) {
-            gameReset();
-          }
-        }
-      });
-    }
+    // const roundLoss = () => {
+    //   setTimeout(function () {
+    //     lives--;
+    //     if (lives >= 0) {
+    //       ship = new Ship(state, g, shieldTime, state.rgbColor2, state.rgbColor3, state.score, lasers, addDust, windowWidth, buttons, lives, gameReset);
+    //       canPlay = true;
+    //       state.laserCharge = 1270;
+    //     }
+    //   }, 3000);
+    //   input.registerAsListener(g.ENTER, function (char, code, press) {
+    //     if (press) {
+    //       if (lives < 0) {
+    //         gameReset();
+    //       }
+    //     }
+    //   });
+    // }
 
 
-    const gameReset = () => {
-      lives = 3;
-      splashScreen = true;
-      resetCanvas();
-    }
+    // const gameReset = () => {
+    //   lives = 3;
+    //   splashScreen = true;
+    //   resetCanvas();
+    // }
 
-    const spawnBoss = () => {
-      bosses.push(new Boss(state, g, state.rgbColor5, windowWidth, addDust, level, lasers, state.rgbColor2, ship))
-    }
+    // const spawnBoss = () => {
+    //   bosses.push(new Boss(state, g, state.rgbColor5, windowWidth, addDust, level, lasers, state.rgbColor2, state.ship))
+    // }
 
-    const spawnAsteroids = () => {
-      for (let i = 0; i < spawnBoost + 1; i++) {
-        asteroids.push(new Asteroid(null, null, 3, g, state.rgbColor1, windowWidth));
-      }
-    }
+    // const spawnAsteroids = () => {
+    //   for (let i = 0; i < spawnBoost + 1; i++) {
+    //     asteroids.push(new Asteroid(null, null, 3, g, state.rgbColor1, state.windowWidth));
+    //   }
+    // }
 
-    const spawnBarriers = () => {
-      for (let i = 0; i < spawnBoost + 1; i++) {
-        const vx = -.4
-        const size = g.round(g.random(10, 50))
-        const y = g.random(0 + size * 4, g.height - size * 2)
-        const x = g.width + size * 6;
-        barriers.push(loadBarriers(g, x, y, vx, size, state.rgbColor4, windowWidth))
-      }
-    }
+    // const spawnBarriers = () => {
+    //   const vx = -.4
+    //   const size = g.round(g.random(10, 50))
+    //   const y = g.random(0 + size * 4, g.height - size * 2)
+    //   const x = g.width + size * 6;
+    //   barriers.push(loadBarriers(g, x, y, vx, size, state.rgbColor4, state.windowWidth))
+    // }
 
-    const spawnEnemy = () => {
-      let radius = g.random(20, 30)
-      enemies.push(new Enemy(state, radius, g, addDust, level, state.rgbColor5, state.rgbColor2, lasers, windowWidth))
-    }
+    // const spawnEnemy = () => {
+    //   let radius = g.random(20, 30)
+    //   enemies.push(new Enemy(state, radius, g, addDust, state.level, state.rgbColor5, state.rgbColor2, state.lasers, state.windowWidth))
+    // }
 
-    const spawnPowerUp = (pos: any) => {
-      powerUps.push(new LaserEnergy(g, pos, windowWidth, laserPowerUp))
-    }
+    // const spawnPowerUp = (pos: any) => {
+    //   powerUps.push(new LaserEnergy(g, pos, state.windowWidth, laserPowerUp))
+    // }
 
-    const laserPowerUp = (points) => {
-      state.score += points;
-      laserOverHeat = false;
-      state.laserCharge = 2000;
-    }
+    // const laserPowerUp = (points) => {
+    //   state.score += points;
+    //   laserOverHeat = false;
+    //   state.laserCharge = 2000;
+    // }
 
-    const checkDust = () => {
-      while (state.dust.length > 30) {
-        state.dust.shift();
-      }
-    }
+    // const checkDebris = () => {
+    //   if (state.debris.length > 7) {
+    //     state.debris.shift();
+    //   }
+    // }
 
-    const checkDebris = () => {
-      if (state.debris.length > 7) {
-        state.debris.shift();
-      }
-    }
+    // const checkLaserCharge = () => {
+    //   if (state.laserCharge < 0) {
+    //     state.laserCharge = 0;
+    //     state.laserOverHeat = true;
+    //     setTimeout(function () {
+    //       state.laserOverHeat = false;
+    //     }, 2500);
+    //   }
+    //   if (state.laserCharge < 1270 && !state.laserOverHeat) {
+    //     state.laserCharge += 5;
+    //   }
+    // }
 
-    const checkLaserCharge = () => {
-      if (state.laserCharge < 0) {
-        state.laserCharge = 0;
-        laserOverHeat = true;
-        setTimeout(function () {
-          laserOverHeat = false;
-        }, 2500);
-      }
-      if (state.laserCharge < 1270 && !laserOverHeat) {
-        state.laserCharge += 5;
-      }
-    }
+    // const canPlayToggle = () => {
+    //   state.canPlay = false;
+    // }
 
-    const canPlayToggle = () => {
-      canPlay = false;
-    }
-
-    const defeatBoss = (i) => {
-      setTimeout(function () {
-        level += 1;
-        possibleBarriers += (8 + (3 * level));
-        possibleBosses += 2;
-        bosses.splice(i, 1);
-      }, 8000)
-    }
+    // const defeatBoss = (state, i) => {
+    //   setTimeout(function () {
+    //     state.level += 1;
+    //     state.possibleBarriers += (8 + (3 * state.level));
+    //     state.possibleBosses += 2;
+    //     state.bosses.splice(i, 1);
+    //   }, 8000)
+    // }
 
     const hyperDriveIntro = () => {
       for (let i = 0; i < stars.length; i++) {
@@ -264,47 +256,47 @@ export const callGame = (eventInput) => {
 
     const resetCanvas = () => {
       state.score = 0;
-      canPlay = true;
+      state.canPlay = true;
 
-      buttons = [];
-      asteroids = [];
-      lasers = [];
-      enemies = [];
-      bosses = [];
+      state.buttons = [];
+      state.asteroids = [];
+      state.lasers = [];
+      state.enemies = [];
+      state.bosses = [];
       state.debris = [];
       state.pointNumbers = [];
-      powerUps = [];
-      barriers = [];
+      state.powerUps = [];
+      state.barriers = [];
 
       possibleBarriers = 10;
       possibleBosses = 1;
       state.laserCharge = 1270;
 
 
-      windowWidth = g.windowWidth <= 1200 ? g.windowWidth : 1200;
-      canvas = g.createCanvas(windowWidth * .98, g.windowHeight * .95);
+      state.windowWidth = g.windowWidth <= 1200 ? g.windowWidth : 1200;
+      canvas = g.createCanvas(state.windowWidth * .98, g.windowHeight * .95);
       ctx = canvas.elt.getContext("2d");
 
       console.log("w:" + g.width + " h:" + g.height)
 
       // SET UP MOBILE BUTTONS
-      buttons[0] = new MobileButton(g, 0, g.UP_ARROW, 38, 120, g.height - 120)
-      buttons[1] = new MobileButton(g, g.PI, g.DOWN_ARROW, 40, 120, g.height - 50)
-      buttons[2] = new MobileButton(g, 3 * g.PI / 2, g.LEFT_ARROW, 37, 50, g.height - 50)
-      buttons[3] = new MobileButton(g, g.PI / 2, g.RIGHT_ARROW, 39, 190, g.height - 50)
-      buttons[4] = new MobileButton(g, 0, " ".charCodeAt(0), 32, g.width - 100 * (windowWidth / 600), g.height - 50)
+      state.buttons[0] = new MobileButton(g, 0, g.UP_ARROW, 38, 120, g.height - 120)
+      state.buttons[1] = new MobileButton(g, g.PI, g.DOWN_ARROW, 40, 120, g.height - 50)
+      state.buttons[2] = new MobileButton(g, 3 * g.PI / 2, g.LEFT_ARROW, 37, 50, g.height - 50)
+      state.buttons[3] = new MobileButton(g, g.PI / 2, g.RIGHT_ARROW, 39, 190, g.height - 50)
+      state.buttons[4] = new MobileButton(g, 0, " ".charCodeAt(0), 32, g.width - 100 * (state.windowWidth / 600), g.height - 50)
 
       // LOAD INITIAL ASSETS
-      ship = new Ship(state, g, shieldTime, state.rgbColor2, state.rgbColor3, state.score, lasers, addDust, state.laserCharge, windowWidth, buttons, lives, gameReset);
-      hud = new Hud(g, state.rgbColor1, state.rgbColor3, windowWidth);
+      state.ship = new Ship(state, g, state.shieldTime, state.rgbColor2, state.rgbColor3, state.score, state.lasers, addDust, state.laserCharge, state.windowWidth, state.buttons, state.lives, gameReset);
+      hud = new Hud(g, state.rgbColor1, state.rgbColor3, state.windowWidth);
       stars = loadStars(g);
       splash = new Splash();
 
       setTimeout(function () {
         input.registerAsListener(g.ENTER, function (char, code, press) {
           if (press) {
-            if (splashScreen) {
-              splashScreen = false;
+            if (state.splashScreen) {
+              state.splashScreen = false;
               beginGameSequence = g.frameCount;
             }
           }
@@ -334,24 +326,24 @@ export const callGame = (eventInput) => {
         input.handleEvent(g.key, g.keyCode, true);
       }
 
-      spawnBoss();
+      spawnBoss(state, g);
     }
 
 
     g.draw = () => {
 
-      if (splashScreen) {
+      if (state.splashScreen) {
         g.background(0);
-        splash.render(g, stars, windowWidth, ctx, logoPath, config);
-        if (ship.beginGame) {
-          splashScreen = false
+        splash.render(g, stars, state.windowWidth, ctx, logoPath, config);
+        if (state.ship.beginGame) {
+          state.splashScreen = false
         }
       } else {
 
         // CHECK FOR FX CREATING LAAAAG
-        checkDust();
-        checkDebris();
-        checkLaserCharge();
+        checkDust(state);
+        checkDebris(state);
+        checkLaserCharge(state);
 
         // STARS
         if (g.frameCount - beginGameSequence < 175) {
@@ -373,28 +365,28 @@ export const callGame = (eventInput) => {
         }
 
         // RANDOM ENEMY SPAWN
-        if (possibleEnemies > 0 && enemies.length < 1) {
+        if (possibleEnemies > 0 && state.enemies.length < 1) {
           let ranNum = g.random(1000);
           if (ranNum <= 1) {
-            spawnEnemy();
+            spawnEnemy(state, g);
           }
         }
 
         // RANDOM ASTEROID SPAWN
-        if (asteroids.length < 3) {
+        if (state.asteroids.length < 3) {
           let ranNum = g.random(650);
           if (ranNum <= 1) {
-            spawnAsteroids();
+            spawnAsteroids(state, g);
             // console.log("spawn rock, total: "+asteroids.length)
           }
         }
 
         // RANDOM BARRIER SPAWN
-        if (barriers.length < 5) {
+        if (state.barriers.length < 5) {
           let ranNum = g.random(220);
-          if (ranNum <= 1 && barriers.length < 6 && possibleBarriers > 0) {
+          if (ranNum <= 1 && state.barriers.length < 6 && possibleBarriers > 0) {
             possibleBarriers -= 1;
-            spawnBarriers();
+            spawnBarriers(state, g);
             // console.log("squares left: "+possibleBarriers)
           }
         }
@@ -402,74 +394,74 @@ export const callGame = (eventInput) => {
         //SPAWN BOSS
         if (possibleBarriers <= 0 && possibleBosses > 0) {
           possibleBosses -= 1;
-          spawnBoss()
+          spawnBoss(state, g)
         }
 
         // _________UPDATES ___________
 
         // UPDATE ASTEROIDS AND CHECK FOR COLLISIONS 
-        for (let i = 0; i < asteroids.length; i++) {
-          if (asteroids[i].offscreen()) {
-            asteroids.splice(i, 1);
+        for (let i = 0; i < state.asteroids.length; i++) {
+          if (state.asteroids[i].offscreen()) {
+            state.asteroids.splice(i, 1);
             continue;
           }
-          if (ship.hits(asteroids[i]) && canPlay) {
-            canPlay = false;
-            var dustVel = p5.Vector.add(ship.vel.mult(0.2), asteroids[i].vel);
-            addDust(state, ship.pos, dustVel, 15, .005, state.rgbColor3, 3, g);
-            ship.destroy();
+          if (state.ship.hits(state.asteroids[i]) && state.canPlay) {
+            state.canPlay = false;
+            var dustVel = p5.Vector.add(state.ship.vel.mult(0.2), state.asteroids[i].vel);
+            addDust(state, state.ship.pos, dustVel, 15, .005, state.rgbColor3, 3, g);
+            state.ship.destroy();
             input.reset();
-            roundLoss();
+            roundLoss(state, g);
           }
-          asteroids[i].update();
+          state.asteroids[i].update();
         }
 
         //UPDATES ALL LASERS AND CHECKS FOR ALL COLLISIONS
-        for (var i = lasers.length - 1; i >= 0; i--) {
+        for (var i = state.lasers.length - 1; i >= 0; i--) {
           // var exists = true;
-          lasers[i].update();
-          if (lasers[i].offscreen()) {
-            lasers.splice(i, 1);
+          state.lasers[i].update();
+          if (state.lasers[i].offscreen()) {
+            state.lasers.splice(i, 1);
             continue;
           }
-          laserCollision(state, g, lasers, i, asteroids, addDust, enemies, addDebris, barriers, ship, roundLoss, canPlayToggle, input, addToScore, windowWidth, spawnPowerUp, addPointNumbers, bosses, canPlay, state)
+          laserCollision(state, g, state.lasers, i, state.asteroids, addDust, state.enemies, addDebris, state.barriers, state.ship, roundLoss, input, addToScore, state.windowWidth, spawnPowerUp, addPointNumbers, state.bosses)
         }
 
         // UPDATE ENEMY AND CHECK FOR COLLISION BEWTWEEN SHIP
-        for (var i = enemies.length - 1; i >= 0; i--) {
-          if (ship.hits(enemies[i]) && canPlay) {
-            canPlay = false;
-            var dustVel = p5.Vector.add(ship.vel.mult(0.2), enemies[i].vel);
-            addDust(state, ship.pos, dustVel, 15, .005, state.rgbColor3, 2.5, g);
-            ship.destroy();
+        for (var i = state.enemies.length - 1; i >= 0; i--) {
+          if (state.ship.hits(state.enemies[i]) && state.canPlay) {
+            state.canPlay = false;
+            var dustVel = p5.Vector.add(state.ship.vel.mult(0.2), state.enemies[i].vel);
+            addDust(state, state.ship.pos, dustVel, 15, .005, state.rgbColor3, 2.5, g);
+            state.ship.destroy();
             input.reset();
-            roundLoss()
+            roundLoss(state, g)
           }
-          enemies[i].update();
+          state.enemies[i].update();
         }
 
         // UPDATE AND CHECK FOR COLLISION WITH POWERUPS
-        for (var i = powerUps.length - 1; i >= 0; i--) {
-          powerUps[i].update();
-          if (powerUps[i].offscreen()) {
-            powerUps.splice(i, 1)
+        for (var i = state.powerUps.length - 1; i >= 0; i--) {
+          state.powerUps[i].update();
+          if (state.powerUps[i].offscreen()) {
+            state.powerUps.splice(i, 1)
             continue;
           } else {
-            if (ship.hits(powerUps[i]) && canPlay) {
+            if (state.ship.hits(state.powerUps[i]) && state.canPlay) {
               let color = [Math.round(g.random(50, 250)), Math.round(g.random(50, 250)), Math.round(g.random(50, 250))]
-              let dustVel = p5.Vector.add(ship.vel.mult(0.5), powerUps[i].vel);
-              addDust(state, ship.pos, dustVel, 7, .015, color, 5, g);
+              let dustVel = p5.Vector.add(state.ship.vel.mult(0.5), state.powerUps[i].vel);
+              addDust(state, state.ship.pos, dustVel, 7, .015, color, 5, g);
               if (g.frameCount - powerUpCounter < 100) {
-                powerUps[i].powerUp(450)
-                addPointNumbers(state, powerUps[i].pos, dustVel.mult(.25), 255, g, '650', 15)
+                state.powerUps[i].powerUp(450)
+                addPointNumbers(state, state.powerUps[i].pos, dustVel.mult(.25), 255, g, '650', 15)
               } else if (g.frameCount - powerUpCounter < 200) {
-                addPointNumbers(state, powerUps[i].pos, dustVel.mult(.25), 255, g, '450', 15)
-                powerUps[i].powerUp(650)
+                addPointNumbers(state, state.powerUps[i].pos, dustVel.mult(.25), 255, g, '450', 15)
+                state.powerUps[i].powerUp(650)
               } else {
-                addPointNumbers(state, powerUps[i].pos, dustVel.mult(.25), 255, g, '250', 15)
-                powerUps[i].powerUp(250)
+                addPointNumbers(state, state.powerUps[i].pos, dustVel.mult(.25), 255, g, '250', 15)
+                state.powerUps[i].powerUp(250)
               }
-              powerUps.splice(i, 1)
+              state.powerUps.splice(i, 1)
               powerUpCounter = g.frameCount
 
             }
@@ -477,45 +469,45 @@ export const callGame = (eventInput) => {
         }
 
         // UPDATE AND DESTROY BARRIERS AND CHECK COLLISION
-        for (let i = 0; i < barriers.length; i++) {
-          for (let j = 0; j < barriers[i].length; j++) {
-            barriers[i][j].update()
-            if (ship.hits(barriers[i][j]) && canPlay) {
-              canPlay = false;
-              var dustVel = p5.Vector.add(ship.vel.mult(0.2), barriers[i][j].vel);
-              addDust(state, ship.pos, dustVel, 15, .005, state.rgbColor3, 2.5, g);
-              ship.destroy();
+        for (let i = 0; i < state.barriers.length; i++) {
+          for (let j = 0; j < state.barriers[i].length; j++) {
+            state.barriers[i][j].update()
+            if (state.ship.hits(state.barriers[i][j]) && state.canPlay) {
+              state.canPlay = false;
+              var dustVel = p5.Vector.add(state.ship.vel.mult(0.2), state.barriers[i][j].vel);
+              addDust(state, state.ship.pos, dustVel, 15, .005, state.rgbColor3, 2.5, g);
+              state.ship.destroy();
               input.reset();
-              roundLoss()
+              roundLoss(state, g)
             }
-            if (barriers[i][j].offscreen()) {
-              barriers[i].splice(j, 1);
+            if (state.barriers[i][j].offscreen()) {
+              state.barriers[i].splice(j, 1);
               continue
             }
           }
-          if (barriers[i].length === 0) {
-            barriers.splice(i, 1)
+          if (state.barriers[i].length === 0) {
+            state.barriers.splice(i, 1)
             continue;
           }
         }
 
         //UPDATE BOSS
-        for (var i = bosses.length - 1; i >= 0; i--) {
-          bosses[i].update(ship);
-          if (bosses[i].hp <= 0 && possibleBosses === 0) {
+        for (var i = state.bosses.length - 1; i >= 0; i--) {
+          state.bosses[i].update(state.ship);
+          if (state.bosses[i].hp <= 0 && possibleBosses === 0) {
             possibleBosses -= 1;
-            let addScore = (1000 + (500 * level))
+            let addScore = (1000 + (500 * state.level))
             addToScore(state, addScore)
-            addPointNumbers(state, bosses[i].pos, bosses[i].vel.mult(.25), 255, g, state.score.toString(), 30)
+            addPointNumbers(state, state.bosses[i].pos, state.bosses[i].vel.mult(.25), 255, g, state.score.toString(), 30)
             defeatBoss(i)
           }
-          if (ship.hits(bosses[i].quad1) && canPlay || ship.hits(bosses[i].quad2) && canPlay || ship.hits(bosses[i].quad3) && canPlay || ship.hits(bosses[i].quad4) && canPlay) {
-            canPlay = false;
-            var dustVel = p5.Vector.add(ship.vel.mult(0.2), bosses[i].vel);
-            addDust(state, ship.pos, dustVel, 15, .005, state.rgbColor3, 2.5, g);
-            ship.destroy();
+          if (state.ship.hits(state.bosses[i].quad1) && state.canPlay || state.ship.hits(state.bosses[i].quad2) && state.canPlay || state.ship.hits(state.bosses[i].quad3) && state.canPlay || state.ship.hits(state.bosses[i].quad4) && state.canPlay) {
+            state.canPlay = false;
+            var dustVel = p5.Vector.add(state.ship.vel.mult(0.2), state.bosses[i].vel);
+            addDust(state, state.ship.pos, dustVel, 15, .005, state.rgbColor3, 2.5, g);
+            state.ship.destroy();
             input.reset();
-            roundLoss()
+            roundLoss(state, g)
           }
 
         }
@@ -546,7 +538,7 @@ export const callGame = (eventInput) => {
           }
         }
 
-        ship.update(state.laserCharge);
+        state.ship.update(state.laserCharge);
 
         // _________ALL RENDERS_________
 
@@ -558,30 +550,30 @@ export const callGame = (eventInput) => {
         g.text("FPS: " + fps.toFixed(2), 10, g.height - 10);
 
 
-        for (let i = 0; i < barriers.length; i++) {
-          render(barriers[i])
+        for (let i = 0; i < state.barriers.length; i++) {
+          render(state.barriers[i])
         }
         render(stars)
-        render(powerUps)
-        render(asteroids)
-        render(lasers)
-        render(enemies)
-        render(bosses)
+        render(state.powerUps)
+        render(state.asteroids)
+        render(state.lasers)
+        render(state.enemies)
+        render(state.bosses)
         render(state.dust)
         render(state.debris)
         render(state.pointNumbers)
-        ship.render();
-        hud.render(lives, state.score, state.laserCharge, laserOverHeat, state);
+        state.ship.render();
+        hud.render(state.lives, state.score, state.laserCharge, state.laserOverHeat, state);
 
 
-        if (lives < 0 && !consoleTrigger) {
+        if (state.lives < 0 && !consoleTrigger) {
           console.log("Your final score was " + state.score)
           consoleTrigger = true
         }
 
         // RENDER MOBILE BUTTONS IF THE SCREEN IS AS SMALL AS AN IPAD 
-        if (windowWidth <= 1024) {
-          render(buttons)
+        if (state.windowWidth <= 1024) {
+          render(state.buttons)
         }
 
       }
