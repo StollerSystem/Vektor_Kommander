@@ -18,8 +18,8 @@ export default function Hud(g, rgbColor1, rgbColor3, windowWidth) {
 
   ];
 
-  this.render = function (lives, score, laserCharge, laserOverHeat) {
-    var scoreString = "" + score;
+  this.render = function (lives, score, laserCharge, laserOverHeat, state) {
+    var scoreString = "" + state.score;
     var x = 75 * (windowWidth / 1800) - (scoreString.length * (size + padding) / 3);
     var digitPos = g.createVector(x, padding);    
 

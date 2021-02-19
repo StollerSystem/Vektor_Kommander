@@ -2,7 +2,7 @@ import * as p5 from 'p5';
 import Entity from './entity.js';
 import Laser from './laser.js';
 
-export default function Enemy(r, g, addDust, level, color1, color2, lasers, windowWidth) {
+export default function Enemy(state, r, g, addDust, level, color1, color2, lasers, windowWidth) {
 
   this.w = windowWidth / 1800;  
 
@@ -51,7 +51,7 @@ export default function Enemy(r, g, addDust, level, color1, color2, lasers, wind
   this.shootLaser = function () {
     var laser = new Laser(scope.pos, scope.vel, scope.heading, g, color2, true, 0, this.w);
     var dustVel = laser.vel.copy();
-    addDust(scope.pos, dustVel.mult(.5), 4, .045, color2, 5, g);
+    addDust(state, scope.pos, dustVel.mult(.5), 4, .045, color2, 5, g);
     lasers.push(laser);
   }
 

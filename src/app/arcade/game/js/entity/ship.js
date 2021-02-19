@@ -5,9 +5,10 @@ import { input } from '../utility/input.js';
 import { lineIntersect } from '../utility/utility.js';
 import VaporTrail from '../effects/vapor-trail.js';
 import Thruster from '../effects/thruster.js';
+import { reduceLaserCharge } from '../utility/utility.js';
 
 
-export default function Ship(g, shieldTime, color1, color2, score, lasers, addDust, reduceLaserCharge, laserCharge, windowWidth, buttons, lives, gameReset) {
+export default function Ship(state, g, shieldTime, color1, color2, score, lasers, addDust, windowWidth, buttons, lives, gameReset) {
   this.w = windowWidth / 1800;
   var windowMod = windowWidth < 1024 ? .99 : null;
   Entity.call(this, 200, g.height / 2, 20 * this.w, g, windowMod);
@@ -71,13 +72,13 @@ export default function Ship(g, shieldTime, color1, color2, score, lasers, addDu
     keyReleased = false;
     setTimeout(function () {
       if (keyReleased) {
-        if (reduceLaserCharge()) {
+        if (reduceLaserCharge(state)) {
           chargeEffect = false;
           let scatter = g.random(.015, -.015)
           let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
           var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, color1, false, scope.heading - scatter, scope.w);
           var dustVel = laser.vel.copy();
-          addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
+          addDust(state, shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
           lasers.push(laser);
         }
       } else {
@@ -87,7 +88,7 @@ export default function Ship(g, shieldTime, color1, color2, score, lasers, addDu
   }
 
   this.chargeShot = function () {
-    if (!keyReleased && reduceLaserCharge()) {
+    if (!keyReleased && reduceLaserCharge(state)) {
       charge += 1
       setTimeout(function () {
         scope.chargeShot();
@@ -99,7 +100,7 @@ export default function Ship(g, shieldTime, color1, color2, score, lasers, addDu
         let shootPos = g.createVector(scope.pos.x + offSet * g.cos(scope.heading), scope.pos.y + offSet * g.sin(scope.heading));
         var laser = new Laser(shootPos, scope.vel, scope.heading - scatter, g, color1, false, scope.heading - scatter, scope.w, charge * 3);
         var dustVel = laser.vel.copy();
-        addDust(shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
+        addDust(state, shootPos, dustVel.mult(.5), 4, .045, color1, 5 * scope.w, g);
         lasers.push(laser);
       }
     }
@@ -134,7 +135,7 @@ export default function Ship(g, shieldTime, color1, color2, score, lasers, addDu
   });
 
   this.update = function (laserCharge) {    
-    this.laserCharge = laserCharge;    
+    this.laserCharge = state.laserCharge;    
     this.edges();
     Entity.prototype.update.call(this);
     if (this.isDestroyed) {

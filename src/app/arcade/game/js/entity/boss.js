@@ -2,7 +2,7 @@ import * as p5 from 'p5';
 import Entity from './entity.js';
 import Laser from './laser.js';
 
-export default function Boss(g, color, windowWidth, addDust, level, lasers, color2, ship) {
+export default function Boss(state, g, color, windowWidth, addDust, level, lasers, color2, ship) {
 
   var windowMod = windowWidth / 1800;
   var r = (225 + (75 * level)) * windowMod;
@@ -19,9 +19,10 @@ export default function Boss(g, color, windowWidth, addDust, level, lasers, colo
   this.hp = 10 + (5 * level);
   this.coreHitFlash = false;
   this.brokenParts = [];
-  this.shotTimer = 300 - (level * 50);
+  this.shotTimer = 400 - (level * 50);
   this.target = ship;
-  this.aim = .15;
+  this.aim = .25;
+  this.laserCharge = 20 + (5 * level);
 
   // randomize some features
   var e = g.random(.70, 1.25);
@@ -30,7 +31,7 @@ export default function Boss(g, color, windowWidth, addDust, level, lasers, colo
   var scope = this;
 
   this.shootLaser = function () {
-
+    // logic to target player
     let x = this.target.pos.x - this.pos.x;
     let y = this.target.pos.y - this.pos.y;
     let z = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
@@ -47,10 +48,9 @@ export default function Boss(g, color, windowWidth, addDust, level, lasers, colo
     }
     let scatter = g.random(-this.aim, this.aim);
     heading += scatter;
-
-    let laser = new Laser(scope.pos, scope.vel, heading, g, color2, true, 0, windowMod, 20);
+    let laser = new Laser(scope.pos, scope.vel, heading, g, color2, true, 0, windowMod, this.laserCharge);
     let dustVel = laser.vel.copy();
-    addDust(scope.pos, dustVel.mult(.5), 4, .025, color2, 10, g);
+    addDust(state, scope.pos, dustVel.mult(.5), 4, .025, color2, 10, g);
     lasers.push(laser);
   }
 
@@ -194,7 +194,7 @@ export default function Boss(g, color, windowWidth, addDust, level, lasers, colo
   }
 
   this.destroy = function () {
-    addDust(this.pos, this.vel, 30, .001, color, 10, g);
+    addDust(state, this.pos, this.vel, 30, .001, color, 10, g);
     for (let i = 0; i < 4; i++) {
       scope.brokenParts[i] = {
         pos: this.pos.copy(),
