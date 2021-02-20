@@ -23,6 +23,7 @@ export const resetCanvas = (state, g, canvas) => {
   state.possibleBarriers = 10;
   state.possibleBosses = 1;
   state.laserCharge = 1270;
+  state.fullReset = false;
 
   state.windowWidth = g.windowWidth <= 1200 ? g.windowWidth : 1200;
   canvas = g.createCanvas(state.windowWidth * .98, g.windowHeight * .95);
@@ -38,7 +39,7 @@ export const resetCanvas = (state, g, canvas) => {
   state.buttons[4] = new MobileButton(g, 0, " ".charCodeAt(0), 32, g.width - 100 * (state.windowWidth / 600), g.height - 50)
 
   // LOAD INITIAL ASSETS
-  state.ship = new Ship(state, g);
+  state.ship = new Ship(state, g)
   state.hud = new Hud(g, state.rgbColor1, state.rgbColor3, state.windowWidth);
   state.stars = loadStars(g);
   state.splash = new Splash();

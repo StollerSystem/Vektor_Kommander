@@ -1,11 +1,12 @@
 import * as p5 from 'p5';
 import Entity from './entity.js';
 import Laser from './laser.js';
+import { addDust } from '../utility/entity-utility';
 
-export default function Boss(state, g, color, windowWidth, addDust, level, lasers, color2, ship) {
+export default function Boss(state, g) {
 
-  var windowMod = windowWidth / 1800;
-  var r = (225 + (75 * level)) * windowMod;
+  var windowMod = state.windowWidth / 1800;
+  var r = (225 + (75 * state.level)) * windowMod;
   var pos = g.createVector(g.width + r * 2, g.random(r, g.height - r));
 
   Entity.call(this, pos.x, pos.y, r, g);
@@ -16,13 +17,13 @@ export default function Boss(state, g, color, windowWidth, addDust, level, laser
   this.rmax = r - 30;
   this.onScreen = false;
   this.destroyed = false;
-  this.hp = 10 + (5 * level);
+  this.hp = 10 + (5 * state.level);
   this.coreHitFlash = false;
   this.brokenParts = [];
-  this.shotTimer = 400 - (level * 50);
-  this.target = ship;
+  this.shotTimer = 400 - (state.level * 50);
+  this.target = state.ship;
   this.aim = .25;
-  this.laserCharge = 20 + (5 * level);
+  this.laserCharge = 20 + (5 * state.level);
 
   // randomize some features
   var e = g.random(.70, 1.25);
@@ -48,10 +49,10 @@ export default function Boss(state, g, color, windowWidth, addDust, level, laser
     }
     let scatter = g.random(-this.aim, this.aim);
     heading += scatter;
-    let laser = new Laser(scope.pos, scope.vel, heading, g, color2, true, 0, windowMod, this.laserCharge);
+    let laser = new Laser(scope.pos, scope.vel, heading, g, state.rgbColor2, true, 0, windowMod, this.laserCharge);
     let dustVel = laser.vel.copy();
-    addDust(state, scope.pos, dustVel.mult(.5), 4, .025, color2, 10, g);
-    lasers.push(laser);
+    addDust(state, scope.pos, dustVel.mult(.5), 4, .025, state.rgbColor2, 10, g);
+    state.lasers.push(laser);
   }
 
   this.vertices = function (x, y, n) {
@@ -194,7 +195,7 @@ export default function Boss(state, g, color, windowWidth, addDust, level, laser
   }
 
   this.destroy = function () {
-    addDust(state, this.pos, this.vel, 30, .001, color, 10, g);
+    addDust(state, this.pos, this.vel, 30, .001, state.rgbColor5, 10, g);
     for (let i = 0; i < 4; i++) {
       scope.brokenParts[i] = {
         pos: this.pos.copy(),
@@ -214,7 +215,7 @@ export default function Boss(state, g, color, windowWidth, addDust, level, laser
       this.quad4.vertices(),
     ]
     g.push();
-    g.stroke(`rgba(${color[2]},${color[0]},${color[1]},${1})`);
+    g.stroke(`rgba(${state.rgbColor5[2]},${state.rgbColor5[0]},${state.rgbColor5[1]},${1})`);
     g.strokeWeight(g.random(1, 2));
     g.fill(0);
     for (let i = 0; i < quads.length; i++) {
@@ -232,7 +233,7 @@ export default function Boss(state, g, color, windowWidth, addDust, level, laser
     if (!this.destroyed) {
       g.push();
       g.translate(this.pos.x, this.pos.y);
-      let coreColor = this.coreHitFlash ? `rgba(${color[1]},${color[2]},${color[0]},${g.random(.5, .9)})` : `rgba(${color[0]},${color[1]},${color[2]},${g.random(.5, .9)})`;
+      let coreColor = this.coreHitFlash ? `rgba(${state.rgbColor5[1]},${state.rgbColor5[2]},${state.rgbColor5[0]},${g.random(.5, .9)})` : `rgba(${state.rgbColor5[0]},${state.rgbColor5[1]},${state.rgbColor5[2]},${g.random(.5, .9)})`;
       g.stroke(coreColor);
       let hpMult = this.hp / 10
       g.strokeWeight(g.random(this.r / 5 * hpMult, this.r / 3 * hpMult));

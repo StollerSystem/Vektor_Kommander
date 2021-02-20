@@ -1,10 +1,11 @@
 import * as p5 from 'p5';
 import Entity from './entity.js';
 import Laser from './laser.js';
+import { addDust } from '../utility/entity-utility.js';
 
-export default function Enemy(state, r, g, addDust, level, color1, color2, lasers, windowWidth) {
+export default function Enemy(state, r, g, color1, color2) {
 
-  this.w = windowWidth / 1800;  
+  this.w = state.windowWidth / 1800;  
 
   var outOfBounds = [
     g.createVector(g.random(g.width), -r),
@@ -15,11 +16,11 @@ export default function Enemy(state, r, g, addDust, level, color1, color2, laser
   var r = r;
   var pos = outOfBounds[g.floor(g.random(0, 4))]
   var radius = r*this.w;
-  let windowMod = windowWidth < 1024 ? .99 : .999;
+  let windowMod = state.windowWidth < 1024 ? .99 : .999;
   Entity.call(this, pos.x, pos.y, radius, g, windowMod)
   
-  this.crazyness = g.random(1, 2 + level / 4);
-  this.shotThresh = g.random(1, 1.5 + level / 5);
+  this.crazyness = g.random(1, 2 + state.level / 4);
+  this.shotThresh = g.random(1, 1.5 + state.level / 5);
   this.point = g.random(1, 2);
   this.vel = p5.Vector.random2D();
   this.vel.mult(4);
@@ -52,7 +53,7 @@ export default function Enemy(state, r, g, addDust, level, color1, color2, laser
     var laser = new Laser(scope.pos, scope.vel, scope.heading, g, color2, true, 0, this.w);
     var dustVel = laser.vel.copy();
     addDust(state, scope.pos, dustVel.mult(.5), 4, .045, color2, 5, g);
-    lasers.push(laser);
+    state.lasers.push(laser);
   }
 
   this.render = function () {

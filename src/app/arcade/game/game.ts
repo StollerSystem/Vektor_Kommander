@@ -6,7 +6,8 @@ import randomColors from './js/utility/random-colors.js';
 import { render } from './js/utility/render.js';
 import { state } from './js/utility/state.js';
 import { resetCanvas } from './js/utility/reset.js';
-import { addToScore, addPointNumbers, addDust, addDebris, roundLoss, spawnBoss, spawnAsteroids, spawnBarriers, spawnEnemy, spawnPowerUp, checkDust, checkDebris, checkLaserCharge, defeatBoss, hyperDriveIntro } from './js/utility/utility.js';
+import { addDust } from './js/utility/entity-utility.js';
+import { addToScore, addPointNumbers, addDebris, roundLoss, spawnBoss, spawnAsteroids, spawnBarriers, spawnEnemy, spawnPowerUp, checkDust, checkDebris, checkLaserCharge, defeatBoss, hyperDriveIntro } from './js/utility/utility.js';
 
 
 export const callGame = (eventInput) => {
@@ -43,6 +44,11 @@ export const callGame = (eventInput) => {
 
 
     g.draw = () => {
+
+      if (state.fullReset) {
+        state.fullReset = false;
+        resetCanvas(state, g, canvas)
+      }
 
       if (state.splashScreen) {
         g.background(0);

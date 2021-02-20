@@ -1,6 +1,4 @@
-import * as p5 from 'p5';
 import PointNumber from '../effects/point-numbers.js';
-import Dust from '../effects/dust.js';
 import Debris from '../effects/debris.js';
 import { input } from './input.js';
 import { loadBarrier } from './load-barriers.js'
@@ -20,22 +18,10 @@ export const addPointNumbers = (state, pos, vel, color, g, text, size) => {
   state.pointNumbers.push(new PointNumber(pos, vel, color, g, text, size))
 }
 
-export const addDust = (state, pos, vel, n, trans, color, weight, g) => {
-  for (var i = 0; i < n; i++) {
-    state.dust.push(new Dust(pos, vel, trans, color, weight, g, state.rgbColor1, state.rgbColor2, state.rgbColor3));
-  }
-}
-
 export const addDebris = (state, pos, vel, n, r, g, rgbColor4) => {
   state.debris.push(new Debris(pos, vel, n, r, g, rgbColor4));
 }
 
-export const reduceLaserCharge = (state) => {
-  if (state.laserCharge > 0) {
-    state.laserCharge -= 100;
-    return true;
-  }
-}
 
 export const roundLoss = (state, g) => {
   setTimeout(function () {
@@ -55,14 +41,8 @@ export const roundLoss = (state, g) => {
   });
 }
 
-// export const gameReset = (state, g) => {
-//   state.lives = 3;
-//   state.splashScreen = true;
-//   resetCanvas(state, g);
-// }
-
 export const spawnBoss = (state, g) => {
-  state.bosses.push(new Boss(state, g, state.rgbColor5, state.windowWidth, addDust, state.level, state.lasers, state.rgbColor2, state.ship))
+  state.bosses.push(new Boss(state, g))
 }
 
 export const spawnAsteroids = (state, g) => {
@@ -79,7 +59,7 @@ export const spawnBarriers = (state, g) => {
 
 export const spawnEnemy = (state, g) => {
   let radius = g.random(20, 30)
-  state.enemies.push(new Enemy(state, radius, g, addDust, state.level, state.rgbColor5, state.rgbColor2, state.lasers, state.windowWidth))
+  state.enemies.push(new Enemy(state, radius, g, state.rgbColor5, state.rgbColor2))
 }
 
 export const spawnPowerUp = (state, g, pos) => {
