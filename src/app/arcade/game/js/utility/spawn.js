@@ -2,6 +2,7 @@ import { state } from './state.js';
 import { spawnBoss, spawnAsteroids, spawnBarriers, spawnEnemy } from './utility.js';
 
 export const spawn = (g) => {
+  
   // RANDOM ENEMY SPAWN
   if (state.possibleEnemies > 0 && state.enemies.length < 1) {
     let ranNum = g.random(1000);
