@@ -7,6 +7,7 @@ import { render } from './js/utility/render.js';
 import { state } from './js/utility/state.js';
 import { resetCanvas } from './js/utility/reset.js';
 import { addDust } from './js/utility/entity-utility.js';
+import { spawn } from './js/utility/spawn.js'
 import { addToScore, addPointNumbers, addDebris, roundLoss, spawnBoss, spawnAsteroids, spawnBarriers, spawnEnemy, spawnPowerUp, checkDust, checkDebris, checkLaserCharge, defeatBoss, hyperDriveIntro } from './js/utility/utility.js';
 
 
@@ -16,8 +17,7 @@ export const callGame = (eventInput) => {
   var logoPath = new Path2D(config.logo.path);
 
   const game = (g: any) => {
-
-    // LOAD COLORS
+   
     g.preload = () => {
       let random_Colors = randomColors(g);
       state.rgbColor1 = config.gameColors.rocks ? config.gameColors.rocks : random_Colors[0]; // ROCKS/SCORE
@@ -26,22 +26,17 @@ export const callGame = (eventInput) => {
       state.rgbColor4 = config.gameColors.squares ? config.gameColors.squares : random_Colors[3]; // SQUARES
       state.rgbColor5 = config.gameColors.enemy ? config.gameColors.enemy : random_Colors[4]; // ENEMY        
     }
-
-    // LOAD VARIABLES
+    
     g.setup = () => {
-      g.frameRate(60)
-      // resetCanvas()
+      g.frameRate(60)      
       resetCanvas(state, g)
       g.keyReleased = () => {
         input.handleEvent(g.key, g.keyCode, false);
       }
       g.keyPressed = () => {
         input.handleEvent(g.key, g.keyCode, true);
-      }
-
-      // spawnBoss(state, g);
+      }      
     }
-
 
     g.draw = () => {
 
@@ -82,38 +77,7 @@ export const callGame = (eventInput) => {
           }
         }
 
-        // RANDOM ENEMY SPAWN
-        if (state.possibleEnemies > 0 && state.enemies.length < 1) {
-          let ranNum = g.random(1000);
-          if (ranNum <= 1) {
-            spawnEnemy(state, g);
-          }
-        }
-
-        // RANDOM ASTEROID SPAWN
-        if (state.asteroids.length < 3) {
-          let ranNum = g.random(650);
-          if (ranNum <= 1) {
-            spawnAsteroids(state, g);
-            // console.log("spawn rock, total: "+asteroids.length)
-          }
-        }
-
-        // RANDOM BARRIER SPAWN
-        if (state.barriers.length < 5) {
-          let ranNum = g.random(220);
-          if (ranNum <= 1 && state.barriers.length < 6 && state.possibleBarriers > 0) {
-            state.possibleBarriers -= 1;
-            spawnBarriers(state, g);
-            // console.log("squares left: "+possibleBarriers)
-          }
-        }
-
-        //SPAWN BOSS
-        if (state.possibleBarriers <= 0 && state.possibleBosses > 0) {
-          state.possibleBosses -= 1;
-          spawnBoss(state, g)
-        }
+        spawn(g);        
 
         // _________UPDATES ___________
 

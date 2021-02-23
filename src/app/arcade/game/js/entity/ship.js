@@ -10,8 +10,7 @@ import { reduceLaserCharge, addDust } from '../utility/entity-utility.js';
 
 
 export default function Ship(state, g) {
-  this.w = state.windowWidth / 1800;
-  console.log("SHIP SIZE MOD: "+this.w)
+  this.w = state.windowWidth / 1800;  
   var windowMod = state.windowWidth < 1024 ? .99 : null;
   Entity.call(this, 200, g.height / 2, 20 * this.w, g, windowMod);
   this.isDestroyed = false;
