@@ -102,7 +102,7 @@ export const callGame = (eventInput) => {
         render(state.debris)
         render(state.pointNumbers)
         state.ship.render();
-        state.hud.render(state.lives, state.score, state.laserCharge, state.laserOverHeat, state);
+        state.hud.render(state);
 
         // RENDER MOBILE BUTTONS IF THE SCREEN IS AS SMALL AS AN IPAD 
         if (state.windowWidth <= 1024) {

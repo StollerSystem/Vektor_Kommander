@@ -1,4 +1,5 @@
 export default function Hud(g, rgbColor1, rgbColor3, windowWidth) {
+
   var windowWidth = windowWidth;
   var size = 30 * (windowWidth / 1800);
   var padding = 10 * (windowWidth / 1800);
@@ -18,15 +19,14 @@ export default function Hud(g, rgbColor1, rgbColor3, windowWidth) {
 
   ];
 
-  this.render = function (lives, score, laserCharge, laserOverHeat, state) {
+  this.render = function (state) {
     var scoreString = "" + state.score;
     var x = 75 * (windowWidth / 1800) - (scoreString.length * (size + padding) / 3);
     var digitPos = g.createVector(x, padding);    
 
-    drawLives(lives);    
+    drawLives(state);    
 
-    if (lives < 0) {
-      
+    if (state.lives < 0) {      
 
       g.push();
       g.textFont('Montserrat')
@@ -67,7 +67,7 @@ export default function Hud(g, rgbColor1, rgbColor3, windowWidth) {
         digitPos.x += size + padding;
       }
     } else {
-      drawLaserCharge(laserCharge, laserOverHeat);
+      drawLaserCharge(state);
       for (var i = 0; i < scoreString.length; i++) {
         var dmap = digitMaps[scoreString.charAt(i)];
         drawDigit(dmap, i, digitPos);
@@ -76,13 +76,13 @@ export default function Hud(g, rgbColor1, rgbColor3, windowWidth) {
     }    
   }
 
-  function drawLives(lives) {
+  function drawLives(state) {
     g.push();
     g.stroke(`rgba(${rgbColor3[0]},${rgbColor3[1]},${rgbColor3[2]},1)`);
     g.strokeWeight(g.random(1, 1.5))
     g.fill(0);
     g.translate(g.width - 150 * (windowWidth / 1800), 20 * (windowWidth / 1800))
-    for (var i = 0; i < lives; i++) {
+    for (var i = 0; i < state.lives; i++) {
       g.translate(38 * (windowWidth / 1800), 0)
       g.curve(
         -1, 20,
@@ -104,15 +104,15 @@ export default function Hud(g, rgbColor1, rgbColor3, windowWidth) {
     g.pop();
   }
 
-  function drawLaserCharge(laserCharge, laserOverHeat) {
+  function drawLaserCharge(state) {
     let w = windowWidth / 1800
     let barColor;
-    let borderColor = laserOverHeat ? 'rgba(255,0,0,.5)' : laserCharge > 1275 ? 'rgba(0,0,255,.9)' : 'rgba(255,255,255,.5)';
-    let maxBorderWeight = laserCharge > 1275 ? 7 : 2;
-    if (laserCharge > 1270) {
+    let borderColor = state.laserOverHeat ? 'rgba(255,0,0,.5)' : state.laserCharge > 1275 ? 'rgba(0,0,255,.9)' : 'rgba(255,255,255,.5)';
+    let maxBorderWeight = state.laserCharge > 1275 ? 7 : 2;
+    if (state.laserCharge > 1270) {
       barColor = `rgba(${0},${255},${Math.round(g.random(0, 240))},.8)`
     } else {
-      barColor = `rgba(${-Math.round((laserCharge - 1270) / 5)},${Math.round(laserCharge / 5)},${40},.5)`
+      barColor = `rgba(${-Math.round((state.laserCharge - 1270) / 5)},${Math.round(state.laserCharge / 5)},${40},.5)`
     }
     g.push();
     g.stroke(borderColor)
@@ -124,9 +124,9 @@ export default function Hud(g, rgbColor1, rgbColor3, windowWidth) {
     g.stroke(borderColor)
     g.fill(barColor);
     g.strokeWeight(g.random(1, maxBorderWeight))
-    g.rect(g.width / 2 - 126 * w, 20 * w, (laserCharge / 5) * w, 15 * w)
+    g.rect(g.width / 2 - 126 * w, 20 * w, (state.laserCharge / 5) * w, 15 * w)
     g.pop()
-    if (laserOverHeat) {
+    if (state.laserOverHeat) {
       g.push();
       g.textFont('Lexend Mega');
       g.textAlign(g.CENTER);
